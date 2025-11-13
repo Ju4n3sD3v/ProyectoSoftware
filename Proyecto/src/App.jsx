@@ -2,6 +2,7 @@ import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import LabelAndInputN from './componentes/LabelAndInputN'
+import Button from './componentes/Button'
 import './App.css'
 
 function App() {
@@ -43,7 +44,7 @@ function App() {
           <LabelAndInputN label ="bolsas_de_alitas" id="ba01"/>
           <LabelAndInputN label ="bolsas_de_alitas" id="ba01"/>
           <LabelAndInputN label ="bolsas_de_alitas" id="ba01"/>
-          <button type="button">Realizar pedido</button>
+          <Button name='Generar informe'></Button>
         </fieldset>
       </div>
     </>
