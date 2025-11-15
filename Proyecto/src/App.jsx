@@ -35,15 +35,22 @@ function App() {
     <>
       <div>
         <fieldset>
+          <center></center>
           <LabelAndInputN label ="bolsas_de_alitas" id="ba01"/>
+          <button>+</button>
+          <button>-</button>
+          <LabelAndInputN label ="bolsas_de_papas" id="bp01"/>
+          <button>+</button>
+          <button>-</button>
+          <LabelAndInputN label ="salsas_BBQ" id=""/>
+          <button>+</button>
+          <button>-</button>
+          <LabelAndInputN label ="salsas_Miel_Mostaza" id="ba01"/>
+          <button>+</button>
+          <button>-</button>
           <LabelAndInputN label ="bolsas_de_alitas" id="ba01"/>
-          <LabelAndInputN label ="bolsas_de_alitas" id="ba01"/>
-          <LabelAndInputN label ="bolsas_de_alitas" id="ba01"/>
-          <LabelAndInputN label ="bolsas_de_alitas" id="ba01"/>
-          <LabelAndInputN label ="bolsas_de_alitas" id="ba01"/>
-          <LabelAndInputN label ="bolsas_de_alitas" id="ba01"/>
-          <LabelAndInputN label ="bolsas_de_alitas" id="ba01"/>
-          <LabelAndInputN label ="bolsas_de_alitas" id="ba01"/>
+          <button>+</button>
+          <button>-</button>
           <Button name='Generar informe'></Button>
         </fieldset>
       </div>

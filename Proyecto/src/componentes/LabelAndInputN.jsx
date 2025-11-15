@@ -13,6 +13,7 @@ export default function LabelAndInputN({ label = "", id = "1" }) {
 
     return (
         <div>
+            <br />
             <label className={label}>{label}: </label>
             <input 
                 type="number" 
@@ -23,8 +24,8 @@ export default function LabelAndInputN({ label = "", id = "1" }) {
                 onChange={handleChange}
                 min="0"
             />
-            {value && <h4 className="value-label">{label + ": "+ value}</h4>}
-            <br />
+            
+            <br /><br />
         </div>
     )
 
