@@ -4,6 +4,8 @@ import viteLogo from '/vite.svg'
 import LabelAndInputN from './componentes/LabelAndInputN'
 import Button from './componentes/Button'
 import './App.css'
+import LoginJefe from './pantallasJefe/loginjefe'
+import ControlInventarioBodega from './pantallasJefe/controlInventarioBodega'
 
 function App() {
   // NUEVO: estados para controlar las pantallas y los datos del login
@@ -76,6 +78,10 @@ function App() {
   setNombre('')
   setContrasena('')
 }
+
+  const controlInventarioBodega = () => {
+  setPantalla('controlInventarioBodega')
+  }
 
   const crreacionPedido = () => {
     setPantalla('creacion de pedido')
@@ -177,19 +183,61 @@ function App() {
 
       {/*Pantalla Jefe */}
       {pantalla === 'jefe' &&(
-        <>
-          <div>
-            <h1> ¿Qué desea hacer?</h1>
-            <br/> 
-            <button> Control de inventario en bodega</button>
-            <br/> <br/> 
-            <button> Analisis de inventario</button>
-            <br/><br/>
-            <button type="button" onClick={volverAlInicio}> Volver al inicio </button>
-
-          </div>
-        </>
+       
+        <LoginJefe
+          volverAlInicio={{volverAlInicio}}
+          controlInventarioBodega={controlInventarioBodega}
+         />
       )}
+
+      {/*Pantalla Jefe */}
+      {pantalla === 'controlInventarioBodega' &&(
+        <ControlInventarioBodega
+          volverAlInicio={volverAlInicio}
+        />
+      )}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
       {/* Pantalla Lider*/}
       {pantalla === 'lider' &&(
@@ -200,7 +248,7 @@ function App() {
         </>
       )}
 
-      {/* Pantalla Lider*/}
+      {/* Pantalla supopervisora*/}
       {pantalla === 'supervisora' &&(
         <>
           hola estoy en la pantalla de supervisora 
@@ -209,7 +257,7 @@ function App() {
         </>
       )}
 
-      {/* Pantalla Lider*/}
+      {/* Pantalla Empleada*/}
       {pantalla === 'empleada' &&(
         <>
           <h1> Estoy en al pantalla empleada</h1>
@@ -218,6 +266,9 @@ function App() {
           <button type="button" onClick={volverAlInicio}> Volver al inicio </button>
         </>
       )}
+
+
+
     </>
   )
 }
