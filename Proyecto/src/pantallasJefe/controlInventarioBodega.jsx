@@ -1,5 +1,5 @@
 
-export default function ControlInventarioBodega({volverAlInicio}) {
+export default function ControlInventarioBodega({volverAlInicio, volverLoginJefe}) {
     return(
         <>
             <div>
@@ -9,7 +9,11 @@ export default function ControlInventarioBodega({volverAlInicio}) {
 
                 </label>
                 <br/><br/>
-                <button> Atras</button>
+                <button
+                    type="button"
+                    onClick={volverLoginJefe}> 
+                    Atras
+                </button>
                 <br/><br/>
                 <button 
                     type="button" 

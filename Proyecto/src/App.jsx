@@ -83,6 +83,10 @@ function App() {
   setPantalla('controlInventarioBodega')
   }
 
+  const volverLoginJefe = () => {
+  setPantalla('jefe')
+  }
+
   const crreacionPedido = () => {
     setPantalla('creacion de pedido')
   }
@@ -185,7 +189,7 @@ function App() {
       {pantalla === 'jefe' &&(
        
         <LoginJefe
-          volverAlInicio={{volverAlInicio}}
+          volverAlInicio={volverAlInicio}
           controlInventarioBodega={controlInventarioBodega}
          />
       )}
@@ -194,6 +198,7 @@ function App() {
       {pantalla === 'controlInventarioBodega' &&(
         <ControlInventarioBodega
           volverAlInicio={volverAlInicio}
+          volverLoginJefe={volverLoginJefe}
         />
       )}
 
