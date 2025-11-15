@@ -46,40 +46,40 @@ function App() {
 
   // NUEVO: cuando envías el formulario de login
   const manejarSubmitLogin = (e) => {
-    e.preventDefault()
-    // Aquí podrías validar nombre/contraseña más adelante
-    setPantalla('app')
-  }
+  e.preventDefault()
 
-  // ====== TU RETURN ORIGINAL (LO DEJO SOLO COMENTADO) ======
-  /*
-  return (
-    <>
-      <div>
-        <fieldset>
-          <center></center>
-          <LabelAndInputN label ="bolsas_de_alitas" id="ba01"/>
-          <button>+</button>
-          <button>-</button>
-          <LabelAndInputN label ="bolsas_de_papas" id="bp01"/>
-          <button>+</button>
-          <button>-</button>
-          <LabelAndInputN label ="salsas_BBQ" id=""/>
-          <button>+</button>
-          <button>-</button>
-          <LabelAndInputN label ="salsas_Miel_Mostaza" id="ba01"/>
-          <button>+</button>
-          <button>-</button>
-          <LabelAndInputN label ="bolsas_de_alitas" id="ba01"/>
-          <button>+</button>
-          <button>-</button>
-          <Button name='Generar informe'></Button>
-        </fieldset>
-      </div>
-    </>
-  )
-  */
-  // =========================================================
+  switch (tipoUsuario) {
+    case "Jefe":
+      setPantalla("jefe")
+      break
+
+    case "Supervisora":
+      setPantalla("supervisora")
+      break
+
+    case "Líder":
+      setPantalla("lider")
+      break
+
+    case "Empleada":
+      setPantalla("empleada")
+      break
+
+    default:
+      setPantalla("inicio")
+  }
+}
+
+
+  const volverAlInicio = () => {
+  setPantalla('inicio')
+  setNombre('')
+  setContrasena('')
+}
+
+  const crreacionPedido = () => {
+    setPantalla('creacion de pedido')
+  }
 
   // NUEVO RETURN CON LAS TRES PANTALLAS
   return (
@@ -119,10 +119,11 @@ function App() {
 
           <form onSubmit={manejarSubmitLogin}>
             <div>
-              <label htmlFor="nombre">Nombre:</label>
+              <label htmlFor="nombre">Nombre: </label>
               <input
                 id="nombre"
                 type="text"
+                placeholder=' pepito...'
                 value={nombre}
                 onChange={(e) => setNombre(e.target.value)}
                 required
@@ -130,10 +131,11 @@ function App() {
             </div>
 
             <div>
-              <label htmlFor="contrasena">Contraseña:</label>
+              <label htmlFor="contrasena">Contraseña: </label>
               <input
                 id="contrasena"
                 type="password"
+                placeholder='***'
                 value={contrasena}
                 onChange={(e) => setContrasena(e.target.value)}
                 required
@@ -145,14 +147,14 @@ function App() {
           </form>
 
           <br />
-          <button type="button" onClick={() => setPantalla('inicio')}>
+          <button type="button" onClick={volverAlInicio}>
             Volver
           </button>
         </div>
       )}
 
       {/* PANTALLA 3: TU INTERFAZ ORIGINAL */}
-      {pantalla === 'app' && (
+      {pantalla === 'creacion de pedido' && (
         <>
           <div>
             <fieldset>
@@ -167,7 +169,53 @@ function App() {
               <LabelAndInputN label ="bolsas_de_alitas" id="ba01"/>
               <Button name='Generar informe'></Button>
             </fieldset>
+            <br/><br/>
+            <button type="button" onClick={volverAlInicio}> Volver al inicio </button>
           </div>
+        </>
+      )}
+
+      {/*Pantalla Jefe */}
+      {pantalla === 'jefe' &&(
+        <>
+          <div>
+            <h1> ¿Qué desea hacer?</h1>
+            <br/> 
+            <button> Control de inventario en bodega</button>
+            <br/> <br/> 
+            <button> Analisis de inventario</button>
+            <br/><br/>
+            <button type="button" onClick={volverAlInicio}> Volver al inicio </button>
+
+          </div>
+        </>
+      )}
+
+      {/* Pantalla Lider*/}
+      {pantalla === 'lider' &&(
+        <>
+          hola estoy en la pantalla de lider 
+          <br/><br/>
+          <button type="button" onClick={volverAlInicio}> Volver al inicio </button>
+        </>
+      )}
+
+      {/* Pantalla Lider*/}
+      {pantalla === 'supervisora' &&(
+        <>
+          hola estoy en la pantalla de supervisora 
+          <br/><br/>
+          <button type="button" onClick={volverAlInicio}> Volver al inicio </button>
+        </>
+      )}
+
+      {/* Pantalla Lider*/}
+      {pantalla === 'empleada' &&(
+        <>
+          <h1> Estoy en al pantalla empleada</h1>
+          <button type = 'button' onClick={crreacionPedido}> Crear informe del pedido </button>
+          <br/><br/>
+          <button type="button" onClick={volverAlInicio}> Volver al inicio </button>
         </>
       )}
     </>
