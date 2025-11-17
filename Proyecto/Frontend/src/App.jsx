@@ -6,6 +6,8 @@ import Button from './componentes/Button'
 import './App.css'
 import LoginJefe from './pantallasJefe/loginjefe'
 import ControlInventarioBodega from './pantallasJefe/controlInventarioBodega'
+import ModificarInventarioJefe from './pantallasJefe/modificarInventario'
+
 function App() {
   // NUEVO: estados para controlar las pantallas y los datos del login
   const [pantalla, setPantalla] = useState('inicio')
@@ -84,6 +86,10 @@ function App() {
 
   const volverLoginJefe = () => {
   setPantalla('jefe')
+  }
+
+  const modificarInventarioJefe = () => {
+    setPantalla('modificarInventarioJefe')
   }
 
   const crreacionPedido = () => {
@@ -198,11 +204,18 @@ function App() {
         <ControlInventarioBodega
           volverAlInicio={volverAlInicio}
           volverLoginJefe={volverLoginJefe}
+          modificarInventarioJefe={modificarInventarioJefe}
         />
       )}
 
-
-
+      {/*Pantalla Modificar Inventario Jefe */}
+      {pantalla === 'modificarInventarioJefe' &&( 
+        <ModificarInventarioJefe
+          volverAlInicio={volverAlInicio}
+          controlInventarioBodega={controlInventarioBodega}
+        />
+        
+      )}
 
 
 
