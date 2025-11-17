@@ -36,8 +36,10 @@ export async function getProductosBodegaSinActualizar72Mock() {
     (ahora - new Date(p.actualizadoEn)) >= MS_72_HORAS
   );
 
-  return sublista;   // ← aquí TIENES la sublista
+  return sublista;   
 }
 
-console.log(getAllProductosBodegaMock());
-console.log(getProductosBodegaSinActualizar72Mock());
+//ME FALTA ACA PARA COMPROBAR LO DEL PEDIDO DE LAS EMPLEADAS
+
+// Prueba
+
