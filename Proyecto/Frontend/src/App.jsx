@@ -4,9 +4,8 @@ import viteLogo from '/vite.svg'
 import LabelAndInputN from './componentes/LabelAndInputN'
 import Button from './componentes/Button'
 import './App.css'
-import LoginJefe from '../pantallasJefe/loginjefe'
-import ControlInventarioBodega from '../pantallasJefe/controlInventarioBodega'
-
+import LoginJefe from './pantallasJefe/loginjefe'
+import ControlInventarioBodega from './pantallasJefe/controlInventarioBodega'
 function App() {
   // NUEVO: estados para controlar las pantallas y los datos del login
   const [pantalla, setPantalla] = useState('inicio')
