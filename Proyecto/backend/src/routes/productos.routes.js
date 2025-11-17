@@ -2,7 +2,7 @@ import { Router } from "express";
 import {
   listarProductosBodega,
   listarProductosBodegaSinActualizar72
-} from "../services/productos.service.js";
+} from "../servicios/productos.service.js";
 
 const router = Router();
 

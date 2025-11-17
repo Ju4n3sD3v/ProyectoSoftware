@@ -1,18 +1,16 @@
-/*import express from 'express';
-import { PORT } from './config.js';
-import { pool } from './db.js';
+import express from "express";
+import productosRoutes from "./routes/productos.routes.js";
+import { PORT } from "./config.js";
 
 const app = express();
 
-app.get('/ping', async (req, res) => {
-  try {
-    const [rows] = await pool.query('SELECT 1 + 1 AS result');
-    res.json({ ok: true, result: rows[0].result });
-  } catch (err) {
-    res.status(500).json({ ok: false, error: err.message });
-  }
-});
+// Middleware para poder leer JSON del body
+app.use(express.json());
 
+// Registrar las rutas de productos
+app.use(productosRoutes);
+
+// Iniciar el servidor
 app.listen(PORT, () => {
-  console.log(`Servidor corriendo en puerto ${PORT}`);
-});*/
+  console.log(`Servidor escuchando en el puerto ${PORT}`);
+});
