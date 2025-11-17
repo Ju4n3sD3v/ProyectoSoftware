@@ -1,4 +1,4 @@
-import { createPool } from 'mysql2/promise';
+/*import { createPool } from 'mysql2/promise';
 import { DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME } from './config.js';
 
 export const pool = createPool({
@@ -10,4 +10,4 @@ export const pool = createPool({
   waitForConnections: true,
   connectionLimit: 10, 
   queueLimit: 0
-});
+});*/

@@ -1,4 +1,4 @@
-import express from 'express';
+/*import express from 'express';
 import { PORT } from './config.js';
 import { pool } from './db.js';
 
@@ -15,4 +15,4 @@ app.get('/ping', async (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en puerto ${PORT}`);
-});
+});*/
