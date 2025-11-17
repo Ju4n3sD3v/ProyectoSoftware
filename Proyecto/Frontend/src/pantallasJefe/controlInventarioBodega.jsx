@@ -1,61 +1,101 @@
+import { useEffect, useState } from "react";
 
-export default function ControlInventarioBodega({volverAlInicio, volverLoginJefe}) {
-    return(
-        <>
-            <div>
-                <h1> Control de inventario en Bodega</h1>
-                <label> Aca podra revisar las cantidades de los insumos los cuales se 
-                    encuentra en este momento en el inventario
+export default function ControlInventarioBodega({ volverAlInicio, volverLoginJefe }) {
+  const [productos, setProductos] = useState([]);
+  const [cargando, setCargando] = useState(true);
+  const [error, setError] = useState(null);
 
-                </label>
-                <br/><br/>
+  useEffect(() => {
+    const cargarProductos = async () => {
+      try {
+        const respuesta = await fetch("http://localhost:4000/productos/bodega");
+        const data = await respuesta.json();
 
-                <div>
-                    <table style={{ border: "1px solid white", borderCollapse: "collapse" }}>
-                        <tr>
-                        <th style={{ border: "1px solid white", padding: "8px" }}>Producto</th>
-                        <th style={{ border: "1px solid white", padding: "8px" }}>Cantidad</th>
-                        </tr>
+        if (!data.ok) {
+          throw new Error(data.error || "Error al obtener productos.");
+        }
 
-                        <tr>
-                        <td style={{ border: "1px solid white", padding: "8px" }}>Vasos</td>
-                        <td style={{ border: "1px solid white", padding: "8px" }}>120</td>
-                        </tr>
+        // data.data viene del backend: { ok: true, data: [...] }
+        setProductos(data.data || []);
+      } catch (err) {
+        console.error(err);
+        setError(err.message);
+      } finally {
+        setCargando(false);
+      }
+    };
 
-                        <tr>
-                        <td style={{ border: "1px solid white", padding: "8px" }}>Cocacola</td>
-                        <td style={{ border: "1px solid white", padding: "8px" }}>120</td>
-                        </tr>
+    cargarProductos();
+  }, []);
 
-                        <tr>
-                        <td style={{ border: "1px solid white", padding: "8px" }}>Platos</td>
-                        <td style={{ border: "1px solid white", padding: "8px" }}>120</td>
-                        </tr>
+  return (
+    <>
+      <div>
+        <h1>Control de inventario en Bodega</h1>
+        <label>
+          Aca podra revisar las cantidades de los insumos los cuales se 
+          encuentran en este momento en el inventario.
+        </label>
 
-                        <tr>
-                        <td style={{ border: "1px solid white", padding: "8px" }}>Salsa</td>
-                        <td style={{ border: "1px solid white", padding: "8px" }}>120</td>
-                        </tr>
-                    </table>
-                    </div>
+        <br /><br />
 
-                <button
-                    type="button"
-                    onClick={volverLoginJefe}> 
-                    Atras
-                </button>
-                <br/><br/>
-                <button 
-                    type="button" 
-                    onClick={volverAlInicio}>
-                    Volver al inicio
-                </button>
+        {cargando && <p>Cargando productos...</p>}
 
-            </div>
-        </>
-    )
+        {error && (
+          <p style={{ color: "red" }}>
+            Ocurrió un error: {error}
+          </p>
+        )}
+
+        {!cargando && !error && (
+          <div>
+            {productos.length === 0 ? (
+              <p>No hay productos en la bodega.</p>
+            ) : (
+              <table style={{ border: "1px solid white", borderCollapse: "collapse" }}>
+                <thead>
+                  <tr>
+                    <th style={{ border: "1px solid white", padding: "8px" }}>ID</th>
+                    <th style={{ border: "1px solid white", padding: "8px" }}>Producto</th>
+                    <th style={{ border: "1px solid white", padding: "8px" }}>Lugar</th>
+                    <th style={{ border: "1px solid white", padding: "8px" }}>Stock</th>
+                    <th style={{ border: "1px solid white", padding: "8px" }}>Última actualización</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {productos.map((p) => (
+                    <tr key={p.id}>
+                      <td style={{ border: "1px solid white", padding: "8px" }}>{p.id}</td>
+                      <td style={{ border: "1px solid white", padding: "8px" }}>{p.nombre}</td>
+                      <td style={{ border: "1px solid white", padding: "8px" }}>{p.lugar}</td>
+                      <td style={{ border: "1px solid white", padding: "8px" }}>{p.stock}</td>
+                      <td style={{ border: "1px solid white", padding: "8px" }}>{p.actualizadoEn}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+          </div>
+        )}
+
+        <br /><br />
+
+        <button
+          type="button"
+          onClick={volverLoginJefe}
+        >
+          Volver al menú del jefe
+        </button>
+
+        <br /><br />
+
+        <button
+          type="button"
+          onClick={volverAlInicio}
+        >
+          Volver al inicio
+        </button>
+      </div>
+    </>
+  );
 }
-
-
-
-
