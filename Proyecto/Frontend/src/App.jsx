@@ -9,6 +9,7 @@ import ControlInventarioBodega from './pantallasJefe/controlInventarioBodega'
 import ModificarInventarioJefe from './pantallasJefe/modificarInventario'
 import LoginLider from './pantallasLider/loginLider'
 import ReporteEntradaSalida from './pantallasLider/reporteEntradaSalida'
+import CreacionPedido from './pantallasEmpleadas/creacionPedido'
 
 function App() {
   // NUEVO: estados para controlar las pantallas y los datos del login
@@ -178,26 +179,11 @@ function App() {
         </div>
       )}
 
-      {/* PANTALLA 3: TU INTERFAZ ORIGINAL */}
+      {/* PANTALLA 3: CREACIÓN DE PEDIDO */}
       {pantalla === 'creacion de pedido' && (
-        <>
-          <div>
-            <fieldset>
-              <LabelAndInputN label ="bolsas_de_alitas" id="ba01"/>
-              <LabelAndInputN label ="bolsas_de_alitas" id="ba01"/>
-              <LabelAndInputN label ="bolsas_de_alitas" id="ba01"/>
-              <LabelAndInputN label ="bolsas_de_alitas" id="ba01"/>
-              <LabelAndInputN label ="bolsas_de_alitas" id="ba01"/>
-              <LabelAndInputN label ="bolsas_de_alitas" id="ba01"/>
-              <LabelAndInputN label ="bolsas_de_alitas" id="ba01"/>
-              <LabelAndInputN label ="bolsas_de_alitas" id="ba01"/>
-              <LabelAndInputN label ="bolsas_de_alitas" id="ba01"/>
-              <Button name='Generar informe'></Button>
-            </fieldset>
-            <br/><br/>
-            <button type="button" onClick={volverAlInicio}> Volver al inicio </button>
-          </div>
-        </>
+        <CreacionPedido
+          volverAlInicio={volverAlInicio}
+        />
       )}
 
       {/*Pantalla Jefe */}
