@@ -7,6 +7,8 @@ import './App.css'
 import LoginJefe from './pantallasJefe/loginjefe'
 import ControlInventarioBodega from './pantallasJefe/controlInventarioBodega'
 import ModificarInventarioJefe from './pantallasJefe/modificarInventario'
+import LoginLider from './pantallasLider/loginLider'
+import ReporteEntradaSalida from './pantallasLider/reporteEntradaSalida'
 
 function App() {
   // NUEVO: estados para controlar las pantallas y los datos del login
@@ -94,6 +96,14 @@ function App() {
 
   const crreacionPedido = () => {
     setPantalla('creacion de pedido')
+  }
+
+  const reporteEntradaSalida = () => {
+    setPantalla('reporteEntradaSalida')
+  }
+
+  const volverLoginLider = () => {
+    setPantalla('lider')
   }
 
   // NUEVO RETURN CON LAS TRES PANTALLAS
@@ -258,11 +268,18 @@ function App() {
 
       {/* Pantalla Lider*/}
       {pantalla === 'lider' &&(
-        <>
-          hola estoy en la pantalla de lider
-          <br/><br/>
-          <button type="button" onClick={volverAlInicio}> Volver al inicio </button>
-        </>
+        <LoginLider
+          volverAlInicio={volverAlInicio}
+          reporteEntradaSalida={reporteEntradaSalida}
+        />
+      )}
+
+      {/* Pantalla Reporte Entrada/Salida Lider */}
+      {pantalla === 'reporteEntradaSalida' &&(
+        <ReporteEntradaSalida
+          volverAlInicio={volverAlInicio}
+          volverLoginLider={volverLoginLider}
+        />
       )}
 
       {/* Pantalla supopervisora*/}
