@@ -12,6 +12,8 @@ import ReporteEntradaSalida from './pantallasLider/reporteEntradaSalida'
 import CreacionPedido from './pantallasEmpleadas/creacionPedido'
 
 import AnalisisInventarioLocal from './pantallasJefe/analisisInventarioLocal'
+import RevisarPedidosJefe from './pantallasJefe/revisarPedidos.jsx';
+
 
 function App() {
   const [pantalla, setPantalla] = useState('inicio')
@@ -49,6 +51,8 @@ function App() {
   const reporteEntradaSalida = () => setPantalla('reporteEntradaSalida')
   const volverLoginLider = () => setPantalla('lider')
   const mostrarAnalisisInventario = () => setPantalla("analisisInventario")
+  const revisarPedidosJefe = () => {setPantalla('revisarPedidos');};
+
 
   return (
     <>
@@ -122,11 +126,12 @@ function App() {
         />
       )}
 
-      {pantalla === 'controlInventarioBodega' && (
+      {pantalla === 'controlInventarioBodega' &&(
         <ControlInventarioBodega
           volverAlInicio={volverAlInicio}
           volverLoginJefe={volverLoginJefe}
           modificarInventarioJefe={modificarInventarioJefe}
+          revisarPedidosJefe={revisarPedidosJefe}   
         />
       )}
 
@@ -136,6 +141,13 @@ function App() {
           controlInventarioBodega={controlInventarioBodega}
         />
       )}
+
+      {pantalla === 'revisarPedidos' && (
+        <RevisarPedidosJefe
+          volverControlInventarioBodega={controlInventarioBodega}
+        />
+      )}
+
 
       {pantalla === 'lider' && (
         <LoginLider

@@ -1,6 +1,12 @@
 import { useEffect, useState } from "react";
 
-export default function ControlInventarioBodega({ volverAlInicio, volverLoginJefe, modificarInventarioJefe }) {
+export default function ControlInventarioBodega({
+  volverAlInicio,
+  volverLoginJefe,
+  modificarInventarioJefe,
+  revisarPedidosJefe,       
+}) {
+
   const [productos, setProductos] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(null);
@@ -91,6 +97,12 @@ export default function ControlInventarioBodega({ volverAlInicio, volverLoginJef
 
 
         <br /><br />
+
+        <button type="button" onClick={revisarPedidosJefe}>
+          Revisar pedidos
+        </button>
+        <br /><br />
+
         <button
           type="button"
           onClick={volverLoginJefe}
