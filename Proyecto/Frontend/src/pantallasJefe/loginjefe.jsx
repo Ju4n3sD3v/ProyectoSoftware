@@ -1,26 +1,26 @@
-export default function LoginJefe({volverAlInicio, controlInventarioBodega}) {
-    return(
-        <>
-            <div>
-                <h1>¿Qué desea hacer?</h1>
-                <br /> 
-                
-                <button type="button" onClick ={controlInventarioBodega}>
-                Control de inventario en bodega
-                </button>
+export default function LoginJefe({ volverAlInicio, controlInventarioBodega, mostrarAnalisisInventario }) {
+  return (
+    <>
+      <div>
+        <h1>¿Qué desea hacer?</h1>
+        <br />
 
-                <br /><br /> 
+        <button type="button" onClick={controlInventarioBodega}>
+          Control de inventario en bodega
+        </button>
 
-                <button>
-                Análisis de inventario
-                </button>
+        <br /><br />
 
-                <br /><br />
+        <button type="button" onClick={mostrarAnalisisInventario}>
+          Análisis de inventario
+        </button>
 
-                <button type="button" onClick={volverAlInicio}>
-                Volver al inicio
-                </button>       
-            </div>
-        </>
-    )
+        <br /><br />
+
+        <button type="button" onClick={volverAlInicio}>
+          Volver al inicio
+        </button>
+      </div>
+    </>
+  );
 }

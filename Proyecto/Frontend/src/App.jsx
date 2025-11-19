@@ -1,9 +1,9 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import './App.css'
+
 import LabelAndInputN from './componentes/LabelAndInputN'
 import Button from './componentes/Button'
-import './App.css'
+
 import LoginJefe from './pantallasJefe/loginjefe'
 import ControlInventarioBodega from './pantallasJefe/controlInventarioBodega'
 import ModificarInventarioJefe from './pantallasJefe/modificarInventario'
@@ -11,133 +11,58 @@ import LoginLider from './pantallasLider/loginLider'
 import ReporteEntradaSalida from './pantallasLider/reporteEntradaSalida'
 import CreacionPedido from './pantallasEmpleadas/creacionPedido'
 
+import AnalisisInventarioLocal from './pantallasJefe/analisisInventarioLocal'
+
 function App() {
-  // NUEVO: estados para controlar las pantallas y los datos del login
   const [pantalla, setPantalla] = useState('inicio')
   const [tipoUsuario, setTipoUsuario] = useState('')
   const [nombre, setNombre] = useState('')
   const [contrasena, setContrasena] = useState('')
 
-  // Tu objeto de productos (no lo toco)
-  const productos = {
-    bolsasAlitas: 0,
-    // Evitar referencia a variable inexistente en este scope.
-    // Si quieres que bolsasHarinas dependa de bolsasAlitas, calcula después de crear el objeto.
-    bolsasHarinas: 0,
-    bolsasPapas: 0,
-    SalsasBBQ: 0,
-    SalsasMielMostaza: 0,
-    SalsasPicanteSuave: 0,
-    SalsasPicanteExtra: 0,
-    Aceite20L: 0,
-    Gaseosasx6Manzana: 0,
-    Gaseosasx6Naranja: 0,
-    Gaseosasx6Uva: 0,
-    Gaseosasx6Pepsi: 0,
-    Gaseosasx6Tamarindo: 0,
-    Paquetex50Combo1: 0,
-    Paquetex50Combo2: 0,
-    Paquetex50Combo3: 0,
-    Paquetex50Combo4: 0,
-    Paquetex50Combo5: 0,
-    Tapasx200: 0,
-    CajaPapas: 0
-  }
-
-  // NUEVO: cuando seleccionas un tipo de usuario en la pantalla de inicio
   const irALogin = (tipo) => {
     setTipoUsuario(tipo)
     setPantalla('login')
   }
 
-  // NUEVO: cuando envías el formulario de login
   const manejarSubmitLogin = (e) => {
-  e.preventDefault()
+    e.preventDefault()
 
-  switch (tipoUsuario) {
-    case "Jefe":
-      setPantalla("jefe")
-      break
-
-    case "Supervisora":
-      setPantalla("supervisora")
-      break
-
-    case "Líder":
-      setPantalla("lider")
-      break
-
-    case "Empleada":
-      setPantalla("empleada")
-      break
-
-    default:
-      setPantalla("inicio")
+    switch (tipoUsuario) {
+      case "Jefe": setPantalla("jefe"); break;
+      case "Supervisora": setPantalla("supervisora"); break;
+      case "Líder": setPantalla("lider"); break;
+      case "Empleada": setPantalla("empleada"); break;
+      default: setPantalla("inicio")
+    }
   }
-}
-
 
   const volverAlInicio = () => {
-  setPantalla('inicio')
-  setNombre('')
-  setContrasena('')
-}
-
-  const controlInventarioBodega = () => {
-  setPantalla('controlInventarioBodega')
+    setPantalla('inicio')
+    setNombre('')
+    setContrasena('')
   }
 
-  const volverLoginJefe = () => {
-  setPantalla('jefe')
-  }
+  const controlInventarioBodega = () => setPantalla('controlInventarioBodega')
+  const volverLoginJefe = () => setPantalla('jefe')
+  const modificarInventarioJefe = () => setPantalla('modificarInventarioJefe')
+  const crreacionPedido = () => setPantalla('creacion de pedido')
+  const reporteEntradaSalida = () => setPantalla('reporteEntradaSalida')
+  const volverLoginLider = () => setPantalla('lider')
+  const mostrarAnalisisInventario = () => setPantalla("analisisInventario")
 
-  const modificarInventarioJefe = () => {
-    setPantalla('modificarInventarioJefe')
-  }
-
-  const crreacionPedido = () => {
-    setPantalla('creacion de pedido')
-  }
-
-  const reporteEntradaSalida = () => {
-    setPantalla('reporteEntradaSalida')
-  }
-
-  const volverLoginLider = () => {
-    setPantalla('lider')
-  }
-
-  // NUEVO RETURN CON LAS TRES PANTALLAS
   return (
     <>
-      {/* PANTALLA 1: SELECCIÓN DE TIPO DE USUARIO */}
       {pantalla === 'inicio' && (
         <div className="pantalla-inicio">
           <h1>¿Qué tipo de usuario es?</h1>
 
-          <div>
-            <label>Jefe</label>
-            <button onClick={() => irALogin('Jefe')}>Siguiente</button>
-          </div>
-
-          <div>
-            <label>Supervisora</label>
-            <button onClick={() => irALogin('Supervisora')}>Siguiente</button>
-          </div>
-
-          <div>
-            <label>Líder</label>
-            <button onClick={() => irALogin('Líder')}>Siguiente</button>
-          </div>
-
-          <div>
-            <label>Empleada</label>
-            <button onClick={() => irALogin('Empleada')}>Siguiente</button>
-          </div>
+          <div><label>Jefe</label> <button type="button" onClick={() => irALogin('Jefe')}>Siguiente</button></div>
+          <div><label>Supervisora</label> <button type="button" onClick={() => irALogin('Supervisora')}>Siguiente</button></div>
+          <div><label>Líder</label> <button type="button" onClick={() => irALogin('Líder')}>Siguiente</button></div>
+          <div><label>Empleada</label> <button type="button" onClick={() => irALogin('Empleada')}>Siguiente</button></div>
         </div>
       )}
 
-      {/* PANTALLA 2: LOGIN (NOMBRE Y CONTRASEÑA) */}
       {pantalla === 'login' && (
         <div className="pantalla-login">
           <h1>Ingreso de usuario</h1>
@@ -149,7 +74,7 @@ function App() {
               <input
                 id="nombre"
                 type="text"
-                placeholder=' pepito...'
+                placeholder='pepito...'
                 value={nombre}
                 onChange={(e) => setNombre(e.target.value)}
                 required
@@ -173,30 +98,31 @@ function App() {
           </form>
 
           <br />
-          <button type="button" onClick={volverAlInicio}>
-            Volver
-          </button>
+          <button type="button" onClick={volverAlInicio}>Volver</button>
         </div>
       )}
 
       {/* PANTALLA 3: CREACIÓN DE PEDIDO */}
       {pantalla === 'creacion de pedido' && (
-        <CreacionPedido
-          volverAlInicio={volverAlInicio}
-        />
+        <CreacionPedido volverAlInicio={volverAlInicio}>
+          <fieldset>
+            {[...Array(9)].map((_, i) => (
+              <LabelAndInputN key={i} label="bolsas_de_alitas" id={`ba${i}`} />
+            ))}
+            <Button name='Generar informe' />
+          </fieldset>
+        </CreacionPedido>
       )}
 
-      {/*Pantalla Jefe */}
-      {pantalla === 'jefe' &&(
-       
+      {pantalla === 'jefe' && (
         <LoginJefe
           volverAlInicio={volverAlInicio}
           controlInventarioBodega={controlInventarioBodega}
-         />
+          mostrarAnalisisInventario={mostrarAnalisisInventario}
+        />
       )}
 
-      {/*Pantalla Jefe */}
-      {pantalla === 'controlInventarioBodega' &&(
+      {pantalla === 'controlInventarioBodega' && (
         <ControlInventarioBodega
           volverAlInicio={volverAlInicio}
           volverLoginJefe={volverLoginJefe}
@@ -204,91 +130,47 @@ function App() {
         />
       )}
 
-      {/*Pantalla Modificar Inventario Jefe */}
-      {pantalla === 'modificarInventarioJefe' &&( 
+      {pantalla === 'modificarInventarioJefe' && (
         <ModificarInventarioJefe
           volverAlInicio={volverAlInicio}
           controlInventarioBodega={controlInventarioBodega}
         />
-        
       )}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      {/* Pantalla Lider*/}
-      {pantalla === 'lider' &&(
+      {pantalla === 'lider' && (
         <LoginLider
           volverAlInicio={volverAlInicio}
           reporteEntradaSalida={reporteEntradaSalida}
         />
       )}
 
-      {/* Pantalla Reporte Entrada/Salida Lider */}
-      {pantalla === 'reporteEntradaSalida' &&(
+      {pantalla === 'reporteEntradaSalida' && (
         <ReporteEntradaSalida
           volverAlInicio={volverAlInicio}
           volverLoginLider={volverLoginLider}
         />
       )}
 
-      {/* Pantalla supopervisora*/}
-      {pantalla === 'supervisora' &&(
+      {pantalla === 'supervisora' && (
         <>
-          hola estoy en la pantalla de supervisora 
-          <br/><br/>
-          <button type="button" onClick={volverAlInicio}> Volver al inicio </button>
+          hola estoy en la pantalla de supervisora
+          <br /><br />
+          <button type="button" onClick={volverAlInicio}>Volver al inicio</button>
         </>
       )}
 
-      {/* Pantalla Empleada*/}
-      {pantalla === 'empleada' &&(
+      {pantalla === 'empleada' && (
         <>
-          <h1> Estoy en al pantalla empleada</h1>
-          <button type = 'button' onClick={crreacionPedido}> Crear informe del pedido </button>
-          <br/><br/>
-          <button type="button" onClick={volverAlInicio}> Volver al inicio </button>
+          <h1>Estoy en la pantalla empleada</h1>
+          <button type="button" onClick={crreacionPedido}>Crear informe del pedido</button>
+          <br /><br />
+          <button type="button" onClick={volverAlInicio}>Volver al inicio</button>
         </>
       )}
 
-
-
+      {pantalla === "analisisInventario" && (
+        <AnalisisInventarioLocal volverLoginJefe={volverLoginJefe} />
+      )}
     </>
   )
 }
