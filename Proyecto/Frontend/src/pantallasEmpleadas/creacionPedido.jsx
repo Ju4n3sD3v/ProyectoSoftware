@@ -58,17 +58,12 @@ function CreacionPedido({ volverAlInicio }) {
     const pedidoFinal = {}
     
     Object.entries(pedido).forEach(([nombreProducto, cantidad]) => {
-      if (cantidad !== "" && parseFloat(cantidad) > 0) {
+      if (cantidad !== "" && parseFloat(cantidad) >= 0) {
         pedidoFinal[nombreProducto] = parseFloat(cantidad)
       }
     })
 
     console.log("Pedido filtrado:", pedidoFinal);
-
-    if (Object.keys(pedidoFinal).length === 0) {
-      alert("Por favor, ingresa al menos un producto")
-      return
-    }
 
     try {
       console.log("📤 Enviando pedido al backend...");
