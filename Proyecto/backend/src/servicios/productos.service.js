@@ -1,4 +1,7 @@
-import { getAllProductosBodegaMock, getProductosBodegaSinActualizar72Mock } from "../data/productos.mock.js";
+import { getAllProductosBodegaMock, 
+  getProductosBodegaSinActualizar72Mock,
+  actualizarStockProductoMock 
+} from "../data/productos.mock.js";
 
 // Servicio: obtener productos de bodega
 export async function listarProductosBodega() {
@@ -58,4 +61,19 @@ export async function listarProductosBodegaSinActualizar72() {
     throw new Error(error.message);
   }
 }
+// Servicio: actualizar stock de un producto en bodega
+export async function actualizarStockProducto(id, nuevoStock) {
+  try {
+    const productoActualizado = await actualizarStockProductoMock(id, nuevoStock);
 
+    return {
+      ok: true,
+      data: productoActualizado
+    };
+  } catch (error) {
+    return {
+      ok: false,
+      error: error.message
+    };
+  }
+}

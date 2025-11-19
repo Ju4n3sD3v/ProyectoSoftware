@@ -42,4 +42,36 @@ export async function getProductosBodegaSinActualizar72Mock() {
 //ME FALTA ACA PARA COMPROBAR LO DEL PEDIDO DE LAS EMPLEADAS
 
 // Prueba
+// ✅ Actualizar stock de un producto de bodega
+export async function actualizarStockProductoMock(id, nuevoStock) {
+  // Validación de stock
+  if (nuevoStock < 0) {
+    throw new Error("El stock no puede ser negativo.");
+  }
+
+  // Buscar producto por id en la Bodega
+  const producto = productos.find(p => p.id === id && p.lugar === "Bodega");
+
+  if (!producto) {
+    throw new Error("Producto no encontrado en la bodega.");
+  }
+
+  // Actualizar stock
+  producto.stock = nuevoStock;
+
+  // Actualizar fecha de última actualización en formato YYYY-MM-DD HH:mm:ss
+  const ahora = new Date();
+  const yyyy = ahora.getFullYear();
+  const mm = String(ahora.getMonth() + 1).padStart(2, "0");
+  const dd = String(ahora.getDate()).padStart(2, "0");
+  const hh = String(ahora.getHours()).padStart(2, "0");
+  const mi = String(ahora.getMinutes()).padStart(2, "0");
+  const ss = String(ahora.getSeconds()).padStart(2, "0");
+
+  producto.actualizadoEn = `${yyyy}-${mm}-${dd} ${hh}:${mi}:${ss}`;
+
+  // Devolvemos el producto ya actualizado
+  return producto;
+}
+
 
