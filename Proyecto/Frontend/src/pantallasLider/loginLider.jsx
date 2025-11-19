@@ -1,4 +1,4 @@
-export default function LoginLider({ volverAlInicio, reporteEntradaSalida }) {
+export default function LoginLider({ volverAlInicio, reporteEntradaSalida, verificarPedidoLider }) {
   return (
     <>
       <div>
@@ -11,6 +11,12 @@ export default function LoginLider({ volverAlInicio, reporteEntradaSalida }) {
 
         <br /><br />
 
+        <button type="button" onClick={verificarPedidoLider}>
+          Verificar pedido de mi local
+        </button>
+
+        <br /><br />
+
         <button type="button" onClick={volverAlInicio}>
           Volver al inicio
         </button>
@@ -18,4 +24,3 @@ export default function LoginLider({ volverAlInicio, reporteEntradaSalida }) {
     </>
   );
 }
-

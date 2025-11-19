@@ -14,6 +14,11 @@ import CreacionPedido from './pantallasEmpleadas/creacionPedido'
 import AnalisisInventarioLocal from './pantallasJefe/analisisInventarioLocal'
 import RevisarPedidosJefe from './pantallasJefe/revisarPedidos.jsx';
 
+// 👇 pantalla de verificación para la líder
+import VerificarPedidoLider from './pantallasLider/verificarPedidoLider'
+
+// 👇 NUEVO: pantalla de faltantes para el Jefe
+import FaltantesJefe from './pantallasJefe/FaltantesJefe'
 
 function App() {
   const [pantalla, setPantalla] = useState('inicio')
@@ -51,8 +56,13 @@ function App() {
   const reporteEntradaSalida = () => setPantalla('reporteEntradaSalida')
   const volverLoginLider = () => setPantalla('lider')
   const mostrarAnalisisInventario = () => setPantalla("analisisInventario")
-  const revisarPedidosJefe = () => {setPantalla('revisarPedidos');};
+  const revisarPedidosJefe = () => { setPantalla('revisarPedidos'); };
 
+  // 👇 navegar a la pantalla de verificación de pedidos de la líder
+  const verificarPedidoLider = () => setPantalla('verificarPedidoLider')
+
+  // 👇 NUEVO: navegar a la pantalla de faltantes del jefe
+  const verFaltantesJefe = () => setPantalla('faltantesJefe')
 
   return (
     <>
@@ -118,11 +128,14 @@ function App() {
         </CreacionPedido>
       )}
 
+      {/* MENÚ JEFE */}
       {pantalla === 'jefe' && (
         <LoginJefe
           volverAlInicio={volverAlInicio}
           controlInventarioBodega={controlInventarioBodega}
           mostrarAnalisisInventario={mostrarAnalisisInventario}
+          // 👇 NUEVO: opción para ver faltantes
+          verFaltantesJefe={verFaltantesJefe}
         />
       )}
 
@@ -148,11 +161,12 @@ function App() {
         />
       )}
 
-
+      {/* MENÚ LÍDER */}
       {pantalla === 'lider' && (
         <LoginLider
           volverAlInicio={volverAlInicio}
           reporteEntradaSalida={reporteEntradaSalida}
+          verificarPedidoLider={verificarPedidoLider}
         />
       )}
 
@@ -160,6 +174,19 @@ function App() {
         <ReporteEntradaSalida
           volverAlInicio={volverAlInicio}
           volverLoginLider={volverLoginLider}
+        />
+      )}
+
+      {pantalla === 'verificarPedidoLider' && (
+        <VerificarPedidoLider
+          volverAlInicio={volverLoginLider}
+        />
+      )}
+
+      {/* 👇 NUEVA PANTALLA: faltantes para el Jefe */}
+      {pantalla === 'faltantesJefe' && (
+        <FaltantesJefe
+          volverControlInventarioBodega={controlInventarioBodega}
         />
       )}
 

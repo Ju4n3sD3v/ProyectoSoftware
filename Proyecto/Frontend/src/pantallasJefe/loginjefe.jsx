@@ -1,4 +1,9 @@
-export default function LoginJefe({ volverAlInicio, controlInventarioBodega, mostrarAnalisisInventario }) {
+export default function LoginJefe({
+  volverAlInicio,
+  controlInventarioBodega,
+  mostrarAnalisisInventario,
+  verFaltantesJefe,   // 👈 NUEVO
+}) {
   return (
     <>
       <div>
@@ -13,6 +18,13 @@ export default function LoginJefe({ volverAlInicio, controlInventarioBodega, mos
 
         <button type="button" onClick={mostrarAnalisisInventario}>
           Análisis de inventario
+        </button>
+
+        <br /><br />
+
+        {/* 👇 NUEVO: opción para ver los productos faltantes por local */}
+        <button type="button" onClick={verFaltantesJefe}>
+          Ver reporte de productos faltantes
         </button>
 
         <br /><br />

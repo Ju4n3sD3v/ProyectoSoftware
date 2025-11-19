@@ -9,6 +9,9 @@ function CreacionPedido({ volverAlInicio }) {
   const [cargando, setCargando] = useState(true)
   const [error, setError] = useState(null)
 
+  // Estado para el local
+  const [local, setLocal] = useState("")
+
   // Cargar datos del backend al montar el componente
   useEffect(() => {
     const cargarDatos = async () => {
@@ -44,21 +47,27 @@ function CreacionPedido({ volverAlInicio }) {
 
   // Función para manejar cambios en los inputs
   const handleInputChange = (nombreProducto, valor) => {
-    setPedido({
-      ...pedido,
+    setPedido((prev) => ({
+      ...prev,
       [nombreProducto]: valor
-    })
+    }))
   }
 
   // Función para recolectar y procesar el pedido
   const handleGenerarInforme = async () => {
     console.log("🔵 Botón 'Generar informe' presionado");
+
+    // Validar que el local esté seleccionado
+    if (!local) {
+      alert("Por favor selecciona un local antes de generar el pedido.")
+      return
+    }
     
-    // Filtrar solo los productos con cantidad > 0
+    // Construir objeto final con las cantidades
     const pedidoFinal = {}
     
     Object.entries(pedido).forEach(([nombreProducto, cantidad]) => {
-      if (cantidad !== "" && parseFloat(cantidad) >= 0) {
+      if (cantidad !== "" && !isNaN(parseFloat(cantidad))) {
         pedidoFinal[nombreProducto] = parseFloat(cantidad)
       }
     })
@@ -73,7 +82,10 @@ function CreacionPedido({ volverAlInicio }) {
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify(pedidoFinal)
+        body: JSON.stringify({
+          local: local,
+          productos: pedidoFinal
+        })
       })
 
       console.log("Respuesta del servidor:", respuesta.status);
@@ -94,6 +106,7 @@ function CreacionPedido({ volverAlInicio }) {
           pedidoLimpio[producto.nombre] = "0"
         })
         setPedido(pedidoLimpio)
+        setLocal("") // limpiar también el local
       } else {
         alert("Error: " + datos.mensaje)
       }
@@ -117,6 +130,23 @@ function CreacionPedido({ volverAlInicio }) {
     <>
       <div>
         <h1>Crear Pedido</h1>
+
+        {/* Selector de local */}
+        <div style={{ marginBottom: "1rem" }}>
+          <label htmlFor="select-local" style={{ marginRight: "0.5rem" }}>
+            Local:
+          </label>
+          <select
+            id="select-local"
+            value={local}
+            onChange={(e) => setLocal(e.target.value)}
+          >
+            <option value="">Seleccione un local</option>
+            <option value="Local 1">Local 1</option>
+            <option value="Local 2">Local 2</option>
+          </select>
+        </div>
+
         <fieldset>
           {productos.map((producto) => (
             <LabelAndInputN 
@@ -124,7 +154,11 @@ function CreacionPedido({ volverAlInicio }) {
               label={producto.nombre}
               id={`producto-${producto.id}`}
               value={pedido[producto.nombre] || "0"}
-              onChange={(valor) => handleInputChange(producto.nombre, valor)}
+              onChange={(e) => {
+                // 👇 Soporta evento o valor directo
+                const valor = e?.target ? e.target.value : e
+                handleInputChange(producto.nombre, valor)
+              }}
             />
           ))}
           <Button 
