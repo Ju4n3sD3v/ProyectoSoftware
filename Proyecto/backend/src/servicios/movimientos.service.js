@@ -5,11 +5,8 @@ import {
   registrarMovimientoMock,
   getReporteDiarioMock
 } from "../data/movimientos.mock.js";
-// Comentadas las importaciones de entrada/salida que fueron removidas del mock
-// import {
-//   registrarEntradaProductoMock,
-//   registrarSalidaProductoMock
-// } from "../data/productos.mock.js";
+import PDFDocument from "pdfkit";
+
 
 // Servicio: registrar una entrada
 export async function registrarEntrada(datos) {
@@ -133,28 +130,7 @@ export async function exportarReportePDF(local, fecha) {
   try {
     const reporte = await getReporteDiarioMock(local, fecha);
 
-    // Simulación de generación de PDF
-    // En producción, usarías una librería como pdfkit o jspdf
-    const contenidoPDF = `
-REPORTE DE ENTRADAS Y SALIDAS
-=============================
-Local: ${reporte.local}
-Fecha: ${reporte.fecha}
-Generado: ${new Date().toLocaleString()}
-
-ENTRADAS:
-${reporte.entradas.length === 0 ? "No hay entradas registradas" : ""}
-${reporte.entradas.map(e => `- ${e.productoNombre}: ${e.cantidad} unidades (${e.hora})`).join('\n')}
-Total Entradas: ${reporte.totalEntradas} unidades
-
-SALIDAS:
-${reporte.salidas.length === 0 ? "No hay salidas registradas" : ""}
-${reporte.salidas.map(s => `- ${s.productoNombre}: ${s.cantidad} unidades (${s.hora})`).join('\n')}
-Total Salidas: ${reporte.totalSalidas} unidades
-
-RESUMEN:
-Diferencia: ${reporte.totalEntradas - reporte.totalSalidas} unidades
-`;
+    const contenidoPDF = await generarPDFBuffer(reporte);
 
     return {
       ok: true,
@@ -199,5 +175,58 @@ export async function exportarReporteExcel(local, fecha) {
   } catch (error) {
     throw new Error(error.message);
   }
+}
+
+function generarPDFBuffer(reporte) {
+  return new Promise((resolve, reject) => {
+    const doc = new PDFDocument({ margin: 40 });
+    const chunks = [];
+
+    doc.on("data", chunk => chunks.push(chunk));
+    doc.on("end", () => resolve(Buffer.concat(chunks)));
+    doc.on("error", reject);
+
+    doc.fontSize(18).text("Reporte de Entradas y Salidas", { align: "center" });
+    doc.moveDown();
+    doc.fontSize(12).text(`Local: ${reporte.local}`);
+    doc.text(`Fecha: ${reporte.fecha}`);
+    doc.text(`Generado: ${new Date().toLocaleString()}`);
+
+    doc.moveDown();
+    doc.fontSize(14).text("Entradas", { underline: true });
+    if (reporte.entradas.length === 0) {
+      doc.fontSize(12).text("No hay entradas registradas");
+    } else {
+      reporte.entradas.forEach(entrada => {
+        doc.fontSize(12).text(`• ${entrada.productoNombre}: ${entrada.cantidad} unidades (${entrada.hora})`);
+        if (entrada.observaciones) {
+          doc.fontSize(10).fillColor("gray").text(`  Observaciones: ${entrada.observaciones}`);
+          doc.fillColor("black");
+        }
+      });
+    }
+
+    doc.moveDown();
+    doc.fontSize(14).text("Salidas", { underline: true });
+    if (reporte.salidas.length === 0) {
+      doc.fontSize(12).text("No hay salidas registradas");
+    } else {
+      reporte.salidas.forEach(salida => {
+        doc.fontSize(12).text(`• ${salida.productoNombre}: ${salida.cantidad} unidades (${salida.hora})`);
+        if (salida.observaciones) {
+          doc.fontSize(10).fillColor("gray").text(`  Observaciones: ${salida.observaciones}`);
+          doc.fillColor("black");
+        }
+      });
+    }
+
+    doc.moveDown();
+    doc.fontSize(14).text("Resumen", { underline: true });
+    doc.fontSize(12).text(`Total Entradas: ${reporte.totalEntradas} unidades`);
+    doc.text(`Total Salidas: ${reporte.totalSalidas} unidades`);
+    doc.text(`Diferencia: ${reporte.totalEntradas - reporte.totalSalidas} unidades`);
+
+    doc.end();
+  });
 }
 

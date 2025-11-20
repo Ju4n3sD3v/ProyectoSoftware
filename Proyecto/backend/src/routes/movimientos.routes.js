@@ -80,7 +80,7 @@ router.get("/movimientos/exportar/pdf/:local/:fecha", async (req, res) => {
     const respuesta = await exportarReportePDF(local, fecha);
     
     // Configurar headers para descarga
-    res.setHeader('Content-Type', 'text/plain');
+    res.setHeader('Content-Type', respuesta.data.tipo || 'application/pdf');
     res.setHeader('Content-Disposition', `attachment; filename="${respuesta.data.nombreArchivo}"`);
     
     return res.status(200).send(respuesta.data.contenido);
