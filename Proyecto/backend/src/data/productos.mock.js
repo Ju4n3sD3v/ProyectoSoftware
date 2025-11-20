@@ -204,4 +204,5 @@ export async function actualizarStockProductoMock(id, nuevoStock) {
   return producto;
 }
 
+export default productos;
 

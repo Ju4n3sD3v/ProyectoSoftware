@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 export default function AnalisisInventarioLocal({ volverLoginJefe }) {
-  const [localId, setLocalId] = useState(1);
+  const [localId, setLocalId] = useState(0);
   const [inventario, setInventario] = useState(null);
   const [historico, setHistorico] = useState([]);
   const [alertas, setAlertas] = useState([]);
@@ -11,7 +11,6 @@ export default function AnalisisInventarioLocal({ volverLoginJefe }) {
 
   const backend = "http://localhost:4000";
 
-  // ---- Obtener inventario actual ----
   const cargarInventario = async () => {
     const res = await fetch(`${backend}/analisis/local/${localId}`);
     const data = await res.json();
@@ -19,7 +18,6 @@ export default function AnalisisInventarioLocal({ volverLoginJefe }) {
     setAlertas(data.alertas || []);
   };
 
-  // ---- Obtener movimientos con rango ----
   const cargarHistorico = async () => {
     if (!fechaInicio || !fechaFin) {
       alert("Selecciona ambas fechas");
@@ -37,9 +35,9 @@ export default function AnalisisInventarioLocal({ volverLoginJefe }) {
     <div>
       <h1>Análisis de inventario por local</h1>
 
-      {/* Seleccionar local */}
       <label>Seleccionar local: </label>
       <select value={localId} onChange={e => setLocalId(Number(e.target.value))}>
+        <option value={0}>Bodega</option>
         <option value={1}>Local 1</option>
         <option value={2}>Local 2</option>
       </select>
@@ -47,7 +45,6 @@ export default function AnalisisInventarioLocal({ volverLoginJefe }) {
       <br /><br />
       <button onClick={cargarInventario}>Ver inventario</button>
 
-      {/* Mostrar inventario */}
       {inventario && (
         <>
           <h2>Inventario Actual — {inventario.nombreLocal}</h2>
@@ -71,7 +68,6 @@ export default function AnalisisInventarioLocal({ volverLoginJefe }) {
             </tbody>
           </table>
 
-          {/* Alertas */}
           <h3>Alertas</h3>
           {alertas.length === 0 && <p>No hay productos críticos.</p>}
 
@@ -85,7 +81,6 @@ export default function AnalisisInventarioLocal({ volverLoginJefe }) {
 
       <hr />
 
-      {/* HISTÓRICO DE MOVIMIENTOS */}
       <h2>Historial de movimientos</h2>
 
       <label>Desde: </label>
