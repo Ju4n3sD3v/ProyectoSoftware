@@ -22,6 +22,25 @@ export default function LabelAndInputN({ label = "", id = "1", value: propValue,
     }
   }
 
+  // Normalizar al perder foco: quitar ceros a la izquierda
+  const handleBlur = () => {
+    const current = isControlled ? propValue : internalValue
+    if (current === "" || current === undefined) return
+
+    const n = Number(current)
+    if (isNaN(n)) {
+      // si no es un número válido, limpiar
+      if (isControlled) onChange("")
+      else setInternalValue("")
+      return
+    }
+
+    // String(Number(...)) elimina ceros a la izquierda y normaliza formatos
+    const normalized = String(n)
+    if (isControlled) onChange(normalized)
+    else setInternalValue(normalized)
+  }
+
   return (
     <div>
       <br />
@@ -31,6 +50,7 @@ export default function LabelAndInputN({ label = "", id = "1", value: propValue,
         id={id}
         value={isControlled ? propValue : internalValue}
         onChange={handleChange}
+        onBlur={handleBlur}
         min="0"
         placeholder="0"   // 👈 se ve el 0 pero no está escrito como valor
       />

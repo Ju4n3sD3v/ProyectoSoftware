@@ -1,0 +1,146 @@
+/* Paleta y estilos específicos para la pantalla "Creación de pedido" */
+
+:root {
+	--brand-lime: #8BC53F;        /* verde lima: marca principal */
+	--brand-lime-dark: #6A993C;   /* verde más oscuro: hover/activo */
+	--white: #FFFFFF;             /* texto sobre verde / fondos destacados */
+	--bg-light: #F5F5F5;          /* fondo general de la app */
+	--text-dark: #333333;         /* texto normal */
+	--danger: #E74C3C;            /* rojo para errores/alertas */
+
+	--radius: 8px;
+	--gap: 0.75rem;
+}
+
+/* Contenedor principal específico para la pantalla de creación de pedido */
+.creacion-pedido {
+	background: var(--bg-light);
+	color: var(--text-dark);
+	padding: 1.5rem;
+	border-radius: calc(var(--radius) + 2px);
+	font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+}
+
+/* Header / título */
+.creacion-pedido h1 {
+	background: var(--brand-lime);
+	color: var(--white);
+	padding: 0.6rem 1rem;
+	border-radius: 6px;
+	display: inline-block;
+	margin: 0 0 1rem 0;
+	font-size: 1.25rem;
+}
+
+/* Logo (si se añade un elemento con la clase .logo) */
+.creacion-pedido .logo {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	color: var(--white);
+	background: var(--brand-lime);
+	padding: 0.25rem 0.6rem;
+	border-radius: 6px;
+	font-weight: 700;
+}
+
+/* Fieldset / secciones destacadas */
+.creacion-pedido fieldset {
+	background: var(--white);
+	padding: 1rem;
+	border-radius: var(--radius);
+	border: 1px solid rgba(0,0,0,0.06);
+	box-shadow: 0 1px 0 rgba(0,0,0,0.02);
+}
+
+/* Labels e inputs */
+.creacion-pedido label {
+	color: var(--text-dark);
+	font-weight: 600;
+}
+
+.creacion-pedido input[type="number"],
+.creacion-pedido select {
+	padding: 0.45rem 0.6rem;
+	border-radius: 6px;
+	border: 1px solid #dcdcdc;
+	background: var(--white);
+	color: var(--text-dark);
+	margin-left: 0.5rem;
+}
+
+/* Botones primarios: 'Ordenar', 'Menú', o botón de generar pedido */
+.creacion-pedido button.btn-generar,
+.creacion-pedido .btn-primary,
+.creacion-pedido button[type="submit"] {
+	background: var(--brand-lime);
+	color: var(--white);
+	border: none;
+	padding: 0.6rem 0.85rem;
+	border-radius: 8px;
+	cursor: pointer;
+	font-weight: 700;
+	transition: background 120ms ease, transform 80ms ease;
+}
+
+.creacion-pedido button.btn-generar:hover,
+.creacion-pedido .btn-primary:hover,
+.creacion-pedido button[type="submit"]:hover {
+	background: var(--brand-lime-dark);
+}
+
+.creacion-pedido button.btn-generar:active,
+.creacion-pedido .btn-primary:active {
+	transform: translateY(1px);
+}
+
+/* Íconos principales relacionados con marca */
+.creacion-pedido .icon-primary {
+	color: var(--brand-lime);
+	vertical-align: middle;
+}
+
+/* Texto normal y descripciones */
+.creacion-pedido p,
+.creacion-pedido .descripcion {
+	color: var(--text-dark);
+}
+
+/* Mensajes de error / alertas */
+.creacion-pedido .error-message {
+	color: var(--danger);
+	background: rgba(231,76,60,0.06);
+	padding: 0.45rem 0.6rem;
+	border-radius: 6px;
+	border: 1px solid rgba(231,76,60,0.12);
+}
+
+/* Accesibilidad: foco visible para teclas */
+.creacion-pedido button:focus,
+.creacion-pedido input:focus,
+.creacion-pedido select:focus {
+	outline: 3px solid rgba(139,197,63,0.18);
+	outline-offset: 2px;
+}
+
+/* Utilidades */
+.creacion-pedido .muted {
+	color: #666666;
+}
+
+/* Estado deshabilitado */
+.creacion-pedido button[disabled] {
+	opacity: 0.6;
+	cursor: not-allowed;
+}
+
+/* Pequeñas reglas responsive */
+@media (max-width: 600px) {
+	.creacion-pedido {
+		padding: 1rem;
+	}
+	.creacion-pedido h1 {
+		font-size: 1.05rem;
+	}
+}
+

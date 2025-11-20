@@ -27,7 +27,8 @@ function CreacionPedido({ volverAlInicio }) {
           // Inicializar el objeto pedido con todos los productos
           const pedidoInicial = {}
           datos.productos.forEach(producto => {
-            pedidoInicial[producto.nombre] = "0"
+            // dejar inputs vacíos para que el usuario los complete
+            pedidoInicial[producto.nombre] = ""
           })
           setPedido(pedidoInicial)
           setCargando(false)
@@ -63,13 +64,13 @@ function CreacionPedido({ volverAlInicio }) {
       return
     }
     
-    // Construir objeto final con las cantidades
+    // Construir objeto final con las cantidades (vacío -> 0)
     const pedidoFinal = {}
-    
-    Object.entries(pedido).forEach(([nombreProducto, cantidad]) => {
-      if (cantidad !== "" && !isNaN(parseFloat(cantidad))) {
-        pedidoFinal[nombreProducto] = parseFloat(cantidad)
-      }
+    productos.forEach((producto) => {
+      const nombre = producto.nombre
+      const raw = pedido[nombre]
+      const cantidad = raw === "" || raw === undefined || isNaN(parseFloat(raw)) ? 0 : parseFloat(raw)
+      pedidoFinal[nombre] = cantidad
     })
 
     console.log("Pedido filtrado:", pedidoFinal);
@@ -100,10 +101,10 @@ function CreacionPedido({ volverAlInicio }) {
         
         alert(`✓ Pedido guardado correctamente\nID: ${datos.id}\nArchivo: ${datos.archivo}`)
         
-        // Limpiar el formulario
+        // Limpiar el formulario (volver a inputs vacíos)
         const pedidoLimpio = {}
         productos.forEach(producto => {
-          pedidoLimpio[producto.nombre] = "0"
+          pedidoLimpio[producto.nombre] = ""
         })
         setPedido(pedidoLimpio)
         setLocal("") // limpiar también el local
@@ -128,7 +129,7 @@ function CreacionPedido({ volverAlInicio }) {
 
   return (
     <>
-      <div>
+      <div className="creacion-pedido">
         <h1>Crear Pedido</h1>
 
         {/* Selector de local */}
@@ -153,7 +154,7 @@ function CreacionPedido({ volverAlInicio }) {
               key={producto.id}
               label={producto.nombre}
               id={`producto-${producto.id}`}
-              value={pedido[producto.nombre] || "0"}
+              value={pedido[producto.nombre] ?? ""}
               onChange={(e) => {
                 // 👇 Soporta evento o valor directo
                 const valor = e?.target ? e.target.value : e
