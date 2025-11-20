@@ -1,3 +1,14 @@
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Archivo donde se va a guardar el inventario de forma persistente
+const RUTA_JSON_PRODUCTOS = path.join(__dirname, "productos.json");
+
+
 // Array en memoria (simula una tabla de BD) BASE DE DATOS PRODUCTOS
 let productos = [
   // 1) Bolsas de pollo
@@ -151,6 +162,23 @@ let productos = [
   { id: 90, lugar: "Local 2", nombre: "Esponja", stock: 25,  actualizadoEn: "2025-02-01 12:00:00" }
 ];
 
+// ===================== PERSISTENCIA EN JSON =====================
+// Si existe un archivo productos.json, cargamos desde ahí para no perder cambios
+try {
+  if (fs.existsSync(RUTA_JSON_PRODUCTOS)) {
+    const contenido = fs.readFileSync(RUTA_JSON_PRODUCTOS, "utf-8");
+    const data = JSON.parse(contenido);
+    if (Array.isArray(data)) {
+      productos = data;
+    }
+  } else {
+    // Si no existe, lo creamos con los valores iniciales
+    fs.writeFileSync(RUTA_JSON_PRODUCTOS, JSON.stringify(productos, null, 2));
+  }
+} catch (error) {
+  console.error("Error al cargar productos desde JSON:", error.message);
+}
+
 
 /*FUNCION MOCK PARA ENCONTRAR TODOS LOS PRODUCTOS DE BODEGA */
 export async function getAllProductosBodegaMock() {
@@ -200,6 +228,8 @@ export async function actualizarStockProductoMock(id, nuevoStock) {
 
   producto.actualizadoEn = `${yyyy}-${mm}-${dd} ${hh}:${mi}:${ss}`;
 
+  guardarProductosEnArchivo();
+
   // Devolvemos el producto ya actualizado
   return producto;
 }
@@ -222,6 +252,16 @@ function obtenerFechaActual() {
   return `${yyyy}-${mm}-${dd} ${hh}:${mi}:${ss}`;
 }
 
+// Función para guardar el array productos en el archivo JSON
+function guardarProductosEnArchivo() {
+  try {
+    fs.writeFileSync(RUTA_JSON_PRODUCTOS, JSON.stringify(productos, null, 2));
+  } catch (error) {
+    console.error("Error al guardar productos en JSON:", error.message);
+  }
+}
+
+
 // Función para registrar una entrada de producto (aumentar stock)
 export async function registrarEntradaProductoMock(productoNombre, local, cantidad) {
   // Validaciones
@@ -242,6 +282,7 @@ export async function registrarEntradaProductoMock(productoNombre, local, cantid
     // Si existe, aumentar el stock
     productoExistente.stock += cantidad;
     productoExistente.actualizadoEn = obtenerFechaActual();
+    guardarProductosEnArchivo(); 
     return productoExistente;
   } else {
     // Si no existe, crear un nuevo producto en ese local
@@ -253,6 +294,7 @@ export async function registrarEntradaProductoMock(productoNombre, local, cantid
       actualizadoEn: obtenerFechaActual()
     };
     productos.push(nuevoProducto);
+    guardarProductosEnArchivo(); 
     return nuevoProducto;
   }
 }
@@ -292,9 +334,10 @@ export async function registrarSalidaProductoMock(productoNombre, local, cantida
   if (productoExistente.stock === 0) {
     const indice = productos.indexOf(productoExistente);
     productos.splice(indice, 1);
+    guardarProductosEnArchivo(); 
     return null; // Retornar null para indicar que se eliminó
   }
-
+  guardarProductosEnArchivo(); 
   return productoExistente;
 }
 
