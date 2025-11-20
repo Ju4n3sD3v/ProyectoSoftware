@@ -1,4 +1,4 @@
-export default function LoginLider({ volverAlInicio, reporteEntradaSalida, verificarPedidoLider }) {
+export default function LoginLider({ volverAlInicio, reporteEntradaSalida, verificarPedidoLider, verInventarioLocal }) {
   return (
     <>
       <div>
@@ -12,10 +12,21 @@ export default function LoginLider({ volverAlInicio, reporteEntradaSalida, verif
         <br /><br />
 
         <button type="button" onClick={verificarPedidoLider}>
-          Verificar pedido de mi local
+          Verificar pedido
         </button>
 
         <br /><br />
+
+        {/* Botón para ver inventario por local (Líder) */}
+        {typeof verInventarioLocal === 'function' && (
+          <>
+            <button type="button" onClick={verInventarioLocal}>
+              Ver inventario por local
+            </button>
+
+            <br /><br />
+          </>
+        )}
 
         <button type="button" onClick={volverAlInicio}>
           Volver al inicio

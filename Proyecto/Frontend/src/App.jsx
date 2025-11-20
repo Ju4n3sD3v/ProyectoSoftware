@@ -14,17 +14,19 @@ import CreacionPedido from './pantallasEmpleadas/creacionPedido'
 import AnalisisInventarioLocal from './pantallasJefe/analisisInventarioLocal'
 import RevisarPedidosJefe from './pantallasJefe/revisarPedidos.jsx';
 
-// 👇 pantalla de verificación para la líder
+
 import VerificarPedidoLider from './pantallasLider/verificarPedidoLider'
 
-// 👇 NUEVO: pantalla de faltantes para el Jefe
 import FaltantesJefe from './pantallasJefe/FaltantesJefe'
+import HistorialEnvios from './pantallasJefe/HistorialEnvios'
+import InventarioPorLocal from './pantallasEmpleadas/InventarioPorLocal'
 
 function App() {
   const [pantalla, setPantalla] = useState('inicio')
   const [tipoUsuario, setTipoUsuario] = useState('')
   const [nombre, setNombre] = useState('')
   const [contrasena, setContrasena] = useState('')
+  const [origenInventario, setOrigenInventario] = useState(null)
 
   const irALogin = (tipo) => {
     setTipoUsuario(tipo)
@@ -58,11 +60,17 @@ function App() {
   const mostrarAnalisisInventario = () => setPantalla("analisisInventario")
   const revisarPedidosJefe = () => { setPantalla('revisarPedidos'); };
 
-  // 👇 navegar a la pantalla de verificación de pedidos de la líder
+  
   const verificarPedidoLider = () => setPantalla('verificarPedidoLider')
 
-  // 👇 NUEVO: navegar a la pantalla de faltantes del jefe
+  
   const verFaltantesJefe = () => setPantalla('faltantesJefe')
+  const verHistorialEnvios = () => setPantalla('historialEnvios')
+  const verInventarioLocal = () => {
+    // Guardar desde qué pantalla se abre el inventario para saber adónde volver
+    setOrigenInventario(pantalla)
+    setPantalla('inventarioLocal')
+  }
 
   return (
     <>
@@ -167,6 +175,7 @@ function App() {
           volverAlInicio={volverAlInicio}
           reporteEntradaSalida={reporteEntradaSalida}
           verificarPedidoLider={verificarPedidoLider}
+          verInventarioLocal={verInventarioLocal}
         />
       )}
 
@@ -183,12 +192,27 @@ function App() {
         />
       )}
 
+      {/* (Inventario para Líder ahora está dentro de LoginLider) */}
+
       {/* 👇 NUEVA PANTALLA: faltantes para el Jefe */}
       {pantalla === 'faltantesJefe' && (
         <FaltantesJefe
           volverControlInventarioBodega={controlInventarioBodega}
           volverLoginJefe={volverLoginJefe}
+          verHistorialEnvios={verHistorialEnvios}
         />
+      )}
+
+      {pantalla === 'inventarioLocal' && (
+        <InventarioPorLocal volver={() => {
+          // Volver a la pantalla que abrió el inventario; por defecto 'jefe'
+          setPantalla(origenInventario || 'jefe')
+          setOrigenInventario(null)
+        }} />
+      )}
+
+      {pantalla === 'historialEnvios' && (
+        <HistorialEnvios volver={() => setPantalla('faltantesJefe')} />
       )}
 
       {pantalla === 'supervisora' && (
@@ -203,6 +227,8 @@ function App() {
         <>
           <h1>Estoy en la pantalla empleada</h1>
           <button type="button" onClick={crreacionPedido}>Crear informe del pedido</button>
+          <br /><br />
+          <button type="button" onClick={verInventarioLocal}>Ver inventario por local</button>
           <br /><br />
           <button type="button" onClick={volverAlInicio}>Volver al inicio</button>
         </>

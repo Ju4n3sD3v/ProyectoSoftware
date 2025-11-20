@@ -1,6 +1,7 @@
 import { getAllProductosBodegaMock, 
   getProductosBodegaSinActualizar72Mock,
-  actualizarStockProductoMock 
+  actualizarStockProductoMock,
+  getProductosPorLocal
 } from "../data/productos.mock.js";
 
 // Servicio: obtener productos de bodega
@@ -75,5 +76,23 @@ export async function actualizarStockProducto(id, nuevoStock) {
       ok: false,
       error: error.message
     };
+  }
+}
+
+// Servicio: listar productos por local (Local 1, Local 2, Bodega)
+export async function listarProductosPorLocal(local) {
+  try {
+    const filtrados = getProductosPorLocal(local);
+
+    if (!filtrados) {
+      throw new Error("No se pudo obtener la lista de productos");
+    }
+
+    return {
+      ok: true,
+      data: filtrados,
+    };
+  } catch (error) {
+    throw new Error(error.message);
   }
 }

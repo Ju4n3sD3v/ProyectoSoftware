@@ -9,6 +9,9 @@ import {
   obtenerPedidosPorLocal,
   revisarPedido,
   obtenerFaltantesPorLocal,
+  registrarEnvio,
+  obtenerEnvios,
+  crearReporteFaltantes,
 } from "../servicios/creacionPedido.service.js";
 
 const router = express.Router();
@@ -150,7 +153,7 @@ router.patch("/api/pedidos/:id", (req, res) => {
  * POST /api/pedidos/:id/verificacion
  * Registrar la verificación de un pedido (cantidades recibidas)
  */
-router.post("/api/pedidos/:id/verificacion", (req, res) => {
+router.post("/api/pedidos/:id/verificacion", async (req, res) => {
   const { id } = req.params;
   const { productosRecibidos } = req.body;
 
@@ -161,10 +164,60 @@ router.post("/api/pedidos/:id/verificacion", (req, res) => {
     });
   }
 
-  const resultado = revisarPedido(id, productosRecibidos);
-  const status = resultado.success ? 200 : 400;
+  try {
+    const resultado = await revisarPedido(id, productosRecibidos);
+    const status = resultado.success ? 200 : 400;
+    return res.status(status).json(resultado);
+  } catch (err) {
+    console.error("Error en ruta verificacion:", err);
+    return res.status(500).json({ success: false, mensaje: "Error interno en verificación" });
+  }
+});
 
-  return res.status(status).json(resultado);
+/**
+ * POST /api/pedidos/:id/enviar
+ * Registrar envío de un producto desde la pantalla de faltantes
+ */
+router.post("/api/pedidos/:id/enviar", (req, res) => {
+  const { id } = req.params;
+  const { producto, cantidad } = req.body;
+
+  if (!producto) {
+    return res.status(400).json({ success: false, mensaje: "Campo 'producto' requerido" });
+  }
+
+  const resultado = registrarEnvio(Number(id), producto, cantidad || 0);
+  const status2 = resultado.success ? 200 : 400;
+
+  return res.status(status2).json(resultado);
+});
+
+/**
+ * GET /api/envios
+ * Obtener historial de envíos registrados
+ */
+router.get("/api/envios", (req, res) => {
+  const resultado = obtenerEnvios();
+  const status3 = resultado.success ? 200 : 500;
+  return res.status(status3).json(resultado);
+});
+
+/**
+ * POST /api/reportes/faltantes
+ * Crear un reporte de faltantes (empleada o líder)
+ * Body: { local: string, faltantes: { [producto]: { solicitada, recibida, faltante, origen } } }
+ */
+router.post("/api/reportes/faltantes", (req, res) => {
+  const { local, faltantes } = req.body;
+
+  if (!local || !faltantes || typeof faltantes !== "object") {
+    return res.status(400).json({ success: false, mensaje: "Debe enviar 'local' y 'faltantes'" });
+  }
+
+  const resultado = crearReporteFaltantes(local, faltantes);
+  const status4 = resultado.success ? 200 : 500;
+
+  return res.status(status4).json(resultado);
 });
 
 export default router;
