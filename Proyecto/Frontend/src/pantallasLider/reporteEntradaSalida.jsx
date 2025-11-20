@@ -6,7 +6,7 @@ export default function ReporteEntradaSalida({ volverAlInicio, volverLoginLider 
   const [cargando, setCargando] = useState(false);
   const [error, setError] = useState(null);
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
-  const [tipoMovimiento, setTipoMovimiento] = useState("entrada"); // "entrada" o "salida"
+  const [tipoMovimiento, setTipoMovimiento] = useState("entrada"); 
   
   // Estado del formulario
   const [formData, setFormData] = useState({
