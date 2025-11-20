@@ -1,0 +1,21 @@
+{
+  "id": 1763657299346,
+  "fecha": "2025-11-20T16:48:19.346Z",
+  "revisado": true,
+  "local": "Local 1",
+  "faltantes": {
+    "Bolsas de pollo": {
+      "solicitada": 0,
+      "recibida": 0,
+      "faltante": 1,
+      "origen": "reportado"
+    },
+    "Bolsas de harina": {
+      "solicitada": 0,
+      "recibida": 0,
+      "faltante": 1,
+      "origen": "reportado"
+    }
+  },
+  "origen": "reporte"
+}

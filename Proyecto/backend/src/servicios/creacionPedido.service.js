@@ -355,6 +355,8 @@ export const revisarPedido = async (id, productosRecibidos) => {
     const pedido = JSON.parse(contenido);
 
     const faltantes = {};
+    // Normalizamos y guardamos lo que el líder informó
+    const productosRevisados = {};
 
     // Calcular faltantes comparando solicitadas con recibidas
     Object.entries(pedido.productos || {}).forEach(
@@ -362,6 +364,9 @@ export const revisarPedido = async (id, productosRecibidos) => {
         const recibidaBruta = productosRecibidos?.[nombre];
         const cantidadRecibida =
           recibidaBruta !== undefined ? Number(recibidaBruta) : 0;
+
+        // Guardar lo que el líder puso (número)
+        productosRevisados[nombre] = cantidadRecibida;
 
         const faltante = Math.max(
           0,
@@ -568,18 +573,33 @@ export const obtenerEnvios = () => {
  * Crear un reporte de faltantes enviado por empleado/líder
  * El reporte se guarda en la carpeta de pedidos para que el jefe lo vea
  */
-export const crearReporteFaltantes = (local, faltantes) => {
+export const crearReporteFaltantes = (local, faltantes, motivo) => {
   try {
     const timestamp = Date.now();
     const nombreArchivo = `reporte_faltantes_${timestamp}.json`;
     const rutaArchivo = path.join(PEDIDOS_DIR, nombreArchivo);
+
+    // Normalizar motivo
+    const motivoFinal = motivo && typeof motivo === 'string' ? motivo : 'Producto agotado';
+
+    // Asegurarnos que cada entrada de faltantes tenga un origen claro
+    const faltantesNormalizados = {};
+    Object.entries(faltantes || {}).forEach(([nombre, info]) => {
+      faltantesNormalizados[nombre] = {
+        solicitada: info.solicitada ?? (info.faltante ?? 0),
+        recibida: info.recibida ?? 0,
+        faltante: info.faltante ?? (info.solicitada ?? 0),
+        origen: info.origen || 'reportado',
+      };
+    });
 
     const reporte = {
       id: timestamp,
       fecha: new Date().toISOString(),
       revisado: true,
       local,
-      faltantes,
+      motivo: motivoFinal,
+      faltantes: faltantesNormalizados,
       origen: "reporte",
     };
 

@@ -40,12 +40,12 @@
     "Bolsas de pollo": 5,
     "Bolsas de papas": 5
   },
-  "faltantes": {
-    "Bolsas de pollo": {
-      "solicitada": 10,
-      "recibida": 5,
-      "faltante": 5,
-      "origen": "pedido"
+  "faltantes": {},
+  "envios": [
+    {
+      "producto": "Bolsas de pollo",
+      "cantidad": 5,
+      "fecha": "2025-11-20T16:47:02.161Z"
     }
-  }
+  ]
 }

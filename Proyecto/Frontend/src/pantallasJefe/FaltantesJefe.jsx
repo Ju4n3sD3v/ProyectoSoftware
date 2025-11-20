@@ -7,6 +7,7 @@ function FaltantesJefe({ volverControlInventarioBodega, volverLoginJefe, verHist
   const [faltantes, setFaltantes] = useState([]); // array de pedidos con faltantes
   const [enviados, setEnviados] = useState({}); // Rastrear qué productos fueron marcados como enviados
   const [enviando, setEnviando] = useState({}); // Rastrear procesos en curso por clave
+  const [consultado, setConsultado] = useState(false);
 
   const cargarFaltantes = async () => {
     if (!local) {
@@ -17,6 +18,7 @@ function FaltantesJefe({ volverControlInventarioBodega, volverLoginJefe, verHist
     setCargando(true);
     setError(null);
     setEnviados({}); // Limpiar estado de enviados al cargar nuevos faltantes
+    setConsultado(false);
 
     try {
       const res = await fetch(
@@ -37,6 +39,7 @@ function FaltantesJefe({ volverControlInventarioBodega, volverLoginJefe, verHist
       setError("Error de conexión al backend");
     } finally {
       setCargando(false);
+      setConsultado(true);
     }
   };
 
@@ -160,7 +163,13 @@ function FaltantesJefe({ volverControlInventarioBodega, volverLoginJefe, verHist
         <select
           id="select-local"
           value={local}
-          onChange={(e) => setLocal(e.target.value)}
+          onChange={(e) => {
+            setLocal(e.target.value);
+            setConsultado(false);
+            setFaltantes([]);
+            setEnviados({});
+            setError(null);
+          }}
         >
           <option value="">Seleccione un local</option>
           <option value="Local 1">Local 1</option>
@@ -180,7 +189,7 @@ function FaltantesJefe({ volverControlInventarioBodega, volverLoginJefe, verHist
       {error && <p style={{ color: "red" }}>Error: {error}</p>}
 
       {/* Lista de faltantes por pedido */}
-      {!cargando && !error && local && (
+      {!cargando && !error && consultado && (
         <div>
           {faltantes.length === 0 ? (
             <p>No hay faltantes reportados para este local.</p>

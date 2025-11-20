@@ -1,0 +1,28 @@
+{
+  "id": 1763661470471,
+  "fecha": "2025-11-20T17:57:50.471Z",
+  "revisado": true,
+  "local": "Local 1",
+  "motivo": "Agotamiento de producto",
+  "faltantes": {
+    "Bolsas de pollo": {
+      "solicitada": 1,
+      "recibida": 0,
+      "faltante": 1,
+      "origen": "agotamiento"
+    },
+    "Extra Picante": {
+      "solicitada": 1,
+      "recibida": 0,
+      "faltante": 1,
+      "origen": "agotamiento"
+    },
+    "Copas/Tapas": {
+      "solicitada": 1,
+      "recibida": 0,
+      "faltante": 1,
+      "origen": "agotamiento"
+    }
+  },
+  "origen": "reporte"
+}

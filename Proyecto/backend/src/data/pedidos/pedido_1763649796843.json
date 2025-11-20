@@ -41,18 +41,17 @@
     "Bolsas de papas": 5,
     "Bolsas de harina": 30
   },
-  "faltantes": {
-    "Bolsas de pollo": {
-      "solicitada": 10,
-      "recibida": 5,
-      "faltante": 5,
-      "origen": "pedido"
+  "faltantes": {},
+  "envios": [
+    {
+      "producto": "Bolsas de pollo",
+      "cantidad": 5,
+      "fecha": "2025-11-20T16:47:07.716Z"
     },
-    "Bolsas de papas": {
-      "solicitada": 20,
-      "recibida": 5,
-      "faltante": 15,
-      "origen": "pedido"
+    {
+      "producto": "Bolsas de papas",
+      "cantidad": 15,
+      "fecha": "2025-11-20T16:47:08.490Z"
     }
-  }
+  ]
 }

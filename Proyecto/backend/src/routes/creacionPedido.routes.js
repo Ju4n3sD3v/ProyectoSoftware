@@ -208,13 +208,13 @@ router.get("/api/envios", (req, res) => {
  * Body: { local: string, faltantes: { [producto]: { solicitada, recibida, faltante, origen } } }
  */
 router.post("/api/reportes/faltantes", (req, res) => {
-  const { local, faltantes } = req.body;
+  const { local, faltantes, motivo } = req.body;
 
   if (!local || !faltantes || typeof faltantes !== "object") {
     return res.status(400).json({ success: false, mensaje: "Debe enviar 'local' y 'faltantes'" });
   }
 
-  const resultado = crearReporteFaltantes(local, faltantes);
+  const resultado = crearReporteFaltantes(local, faltantes, motivo);
   const status4 = resultado.success ? 200 : 500;
 
   return res.status(status4).json(resultado);

@@ -7,6 +7,8 @@ function InventarioPorLocal({ volver }) {
   const [cargando, setCargando] = useState(false);
   const [error, setError] = useState(null);
   const [seleccionados, setSeleccionados] = useState({});
+  const [previewReporte, setPreviewReporte] = useState(false);
+  const [cantidadesReporte, setCantidadesReporte] = useState({});
   const [editando, setEditando] = useState({});
 
   const cargar = async () => {
@@ -41,29 +43,50 @@ function InventarioPorLocal({ volver }) {
     setSeleccionados((prev) => ({ ...prev, [nombre]: !prev[nombre] }));
   };
 
-  const enviarReporte = async () => {
-    const selecion = Object.entries(seleccionados).filter(([,v]) => v).map(([k]) => k);
-    if (selecion.length === 0) {
+  const iniciarReporte = () => {
+    const seleccion = Object.entries(seleccionados).filter(([,v]) => v).map(([k]) => k);
+    if (seleccion.length === 0) {
       alert('Selecciona al menos un producto para reportar');
       return;
     }
 
-    // Construir objeto faltantes con formato esperado por backend/jefe
+    // Inicializar cantidades de reporte en 1 (o 0 si quieres)
+    const inicial = {};
+    seleccion.forEach((nombre) => { inicial[nombre] = 1; });
+    setCantidadesReporte(inicial);
+    setPreviewReporte(true);
+  };
+
+  const enviarReporteFinal = async () => {
+    // Construir faltantes desde cantidadesReporte
+    const nombres = Object.keys(cantidadesReporte);
+    if (nombres.length === 0) {
+      alert('No hay productos en el reporte');
+      return;
+    }
+
     const faltantes = {};
-    selecion.forEach((nombre) => {
+    nombres.forEach((nombre) => {
+      const qty = Number(cantidadesReporte[nombre] || 0);
+      if (qty <= 0) return; // ignorar
       faltantes[nombre] = {
-        solicitada: 0,
+        solicitada: qty,
         recibida: 0,
-        faltante: 1,
-        origen: "reportado",
+        faltante: qty,
+        origen: 'agotamiento',
       };
     });
+
+    if (Object.keys(faltantes).length === 0) {
+      alert('Ingresa cantidades válidas mayor a 0');
+      return;
+    }
 
     try {
       const res = await fetch('http://localhost:4000/api/reportes/faltantes', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ local, faltantes }),
+        body: JSON.stringify({ local, faltantes, motivo: 'Agotamiento de producto' }),
       });
 
       const data = await res.json();
@@ -73,8 +96,10 @@ function InventarioPorLocal({ volver }) {
       }
 
       alert('Reporte enviado correctamente');
-      // Limpiar selección y recargar
+      // Limpiar selección, preview y cantidades
       setSeleccionados({});
+      setCantidadesReporte({});
+      setPreviewReporte(false);
     } catch (err) {
       console.error('Error enviando reporte:', err);
       alert('Error de conexión con el backend');
@@ -101,7 +126,7 @@ function InventarioPorLocal({ volver }) {
       {error && <p style={{ color: 'red' }}>Error: {error}</p>}
 
       {!cargando && !error && productos.length > 0 && (
-        <div>
+          <div>
           <div style={{ marginBottom: '0.5rem' }}>
             <label>Buscar: </label>
             <input type="text" value={filtro} onChange={(e) => setFiltro(e.target.value)} placeholder="Buscar por nombre..." />
@@ -180,7 +205,42 @@ function InventarioPorLocal({ volver }) {
           </table>
 
           <br />
-          <button onClick={enviarReporte}>Enviar reporte a jefe</button>
+          {!previewReporte ? (
+            <button onClick={iniciarReporte}>Crear reporte</button>
+          ) : (
+            <div>
+              <h3>Previsualizar reporte (Agotamiento de producto)</h3>
+              <table border="1" cellPadding="6" style={{ margin: '0 auto', minWidth: 500 }}>
+                <thead>
+                  <tr>
+                    <th>Producto</th>
+                    <th>Cantidad solicitada</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {Object.keys(cantidadesReporte).map((nombre) => (
+                    <tr key={nombre}>
+                      <td style={{ textAlign: 'left' }}>{nombre}</td>
+                      <td style={{ textAlign: 'center' }}>
+                        <input
+                          type="number"
+                          min="1"
+                          value={cantidadesReporte[nombre]}
+                          onChange={(e) => setCantidadesReporte((prev) => ({ ...prev, [nombre]: e.target.value }))}
+                          style={{ width: '80px' }}
+                        />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+
+              <div style={{ marginTop: '0.5rem' }}>
+                <button onClick={enviarReporteFinal}>Enviar reporte al jefe</button>
+                <button style={{ marginLeft: '0.5rem' }} onClick={() => { setPreviewReporte(false); setCantidadesReporte({}); }}>Cancelar</button>
+              </div>
+            </div>
+          )}
         </div>
       )}
 

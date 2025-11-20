@@ -1,0 +1,28 @@
+{
+  "id": 1763657773950,
+  "fecha": "2025-11-20T16:56:13.951Z",
+  "revisado": true,
+  "local": "Local 1",
+  "motivo": "Agotamiento de producto",
+  "faltantes": {
+    "Bolsas de pollo": {
+      "solicitada": 10,
+      "recibida": 0,
+      "faltante": 10,
+      "origen": "agotamiento"
+    },
+    "Aceite 20L": {
+      "solicitada": 20,
+      "recibida": 0,
+      "faltante": 20,
+      "origen": "agotamiento"
+    },
+    "Combo#3": {
+      "solicitada": 30,
+      "recibida": 0,
+      "faltante": 30,
+      "origen": "agotamiento"
+    }
+  },
+  "origen": "reporte"
+}
