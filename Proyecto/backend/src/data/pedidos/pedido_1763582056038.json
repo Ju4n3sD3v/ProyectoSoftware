@@ -1,13 +1,13 @@
 {
   "id": 1763582056038,
   "fecha": "2025-11-19T19:54:16.038Z",
-  "revisado": false,
+  "revisado": true,
   "local": "Local 2",
   "productos": {
-    "Bolsas de pollo": 10,
+    "Bolsas de pollo": 14,
     "Bolsas de papas": 20,
     "Bolsas de harina": 30,
-    "Aceite 20L": 0,
+    "Aceite 20L": 5,
     "Combo#1": 0,
     "Combo#2": 0,
     "Combo#3": 0,
@@ -34,5 +34,8 @@
     "Vinagre": 0,
     "Mata cucarachas": 0,
     "Esponja": 0
-  }
+  },
+  "fechaRevision": "2025-11-20T06:18:35.094Z",
+  "inventarioActualizadoEnBodega": true,
+  "fechaActualizacionInventario": "2025-11-20T06:17:58.619Z"
 }
