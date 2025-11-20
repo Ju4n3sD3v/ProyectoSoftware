@@ -5,10 +5,11 @@ import {
   registrarMovimientoMock,
   getReporteDiarioMock
 } from "../data/movimientos.mock.js";
-import {
-  registrarEntradaProductoMock,
-  registrarSalidaProductoMock
-} from "../data/productos.mock.js";
+// Comentadas las importaciones de entrada/salida que fueron removidas del mock
+// import {
+//   registrarEntradaProductoMock,
+//   registrarSalidaProductoMock
+// } from "../data/productos.mock.js";
 
 // Servicio: registrar una entrada
 export async function registrarEntrada(datos) {
@@ -30,17 +31,8 @@ export async function registrarEntrada(datos) {
     // Registrar el movimiento
     const nuevoMovimiento = await registrarMovimientoMock(movimiento);
 
-    // Actualizar el stock del producto en el local correspondiente
-    try {
-      await registrarEntradaProductoMock(
-        datos.productoNombre,
-        datos.local,
-        datos.cantidad
-      );
-    } catch (error) {
-      // Si falla la actualización del producto, lanzar error
-      throw new Error(`Error al actualizar stock: ${error.message}`);
-    }
+    // Nota: Actualización de stock del producto removida (registrarEntradaProductoMock no disponible)
+    // La actualización de stock ahora se maneja en revisarPedido() para verificación de pedidos
 
     return {
       ok: true,
@@ -70,19 +62,10 @@ export async function registrarSalida(datos) {
       tipo: "salida"
     };
 
-    // Validar stock antes de registrar la salida
-    try {
-      await registrarSalidaProductoMock(
-        datos.productoNombre,
-        datos.local,
-        datos.cantidad
-      );
-    } catch (error) {
-      // Si no hay suficiente stock, lanzar error antes de registrar el movimiento
-      throw new Error(`Error al procesar salida: ${error.message}`);
-    }
+    // Nota: Validación de stock removida (registrarSalidaProductoMock no disponible)
+    // La validación de stock ahora se maneja en revisarPedido() para verificación de pedidos
 
-    // Registrar el movimiento solo si la actualización del stock fue exitosa
+    // Registrar el movimiento
     const nuevoMovimiento = await registrarMovimientoMock(movimiento);
 
     return {
