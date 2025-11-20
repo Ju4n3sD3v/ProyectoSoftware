@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import { registrarSalidaProductoMock } from "../data/productos.mock.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -263,14 +264,53 @@ export const exportarPedidoExcel = (id) => {
 
     const fecha = pedido.fecha || "";
 
+    // SI HAY cantidades revisadas, usamos SOLO esas.
+    // Si no, usamos las originales.
+    const productosParaExportar =
+      pedido.productosRecibidos &&
+      Object.keys(pedido.productosRecibidos).length > 0
+        ? pedido.productosRecibidos
+        : (pedido.productos || {});
+
     const lineas = [];
-    // Cabecera
     lineas.push("ID Pedido;Fecha;Producto;Cantidad");
 
-    // Filas
-    Object.entries(pedido.productos || {}).forEach(([nombre, cantidad]) => {
+    // Para no descontar dos veces si vuelven a exportar
+    const inventarioYaActualizado =
+      pedido.inventarioActualizadoEnBodega === true;
+
+    for (const [nombre, valor] of Object.entries(productosParaExportar)) {
+      const cantidad = Number(valor) || 0;
+
+      // 👉 Lo que se ve en el Excel
       lineas.push(`${pedido.id};${fecha};${nombre};${cantidad}`);
-    });
+
+      // 👉 Actualizar inventario de Bodega SOLO la primera vez
+      if (!inventarioYaActualizado && cantidad > 0) {
+        try {
+          // Restamos de Bodega lo que salió en el pedido
+          registrarSalidaProductoMock(nombre, "Bodega", cantidad)
+            .catch((err) => {
+              console.error(
+                `Error al actualizar inventario de "${nombre}" en Bodega:`,
+                err.message
+              );
+            });
+        } catch (error) {
+          console.error(
+            `Error al llamar registrarSalidaProductoMock para "${nombre}":`,
+            error.message
+          );
+        }
+      }
+    }
+
+    // Marcamos que ya se aplicó este pedido al inventario
+    if (!inventarioYaActualizado) {
+      pedido.inventarioActualizadoEnBodega = true;
+      pedido.fechaActualizacionInventario = new Date().toISOString();
+      fs.writeFileSync(rutaArchivo, JSON.stringify(pedido, null, 2));
+    }
 
     const csv = lineas.join("\n");
 
@@ -290,6 +330,7 @@ export const exportarPedidoExcel = (id) => {
     };
   }
 };
+
 
 /**
  * 👉 Registrar la REVISION de un pedido
@@ -314,32 +355,41 @@ export const revisarPedido = (id, productosRecibidos) => {
     const pedido = JSON.parse(contenido);
 
     const faltantes = {};
+    const productosRevisados = {};
+    const productosOriginales = pedido.productos || {};
 
-    Object.entries(pedido.productos || {}).forEach(
-      ([nombre, cantidadSolicitada]) => {
-        const recibidaBruta = productosRecibidos?.[nombre];
-        const cantidadRecibida =
-          recibidaBruta !== undefined ? Number(recibidaBruta) : 0;
+    // Recorremos lo que se pidió originalmente
+    for (const [nombre, solicitadaRaw] of Object.entries(productosOriginales)) {
+      const solicitada = Number(solicitadaRaw) || 0;
 
-        const faltante = Math.max(
-          0,
-          Number(cantidadSolicitada) - cantidadRecibida
-        );
+      const recibidaRaw =
+        productosRecibidos && productosRecibidos[nombre] !== undefined
+          ? productosRecibidos[nombre]
+          : 0;
 
-        if (faltante > 0) {
-          faltantes[nombre] = {
-            solicitada: Number(cantidadSolicitada),
-            recibida: cantidadRecibida,
-            faltante,
-            origen: "pedido", // 👈 para que el jefe sepa que no llegó en el pedido
-          };
-        }
+      const recibida = Number(recibidaRaw) || 0;
+
+      // 👉 Lo que el jefe deja como valor final
+      productosRevisados[nombre] = recibida;
+
+      const faltante = Math.max(0, solicitada - recibida);
+
+      if (faltante > 0) {
+        faltantes[nombre] = {
+          solicitada,
+          recibida,
+          faltante,
+          origen: "pedido",
+        };
       }
-    );
+    }
 
     pedido.revisado = true;
     pedido.fechaRevision = new Date().toISOString();
-    pedido.productosRecibidos = productosRecibidos;
+    // Guardamos explícitamente lo que el jefe puso:
+    pedido.productosRecibidos = productosRevisados;
+    // Y también actualizamos productos para que el resto del sistema los vea igual:
+    pedido.productos = productosRevisados;
     pedido.faltantes = faltantes;
 
     fs.writeFileSync(rutaArchivo, JSON.stringify(pedido, null, 2));

@@ -1,83 +1,179 @@
-// Inventario actual por local
-let inventarioPorLocal = [
-  {
-    localId: 1,
-    nombreLocal: "Local Centro",
-    productos: [
-      { id: 1, nombre: "Harina", stock: 120, minimo: 50 },
-      { id: 2, nombre: "Queso", stock: 30, minimo: 40 },
-      { id: 3, nombre: "Salsa", stock: 80, minimo: 25 }
-    ]
+import productos from "./productos.mock.js";
+import { getAllMovimientosMock } from "./movimientos.mock.js";
+
+// -------------------------------------------------------------
+// MÍNIMOS POR LOCAL
+// -------------------------------------------------------------
+const minimosPorLocal = {
+  "Bodega": {
+  "Bolsas de pollo": 25,
+  "Bolsas de papas": 20,
+  "Bolsas de harina": 40,
+  "Aceite 20L": 10,
+  "Combo#1": 1,
+  "Combo#2": 2,
+  "Combo#3": 3,
+  "Combo#4": 4,
+  "Combo#5": 4,
+  "Tapas de combos": 14,
+  "Cajas de papas": 200,
+  "BBQ": 9,
+  "Miel Mostaza": 8,
+  "Picante Suave": 2,
+  "Extra Picante": 2,
+  "Rosada": 1,
+  "Roja": 1,
+  "Piña": 1,
+  "Escoba": 5,
+  "Trapera": 2,
+  "Desengrasante": 4,
+  "Limpido": 4,
+  "Papel higiénico": 3,
+  "Limpiones": 4,
+  "Copas/Tapas": 10,
+  "Antibacterial": 5,
+  "Jabón de manos": 5,
+  "Vinagre": 5,
+  "Mata cucarachas": 5,
+  "Esponja": 2
   },
-  {
-    localId: 2,
-    nombreLocal: "Local Norte",
-    productos: [
-      { id: 1, nombre: "Harina", stock: 200, minimo: 50 },
-      { id: 2, nombre: "Queso", stock: 60, minimo: 40 },
-      { id: 3, nombre: "Salsa", stock: 15, minimo: 25 }
-    ]
+  "Local 1": {
+  "Bolsas de pollo": 25,
+  "Bolsas de papas": 20,
+  "Bolsas de harina": 40,
+  "Aceite 20L": 10,
+  "Combo#1": 1,
+  "Combo#2": 2,
+  "Combo#3": 3,
+  "Combo#4": 4,
+  "Combo#5": 4,
+  "Tapas de combos": 14,
+  "Cajas de papas": 200,
+  "BBQ": 9,
+  "Miel Mostaza": 8,
+  "Picante Suave": 2,
+  "Extra Picante": 2,
+  "Rosada": 1,
+  "Roja": 1,
+  "Piña": 1,
+  "Escoba": 5,
+  "Trapera": 2,
+  "Desengrasante": 4,
+  "Limpido": 4,
+  "Papel higiénico": 3,
+  "Limpiones": 4,
+  "Copas/Tapas": 10,
+  "Antibacterial": 5,
+  "Jabón de manos": 5,
+  "Vinagre": 5,
+  "Mata cucarachas": 5,
+  "Esponja": 2
+  },
+  "Local 2": {
+  "Bolsas de pollo": 25,
+  "Bolsas de papas": 20,
+  "Bolsas de harina": 40,
+  "Aceite 20L": 10,
+  "Combo#1": 1,
+  "Combo#2": 2,
+  "Combo#3": 3,
+  "Combo#4": 4,
+  "Combo#5": 4,
+  "Tapas de combos": 14,
+  "Cajas de papas": 200,
+  "BBQ": 9,
+  "Miel Mostaza": 8,
+  "Picante Suave": 2,
+  "Extra Picante": 2,
+  "Rosada": 1,
+  "Roja": 1,
+  "Piña": 1,
+  "Escoba": 5,
+  "Trapera": 2,
+  "Desengrasante": 4,
+  "Limpido": 4,
+  "Papel higiénico": 3,
+  "Limpiones": 4,
+  "Copas/Tapas": 10,
+  "Antibacterial": 5,
+  "Jabón de manos": 5,
+  "Vinagre": 5,
+  "Mata cucarachas": 5,
+  "Esponja": 2
   }
-];
+};
 
-
-// Historial de movimientos por local
-let movimientosHistoricos = [
-  {
-    localId: 1,
-    fecha: "2025-01-01",
-    productoId: 1,
-    cantidad: -20
-  },
-  {
-    localId: 1,
-    fecha: "2025-01-05",
-    productoId: 2,
-    cantidad: 10
-  },
-  {
-    localId: 2,
-    fecha: "2025-01-03",
-    productoId: 3,
-    cantidad: -5
-  }
-];
-
-
-// -------------------------------
-// Funciones Mock
-// -------------------------------
-
-// Inventario
+// -------------------------------------------------------------
+// 1. OBTENER INVENTARIO REAL (BODEGA / LOCAL 1 / LOCAL 2)
+// -------------------------------------------------------------
 export async function obtenerInventarioDeLocalMock(localId) {
-  return inventarioPorLocal.find(l => l.localId === localId) || null;
+  let localNombre =
+    localId === 0 ? "Bodega" :
+    localId === 1 ? "Local 1" :
+    localId === 2 ? "Local 2" : null;
+
+  if (!localNombre) return null;
+
+  // Filtrar productos por lugar
+  const productosLocal = productos.filter(p => p.lugar === localNombre);
+
+  if (productosLocal.length === 0) return null;
+
+  // Obtener mínimos específicos del local
+  const minimosLocal = minimosPorLocal[localNombre] || {};
+
+  const productosFinal = productosLocal.map(p => ({
+    id: p.id,
+    nombre: p.nombre,
+    stock: p.stock,
+    minimo: minimosLocal[p.nombre] ?? 0
+  }));
+
+  const alertas = productosFinal
+    .filter(p => p.stock < p.minimo)
+    .map(p => ({
+      producto: p.nombre,
+      stockActual: p.stock,
+      minimo: p.minimo,
+      mensaje: `El producto ${p.nombre} está por debajo del mínimo (${p.minimo})`
+    }));
+
+  return {
+    localId,
+    nombreLocal: localNombre,
+    productos: productosFinal,
+    alertas
+  };
 }
 
-
-// Movimientos históricos filtrados por rango
+// -------------------------------------------------------------
+// 2. MOVIMIENTOS POR RANGO
+// -------------------------------------------------------------
 export async function obtenerMovimientosPorRangoMock(localId, fechaInicio, fechaFin) {
+  let localNombre =
+    localId === 0 ? "Bodega" :
+    localId === 1 ? "Local 1" :
+    localId === 2 ? "Local 2" : null;
+
+  const movimientos = await getAllMovimientosMock();
+
   const inicio = new Date(fechaInicio);
   const fin = new Date(fechaFin);
 
-  return movimientosHistoricos
+  return movimientos
     .filter(m => {
-      const fechaMov = new Date(m.fecha);
+      const fecha = new Date(m.fecha);
       return (
-        m.localId === localId &&
-        fechaMov >= inicio &&
-        fechaMov <= fin
+        m.local === localNombre &&
+        fecha >= inicio &&
+        fecha <= fin
       );
     })
-    .map(mov => {
-      // Buscar nombre del producto
-      const local = inventarioPorLocal.find(l => l.localId === mov.localId);
-      const producto = local.productos.find(p => p.id === mov.productoId);
-
-      return {
-        fecha: mov.fecha,
-        producto: producto.nombre,
-        cantidad: mov.cantidad,
-        tipo: mov.cantidad >= 0 ? "entrada" : "salida"
-      };
-    });
+    .map(m => ({
+      fecha: m.fecha,
+      producto: m.productoNombre,
+      cantidad: m.cantidad,
+      tipo: m.tipo,
+      observaciones: m.observaciones
+    }));
 }
