@@ -42,7 +42,7 @@ export default function LabelAndInputN({ label = "", id = "1", value: propValue,
   }
 
   return (
-    <div>
+    <div className="divc">
       <br />
       <label className={label}>{label}: </label>
       <input

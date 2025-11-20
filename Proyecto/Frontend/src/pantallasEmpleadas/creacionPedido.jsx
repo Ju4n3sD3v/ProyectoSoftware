@@ -99,7 +99,7 @@ function CreacionPedido({ volverAlInicio }) {
         console.log("Datos guardados en JSON:")
         console.log(JSON.stringify(pedidoFinal, null, 2))
         
-        alert(`✓ Pedido guardado correctamente\nID: ${datos.id}\nArchivo: ${datos.archivo}`)
+        alert(`✓ Pedido guardado correctamente`)
         
         // Limpiar el formulario (volver a inputs vacíos)
         const pedidoLimpio = {}
@@ -108,6 +108,7 @@ function CreacionPedido({ volverAlInicio }) {
         })
         setPedido(pedidoLimpio)
         setLocal("") // limpiar también el local
+        
       } else {
         alert("Error: " + datos.mensaje)
       }
