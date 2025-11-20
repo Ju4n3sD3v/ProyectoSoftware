@@ -68,6 +68,7 @@ function VerificarPedidosLider({ volverAlInicio }) {
   };
 
   const handleCambiarCantidadRecibida = (nombreProducto, valor) => {
+    console.log('handleCambiarCantidadRecibida called:', nombreProducto, valor);
     // permitir vacío
     if (valor === "") {
       setCantidadesRecibidas((prev) => ({
@@ -237,7 +238,7 @@ function VerificarPedidosLider({ volverAlInicio }) {
             </thead>
             <tbody>
               {Object.entries(pedidoSeleccionado.productos || {})
-                // 👇 Solo mostrar productos donde se pidió más de 0
+                
                 .filter(([, cantidadSolicitada]) => Number(cantidadSolicitada) > 0)
                 .map(([nombreProducto, cantidadSolicitada]) => (
                   <tr key={nombreProducto}>

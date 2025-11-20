@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { registrarSalidaProductoMock } from "../data/productos.mock.js";
+import { listarProductosPorLocal, actualizarStockProducto } from "./productos.service.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -338,7 +338,7 @@ export const exportarPedidoExcel = (id) => {
  * - Calcula faltantes por producto
  * - Marca el pedido como revisado
  */
-export const revisarPedido = (id, productosRecibidos) => {
+export const revisarPedido = async (id, productosRecibidos) => {
   try {
     const archivos = fs.readdirSync(PEDIDOS_DIR);
     const archivo = archivos.find((arch) => arch.includes(id));
@@ -355,35 +355,64 @@ export const revisarPedido = (id, productosRecibidos) => {
     const pedido = JSON.parse(contenido);
 
     const faltantes = {};
-    const productosRevisados = {};
-    const productosOriginales = pedido.productos || {};
 
-    // Recorremos lo que se pidió originalmente
-    for (const [nombre, solicitadaRaw] of Object.entries(productosOriginales)) {
-      const solicitada = Number(solicitadaRaw) || 0;
+    // Calcular faltantes comparando solicitadas con recibidas
+    Object.entries(pedido.productos || {}).forEach(
+      ([nombre, cantidadSolicitada]) => {
+        const recibidaBruta = productosRecibidos?.[nombre];
+        const cantidadRecibida =
+          recibidaBruta !== undefined ? Number(recibidaBruta) : 0;
 
-      const recibidaRaw =
-        productosRecibidos && productosRecibidos[nombre] !== undefined
-          ? productosRecibidos[nombre]
-          : 0;
+        const faltante = Math.max(
+          0,
+          Number(cantidadSolicitada) - cantidadRecibida
+        );
 
-      const recibida = Number(recibidaRaw) || 0;
-
-      // 👉 Lo que el jefe deja como valor final
-      productosRevisados[nombre] = recibida;
-
-      const faltante = Math.max(0, solicitada - recibida);
-
-      if (faltante > 0) {
-        faltantes[nombre] = {
-          solicitada,
-          recibida,
-          faltante,
-          origen: "pedido",
-        };
+        if (faltante > 0) {
+          faltantes[nombre] = {
+            solicitada: Number(cantidadSolicitada),
+            recibida: cantidadRecibida,
+            faltante,
+            origen: "pedido",
+          };
+        }
       }
+    );
+
+    // Intentar actualizar inventario del local: sumar las cantidades recibidas
+    try {
+      if (pedido.local) {
+        const listaLocalRes = await listarProductosPorLocal(pedido.local);
+        if (listaLocalRes && listaLocalRes.ok) {
+          const productosLocal = listaLocalRes.data || [];
+
+          // Para cada producto recibido > 0, buscar el producto en el local y sumarle la cantidad recibida
+          for (const [nombre, recibidaBruta] of Object.entries(
+            productosRecibidos
+          )) {
+            const cantidadRecibida = recibidaBruta !== undefined ? Number(recibidaBruta) : 0;
+            if (cantidadRecibida <= 0) continue;
+
+            const prodLocal = productosLocal.find((p) => p.nombre === nombre);
+            if (prodLocal) {
+              const nuevoStockLocal = Number(prodLocal.stock || 0) + cantidadRecibida;
+              try {
+                await actualizarStockProducto(prodLocal.id, nuevoStockLocal);
+                console.log(`Stock actualizado para '${nombre}' en ${pedido.local}: +${cantidadRecibida}`);
+              } catch (err) {
+                console.warn(`No se pudo actualizar stock local para '${nombre}':`, err.message || err);
+              }
+            } else {
+              console.warn(`Producto '${nombre}' no encontrado en inventario del local '${pedido.local}'`);
+            }
+          }
+        }
+      }
+    } catch (err) {
+      console.error("Error actualizando inventario del local:", err);
     }
 
+    // Guardar cambios en el pedido
     pedido.revisado = true;
     pedido.fechaRevision = new Date().toISOString();
     // Guardamos explícitamente lo que el jefe puso:
@@ -449,5 +478,116 @@ export const obtenerFaltantesPorLocal = (local) => {
       mensaje: "Error al obtener los faltantes por local",
       error: error.message,
     };
+  }
+};
+
+/**
+ * Registrar envío de un producto para un pedido: actualiza el pedido (quita/reduce faltante)
+ * y añade un registro en `envios` dentro del mismo pedido.
+ */
+export const registrarEnvio = (pedidoId, productoNombre, cantidad) => {
+  try {
+    const archivos = fs.readdirSync(PEDIDOS_DIR);
+    const archivoEncontrado = archivos.find((a) => a.includes(`pedido_${pedidoId}`) || a.includes(`_${pedidoId}.json`) || false);
+
+    if (!archivoEncontrado) {
+      return { success: false, mensaje: "Pedido no encontrado" };
+    }
+
+    const rutaArchivo = path.join(PEDIDOS_DIR, archivoEncontrado);
+    const contenido = fs.readFileSync(rutaArchivo, "utf-8");
+    const pedido = JSON.parse(contenido);
+
+    if (!pedido.faltantes || !pedido.faltantes[productoNombre]) {
+      return { success: false, mensaje: "Producto no está listado como faltante en este pedido" };
+    }
+
+    const requerido = Number(cantidad || 0);
+    const actualFaltante = Number(pedido.faltantes[productoNombre].faltante || pedido.faltantes[productoNombre].solicitada || 0);
+
+    // Si se envia una cantidad parcial, reducir el faltante. Si se envia completa, eliminar la entrada.
+    if (requerido < actualFaltante) {
+      pedido.faltantes[productoNombre].faltante = actualFaltante - requerido;
+    } else {
+      delete pedido.faltantes[productoNombre];
+    }
+
+    // Añadir registro de envío dentro del pedido
+    pedido.envios = pedido.envios || [];
+    pedido.envios.push({
+      producto: productoNombre,
+      cantidad: requerido,
+      fecha: new Date().toISOString(),
+    });
+
+    // Guardar cambios
+    fs.writeFileSync(rutaArchivo, JSON.stringify(pedido, null, 2));
+
+    return { success: true, mensaje: "Envío registrado", pedido };
+  } catch (error) {
+    console.error("Error registrarEnvio:", error);
+    return { success: false, mensaje: "Error registrando envío", error: error.message };
+  }
+};
+
+/**
+ * Obtener todos los envíos registrados en los pedidos
+ */
+export const obtenerEnvios = () => {
+  try {
+    const archivos = fs.readdirSync(PEDIDOS_DIR);
+    const envios = [];
+
+    archivos.forEach((archivo) => {
+      const rutaArchivo = path.join(PEDIDOS_DIR, archivo);
+      const contenido = fs.readFileSync(rutaArchivo, "utf-8");
+      const pedido = JSON.parse(contenido);
+
+      if (pedido.envios && Array.isArray(pedido.envios) && pedido.envios.length > 0) {
+        pedido.envios.forEach((e) => {
+          envios.push({
+            pedidoId: pedido.id,
+            local: pedido.local,
+            fechaPedido: pedido.fecha,
+            producto: e.producto,
+            cantidad: e.cantidad,
+            fechaEnvio: e.fecha,
+          });
+        });
+      }
+    });
+
+    return { success: true, cantidad: envios.length, envios };
+  } catch (error) {
+    console.error("Error obtenerEnvios:", error);
+    return { success: false, mensaje: "Error al obtener envíos", error: error.message };
+  }
+};
+
+/**
+ * Crear un reporte de faltantes enviado por empleado/líder
+ * El reporte se guarda en la carpeta de pedidos para que el jefe lo vea
+ */
+export const crearReporteFaltantes = (local, faltantes) => {
+  try {
+    const timestamp = Date.now();
+    const nombreArchivo = `reporte_faltantes_${timestamp}.json`;
+    const rutaArchivo = path.join(PEDIDOS_DIR, nombreArchivo);
+
+    const reporte = {
+      id: timestamp,
+      fecha: new Date().toISOString(),
+      revisado: true,
+      local,
+      faltantes,
+      origen: "reporte",
+    };
+
+    fs.writeFileSync(rutaArchivo, JSON.stringify(reporte, null, 2));
+
+    return { success: true, mensaje: "Reporte creado", reporte };
+  } catch (error) {
+    console.error("Error crearReporteFaltantes:", error);
+    return { success: false, mensaje: "Error creando reporte", error: error.message };
   }
 };

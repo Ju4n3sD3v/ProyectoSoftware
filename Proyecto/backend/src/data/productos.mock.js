@@ -208,10 +208,11 @@ export async function actualizarStockProductoMock(id, nuevoStock) {
   }
 
   // Buscar producto por id en la Bodega
-  const producto = productos.find(p => p.id === id && p.lugar === "Bodega");
+  // Buscar producto por id en cualquier lugar (bodega o local)
+  const producto = productos.find(p => p.id === id);
 
   if (!producto) {
-    throw new Error("Producto no encontrado en la bodega.");
+    throw new Error("Producto no encontrado.");
   }
 
   // Actualizar stock
@@ -228,117 +229,13 @@ export async function actualizarStockProductoMock(id, nuevoStock) {
 
   producto.actualizadoEn = `${yyyy}-${mm}-${dd} ${hh}:${mi}:${ss}`;
 
-  guardarProductosEnArchivo();
-
   // Devolvemos el producto ya actualizado
   return producto;
 }
 
-// Función para obtener el siguiente ID disponible
-function obtenerSiguienteId() {
-  if (productos.length === 0) return 1;
-  return Math.max(...productos.map(p => p.id)) + 1;
-}
-
-// Función para formatear fecha actual
-function obtenerFechaActual() {
-  const ahora = new Date();
-  const yyyy = ahora.getFullYear();
-  const mm = String(ahora.getMonth() + 1).padStart(2, "0");
-  const dd = String(ahora.getDate()).padStart(2, "0");
-  const hh = String(ahora.getHours()).padStart(2, "0");
-  const mi = String(ahora.getMinutes()).padStart(2, "0");
-  const ss = String(ahora.getSeconds()).padStart(2, "0");
-  return `${yyyy}-${mm}-${dd} ${hh}:${mi}:${ss}`;
-}
-
-// Función para guardar el array productos en el archivo JSON
-function guardarProductosEnArchivo() {
-  try {
-    fs.writeFileSync(RUTA_JSON_PRODUCTOS, JSON.stringify(productos, null, 2));
-  } catch (error) {
-    console.error("Error al guardar productos en JSON:", error.message);
-  }
-}
-
-
-// Función para registrar una entrada de producto (aumentar stock)
-export async function registrarEntradaProductoMock(productoNombre, local, cantidad) {
-  // Validaciones
-  if (!productoNombre || !local || !cantidad) {
-    throw new Error("Faltan datos requeridos: productoNombre, local, cantidad");
-  }
-
-  if (cantidad <= 0) {
-    throw new Error("La cantidad debe ser mayor a 0");
-  }
-
-  // Buscar si el producto ya existe en ese local
-  const productoExistente = productos.find(
-    p => p.nombre === productoNombre && p.lugar === local
-  );
-
-  if (productoExistente) {
-    // Si existe, aumentar el stock
-    productoExistente.stock += cantidad;
-    productoExistente.actualizadoEn = obtenerFechaActual();
-    guardarProductosEnArchivo(); 
-    return productoExistente;
-  } else {
-    // Si no existe, crear un nuevo producto en ese local
-    const nuevoProducto = {
-      id: obtenerSiguienteId(),
-      lugar: local,
-      nombre: productoNombre,
-      stock: cantidad,
-      actualizadoEn: obtenerFechaActual()
-    };
-    productos.push(nuevoProducto);
-    guardarProductosEnArchivo(); 
-    return nuevoProducto;
-  }
-}
-
-// Función para registrar una salida de producto (disminuir stock)
-export async function registrarSalidaProductoMock(productoNombre, local, cantidad) {
-  // Validaciones
-  if (!productoNombre || !local || !cantidad) {
-    throw new Error("Faltan datos requeridos: productoNombre, local, cantidad");
-  }
-
-  if (cantidad <= 0) {
-    throw new Error("La cantidad debe ser mayor a 0");
-  }
-
-  // Buscar el producto en ese local
-  const productoExistente = productos.find(
-    p => p.nombre === productoNombre && p.lugar === local
-  );
-
-  if (!productoExistente) {
-    throw new Error(`El producto "${productoNombre}" no existe en ${local}`);
-  }
-
-  // Validar que haya suficiente stock
-  if (productoExistente.stock < cantidad) {
-    throw new Error(
-      `Stock insuficiente. Stock actual: ${productoExistente.stock}, cantidad solicitada: ${cantidad}`
-    );
-  }
-
-  // Disminuir el stock
-  productoExistente.stock -= cantidad;
-  productoExistente.actualizadoEn = obtenerFechaActual();
-
-  // Si el stock llega a 0, eliminar el producto
-  if (productoExistente.stock === 0) {
-    const indice = productos.indexOf(productoExistente);
-    productos.splice(indice, 1);
-    guardarProductosEnArchivo(); 
-    return null; // Retornar null para indicar que se eliminó
-  }
-  guardarProductosEnArchivo(); 
-  return productoExistente;
+// FUNCION MOCK PARA OBTENER PRODUCTOS DE UN LOCAL ESPECÍFICO
+export function getProductosPorLocal(local) {
+  return productos.filter(p => p.lugar === local);
 }
 
 export default productos;

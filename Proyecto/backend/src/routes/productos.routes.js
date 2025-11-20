@@ -76,4 +76,18 @@ router.put("/productos/:id", async (req, res) => {
   }
 });
 
+// GET /productos/local/:local -> listar productos por local (Local 1, Local 2, Bodega)
+router.get("/productos/local/:local", async (req, res) => {
+  try {
+    const local = req.params.local;
+    // servicio que filtra por local
+    const { listarProductosPorLocal } = await import("../servicios/productos.service.js");
+    const respuesta = await listarProductosPorLocal(decodeURIComponent(local));
+    return res.status(200).json(respuesta);
+  } catch (error) {
+    console.error("Error en listarProductosPorLocal:", error.message);
+    return res.status(500).json({ ok: false, error: "Error al obtener los productos por local." });
+  }
+});
+
 export default router;

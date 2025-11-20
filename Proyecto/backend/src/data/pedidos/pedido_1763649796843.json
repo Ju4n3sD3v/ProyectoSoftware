@@ -1,13 +1,13 @@
 {
-  "id": 1763587106645,
-  "fecha": "2025-11-19T21:18:26.645Z",
+  "id": 1763649796843,
+  "fecha": "2025-11-20T14:43:16.843Z",
   "revisado": true,
   "local": "Local 1",
   "productos": {
-    "Bolsas de pollo": 15,
+    "Bolsas de pollo": 10,
     "Bolsas de papas": 20,
     "Bolsas de harina": 30,
-    "Aceite 20L": 40,
+    "Aceite 20L": 0,
     "Combo#1": 0,
     "Combo#2": 0,
     "Combo#3": 0,
@@ -35,12 +35,11 @@
     "Mata cucarachas": 0,
     "Esponja": 0
   },
-  "fechaRevision": "2025-11-20T06:28:53.177Z",
+  "fechaRevision": "2025-11-20T14:43:36.197Z",
   "productosRecibidos": {
     "Bolsas de pollo": 5,
-    "Bolsas de papas": 10,
-    "Bolsas de harina": 30,
-    "Aceite 20L": 40
+    "Bolsas de papas": 5,
+    "Bolsas de harina": 30
   },
   "faltantes": {
     "Bolsas de pollo": {
@@ -51,11 +50,9 @@
     },
     "Bolsas de papas": {
       "solicitada": 20,
-      "recibida": 10,
-      "faltante": 10,
+      "recibida": 5,
+      "faltante": 15,
       "origen": "pedido"
     }
-  },
-  "inventarioActualizadoEnBodega": true,
-  "fechaActualizacionInventario": "2025-11-20T06:28:55.940Z"
+  }
 }
