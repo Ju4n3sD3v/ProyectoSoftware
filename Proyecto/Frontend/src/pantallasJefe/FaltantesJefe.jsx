@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-function FaltantesJefe({ volverControlInventarioBodega }) {
+function FaltantesJefe({ volverControlInventarioBodega, volverLoginJefe }) {
   const [local, setLocal] = useState("");
   const [cargando, setCargando] = useState(false);
   const [error, setError] = useState(null);
@@ -166,7 +166,7 @@ function FaltantesJefe({ volverControlInventarioBodega }) {
       )}
 
       <br />
-      <button type="button" onClick={volverControlInventarioBodega}>
+      <button type="button" onClick={volverLoginJefe}>
         Volver al menú del jefe
       </button>
     </div>

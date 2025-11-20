@@ -187,6 +187,7 @@ function App() {
       {pantalla === 'faltantesJefe' && (
         <FaltantesJefe
           volverControlInventarioBodega={controlInventarioBodega}
+          volverLoginJefe={volverLoginJefe}
         />
       )}
 
