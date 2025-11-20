@@ -51,8 +51,8 @@ export default function LabelAndInputN({ label = "", id = "1", value: propValue,
         value={isControlled ? propValue : internalValue}
         onChange={handleChange}
         onBlur={handleBlur}
-        min="0"
-        placeholder="0"   // 👈 se ve el 0 pero no está escrito como valor
+        min={1}
+        placeholder="0"   
       />
       <br /><br />
     </div>
