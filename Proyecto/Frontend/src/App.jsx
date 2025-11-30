@@ -3,17 +3,17 @@ import './App.css'
 
 import LabelAndInputN from './componentes/LabelAndInputN'
 import Button from './componentes/Button'
-
 import LoginJefe from './pantallasJefe/loginjefe'
 import ControlInventarioBodega from './pantallasJefe/controlInventarioBodega'
 import ModificarInventarioJefe from './pantallasJefe/modificarInventario'
 import LoginLider from './pantallasLider/loginLider'
+
 import ReporteEntradaSalida from './pantallasLider/reporteEntradaSalida'
 import CreacionPedido from './pantallasEmpleadas/creacionPedido'
-
 import AnalisisInventarioLocal from './pantallasJefe/analisisInventarioLocal'
 import RevisarPedidosJefe from './pantallasJefe/revisarPedidos.jsx';
 
+import SupervisoraRoles from './pantallasJefe/supervisoraRoles.jsx'
 
 import VerificarPedidoLider from './pantallasLider/verificarPedidoLider'
 
@@ -270,11 +270,7 @@ function App() {
       )}
 
       {pantalla === 'supervisora' && (
-        <>
-          hola estoy en la pantalla de supervisora
-          <br /><br />
-          <button type="button" onClick={volverAlInicio}>Volver al inicio</button>
-        </>
+        <SupervisoraRoles volverAlInicio={volverAlInicio} />
       )}
 
       {pantalla === 'empleada' && (

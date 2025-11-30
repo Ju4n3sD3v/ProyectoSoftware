@@ -7,7 +7,9 @@ import creacionPedidoRoutes from "./routes/creacionPedido.routes.js";
 import datosRoutes from "./routes/datos.routes.js";
 import analisisLocalRoutes from "./routes/analisisLocal.routes.js";
 import verificarPedidoRoutes from "./routes/verificarPedido.routes.js";
-import authRoutes from "./routes/auth.routes.js"; 
+import rolesRoutes from "./routes/roles.routes.js";
+import usuariosRoutes from "./routes/usuarios.routes.js";
+import authRoutes from "./routes/auth.routes.js";
 
 import { PORT } from "./config.js";
 
@@ -26,6 +28,8 @@ app.use(creacionPedidoRoutes);
 app.use(datosRoutes);
 app.use(analisisLocalRoutes);
 app.use(verificarPedidoRoutes);
+app.use(rolesRoutes);
+app.use(usuariosRoutes);
 app.use(authRoutes);
 
 // Iniciar servidor

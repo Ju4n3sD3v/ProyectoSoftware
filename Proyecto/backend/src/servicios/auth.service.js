@@ -2,21 +2,22 @@
 import { usuarios } from "../data/usuarios.mock.js";
 
 /**
- * Autentica un usuario por usuario, contraseña y rol esperado.
- * Devuelve null si algo no coincide.
+ * Autentica un usuario por usuario y contraseña.
+ * Devuelve { usuario, rol } si es válido, o null si no.
  */
-export const autenticarUsuario = (usuario, contrasena, rolEsperado) => {
+export const autenticarUsuario = (usuario, contrasena) => {
   if (!usuario || !contrasena) return null;
 
+  const usuarioLimpio = usuario.trim();
+  const contrasenaLimpia = contrasena.trim();
+
   const encontrado = usuarios.find(
-    (u) => u.usuario === usuario && u.contrasena === contrasena
+    (u) =>
+      u.usuario === usuarioLimpio &&
+      u.contrasena === contrasenaLimpia
   );
 
   if (!encontrado) return null;
-
-  if (rolEsperado && encontrado.rol !== rolEsperado) {
-    return null;
-  }
 
   return {
     usuario: encontrado.usuario,

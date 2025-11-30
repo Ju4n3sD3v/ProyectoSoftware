@@ -1,8 +1,6 @@
 // backend/src/data/usuarios.mock.js
 
-// 👀 IMPORTANTE: tiene que ser "export const usuarios = ..." 
-// NO export default, NO module.exports
-
+// Lista de usuarios de prueba
 export const usuarios = [
   {
     usuario: "jefe1",

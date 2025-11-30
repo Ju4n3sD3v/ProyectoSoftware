@@ -6,10 +6,10 @@ const router = Router();
 
 /**
  * POST /api/auth/login
- * Body: { usuario, contrasena, rolEsperado }
+ * Body: { usuario, contrasena }
  */
 router.post("/api/auth/login", (req, res) => {
-  const { usuario, contrasena, rolEsperado } = req.body;
+  const { usuario, contrasena } = req.body;
 
   if (!usuario || !contrasena) {
     return res
@@ -17,15 +17,14 @@ router.post("/api/auth/login", (req, res) => {
       .json({ mensaje: "Faltan datos: usuario y contraseña son obligatorios" });
   }
 
-  const user = autenticarUsuario(usuario, contrasena, rolEsperado);
+  const user = autenticarUsuario(usuario, contrasena);
 
   if (!user) {
     return res
       .status(401)
-      .json({ mensaje: "Usuario, contraseña o rol incorrectos" });
+      .json({ mensaje: "Usuario o contraseña incorrectos" });
   }
 
-  // En un futuro aquí se podría generar un token JWT
   return res.json({
     usuario: user.usuario,
     rol: user.rol,
