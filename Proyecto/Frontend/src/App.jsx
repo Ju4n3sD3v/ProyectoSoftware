@@ -27,28 +27,73 @@ function App() {
   const [nombre, setNombre] = useState('')
   const [contrasena, setContrasena] = useState('')
   const [origenInventario, setOrigenInventario] = useState(null)
+  const [errorLogin, setErrorLogin] = useState("")
 
   const irALogin = (tipo) => {
     setTipoUsuario(tipo)
     setPantalla('login')
   }
 
-  const manejarSubmitLogin = (e) => {
-    e.preventDefault()
+    const manejarSubmitLogin = async (e) => {
+    e.preventDefault();
 
-    switch (tipoUsuario) {
-      case "Jefe": setPantalla("jefe"); break;
-      case "Supervisora": setPantalla("supervisora"); break;
-      case "Líder": setPantalla("lider"); break;
-      case "Empleada": setPantalla("empleada"); break;
-      default: setPantalla("inicio")
+    // Limpiar error previo
+    setErrorLogin("");
+
+    try {
+      const respuesta = await fetch("http://localhost:4000/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          usuario: nombre,
+          contrasena: contrasena,
+          rolEsperado: tipoUsuario, // 👈 validamos también el rol
+        }),
+      });
+
+      if (!respuesta.ok) {
+        const dataError = await respuesta.json().catch(() => ({}));
+        setErrorLogin(
+          dataError.mensaje || "Usuario, contraseña o rol incorrectos"
+        );
+        return;
+      }
+
+      const data = await respuesta.json();
+
+      // data.rol viene del backend (ya validado)
+      switch (data.rol) {
+        case "Jefe":
+          setPantalla("jefe");
+          break;
+        case "Supervisora":
+          setPantalla("supervisora");
+          break;
+        case "Líder":
+          setPantalla("lider");
+          break;
+        case "Empleada":
+          setPantalla("empleada");
+          break;
+        default:
+          setErrorLogin("Rol no reconocido desde el servidor");
+          setPantalla("inicio");
+          return;
+      }
+    } catch (error) {
+      console.error("Error al hacer login:", error);
+      setErrorLogin("Error al conectar con el servidor de autenticación");
     }
   }
+
 
   const volverAlInicio = () => {
     setPantalla('inicio')
     setNombre('')
     setContrasena('')
+    setErrorLogin("")  
   }
 
   const controlInventarioBodega = () => setPantalla('controlInventarioBodega')
@@ -96,7 +141,7 @@ function App() {
               <input
                 id="nombre"
                 type="text"
-                placeholder='pepito...'
+                placeholder="pepito..."
                 value={nombre}
                 onChange={(e) => setNombre(e.target.value)}
                 required
@@ -108,7 +153,7 @@ function App() {
               <input
                 id="contrasena"
                 type="password"
-                placeholder='***'
+                placeholder="***"
                 value={contrasena}
                 onChange={(e) => setContrasena(e.target.value)}
                 required
@@ -119,10 +164,19 @@ function App() {
             <button type="submit">Siguiente</button>
           </form>
 
+          {/* 👇 NUEVO: mensaje de error si algo falla */}
+          {errorLogin && (
+            <>
+              <br />
+              <p style={{ color: "red" }}>{errorLogin}</p>
+            </>
+          )}
+
           <br />
           <button type="button" onClick={volverAlInicio}>Volver</button>
         </div>
       )}
+
 
       {/* PANTALLA 3: CREACIÓN DE PEDIDO */}
       {pantalla === 'creacion de pedido' && (
