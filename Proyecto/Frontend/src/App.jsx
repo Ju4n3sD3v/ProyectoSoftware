@@ -108,24 +108,28 @@ function App() {
       }
 
       const data = await respuesta.json()
-      switch (data.rol) {
-        case 'Jefe':
-          setPantalla('jefe')
-          break
-        case 'Supervisora':
-          setPantalla('supervisora')
-          break
-        case 'L?der':
-          setPantalla('lider')
-          break
-        case 'Empleada':
-          setPantalla('empleada')
-          break
-        default:
-          setErrorLogin('Rol no reconocido desde el servidor')
-          setPantalla('inicio')
-          return
+
+      const rolNormalizado = (data.rol || '')
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase()
+
+      const mapaRol = {
+        jefe: 'jefe',
+        supervisora: 'supervisora',
+        lider: 'lider',
+        empleada: 'empleada',
       }
+
+      const rolDestino = mapaRol[rolNormalizado]
+
+      if (!rolDestino) {
+        setErrorLogin('Rol no reconocido desde el servidor')
+        setPantalla('inicio')
+        return
+      }
+
+      setPantalla(rolDestino)
     } catch (error) {
       console.error('Error al hacer login:', error)
       setErrorLogin('Error al conectar con el servidor de autenticaci?n')
