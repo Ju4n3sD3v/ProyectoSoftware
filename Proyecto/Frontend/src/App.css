@@ -147,3 +147,241 @@
   border-radius: 14px;
   box-shadow: 0 10px 28px rgba(0, 0, 0, 0.08);
 }
+
+/* Layouts y superficies compartidas */
+.page {
+  min-height: 100vh;
+  padding: 32px 16px 48px;
+  background: linear-gradient(180deg, #eef6e8 0%, #f6f8fb 100%);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.card-surface {
+  width: 100%;
+  max-width: 1080px;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 28px;
+  box-shadow: 0 18px 40px rgba(18, 38, 32, 0.12);
+  border: 1px solid rgba(33, 68, 50, 0.08);
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+
+.page-header h1 {
+  margin: 0;
+  font-size: 26px;
+  letter-spacing: -0.02em;
+}
+
+.muted {
+  color: #5f6b63;
+  margin: 0;
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.grid-actions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.btn {
+  border: none;
+  border-radius: 12px;
+  padding: 12px 16px;
+  background: linear-gradient(145deg, #7abf43, #5ea233);
+  color: #ffffff;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 120ms ease, box-shadow 140ms ease, opacity 120ms ease;
+  box-shadow: 0 10px 22px rgba(78, 146, 58, 0.25);
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 26px rgba(78, 146, 58, 0.28);
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.btn.secondary {
+  background: linear-gradient(145deg, #2d7bfa, #1f68d8);
+  box-shadow: 0 10px 22px rgba(45, 123, 250, 0.23);
+}
+
+.btn.ghost {
+  background: transparent;
+  color: #2f3b34;
+  border: 1px solid rgba(47, 59, 52, 0.2);
+  box-shadow: none;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #ffffff;
+  box-shadow: 0 8px 18px rgba(22, 42, 35, 0.08);
+}
+
+.data-table th,
+.data-table td {
+  padding: 12px 14px;
+  text-align: left;
+  border-bottom: 1px solid rgba(33, 68, 50, 0.08);
+}
+
+.data-table th {
+  background: #f4f8f0;
+  font-weight: 800;
+  color: #273229;
+}
+
+.data-table tr:last-child td {
+  border-bottom: none;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 10px;
+  background: rgba(122, 191, 67, 0.12);
+  color: #3d6c26;
+  font-weight: 700;
+}
+
+.alert {
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(45, 123, 250, 0.08);
+  color: #1f68d8;
+  border: 1px solid rgba(45, 123, 250, 0.2);
+  margin: 8px 0;
+}
+
+.alert.error {
+  background: rgba(229, 57, 53, 0.08);
+  color: #c62828;
+  border-color: rgba(229, 57, 53, 0.25);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 12px;
+  font-weight: 600;
+  color: #2f3b34;
+}
+
+.field input,
+.field select,
+.field textarea {
+  border: 1px solid rgba(47, 59, 52, 0.2);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 15px;
+  background: #ffffff;
+  transition: border-color 120ms ease, box-shadow 120ms ease;
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  border-color: #7abf43;
+  box-shadow: 0 0 0 3px rgba(122, 191, 67, 0.18);
+  outline: none;
+}
+
+.form-grid {
+  display: grid;
+  gap: 12px;
+}
+
+.chip {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #eef6e8;
+  color: #3a5930;
+  font-weight: 700;
+}
+
+.card-inline {
+  background: #f7faf3;
+  border: 1px solid rgba(33, 68, 50, 0.08);
+  padding: 14px 16px;
+  border-radius: 12px;
+  margin: 10px 0;
+}
+
+button {
+  font-family: inherit;
+}
+
+button:not(.role-card):not(.btn):not(.ghost):not(.secondary) {
+  border: none;
+  border-radius: 12px;
+  padding: 12px 16px;
+  background: linear-gradient(145deg, #7abf43, #5ea233);
+  color: #ffffff;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 120ms ease, box-shadow 140ms ease, opacity 120ms ease;
+  box-shadow: 0 10px 22px rgba(78, 146, 58, 0.25);
+}
+
+button:not(.role-card):not(.btn):hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 26px rgba(78, 146, 58, 0.28);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table th,
+table td {
+  padding: 10px 12px;
+  border: 1px solid rgba(33, 68, 50, 0.08);
+}
+
+table th {
+  background: #f4f8f0;
+  text-align: left;
+}
+
+input,
+select,
+textarea {
+  border-radius: 10px;
+  border: 1px solid rgba(47, 59, 52, 0.2);
+  padding: 10px 12px;
+  font-size: 15px;
+}

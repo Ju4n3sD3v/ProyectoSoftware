@@ -11,7 +11,7 @@ import LoginLider from './pantallasLider/loginLider'
 import ReporteEntradaSalida from './pantallasLider/reporteEntradaSalida'
 import CreacionPedido from './pantallasEmpleadas/creacionPedido'
 import AnalisisInventarioLocal from './pantallasJefe/analisisInventarioLocal'
-import RevisarPedidosJefe from './pantallasJefe/revisarPedidos.jsx';
+import RevisarPedidosJefe from './pantallasJefe/revisarPedidos.jsx'
 
 import SupervisoraRoles from './pantallasJefe/supervisoraRoles.jsx'
 
@@ -71,73 +71,72 @@ function App() {
   const [nombre, setNombre] = useState('')
   const [contrasena, setContrasena] = useState('')
   const [origenInventario, setOrigenInventario] = useState(null)
-  const [errorLogin, setErrorLogin] = useState("")
+  const [errorLogin, setErrorLogin] = useState('')
+
+  const wrapScreen = (children) => (
+    <div className="page">
+      <div className="card-surface">
+        {children}
+      </div>
+    </div>
+  )
 
   const irALogin = (tipo) => {
     setTipoUsuario(tipo)
     setPantalla('login')
   }
 
-    const manejarSubmitLogin = async (e) => {
-    e.preventDefault();
-
-    // Limpiar error previo
-    setErrorLogin("");
+  const manejarSubmitLogin = async (e) => {
+    e.preventDefault()
+    setErrorLogin('')
 
     try {
-      const respuesta = await fetch("http://localhost:4000/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+      const respuesta = await fetch('http://localhost:4000/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           usuario: nombre,
           contrasena: contrasena,
-          rolEsperado: tipoUsuario, // 👈 validamos también el rol
+          rolEsperado: tipoUsuario,
         }),
-      });
+      })
 
       if (!respuesta.ok) {
-        const dataError = await respuesta.json().catch(() => ({}));
-        setErrorLogin(
-          dataError.mensaje || "Usuario, contraseña o rol incorrectos"
-        );
-        return;
+        const dataError = await respuesta.json().catch(() => ({}))
+        setErrorLogin(dataError.mensaje || 'Usuario, contrasena o rol incorrectos')
+        return
       }
 
-      const data = await respuesta.json();
-
-      // data.rol viene del backend (ya validado)
+      const data = await respuesta.json()
       switch (data.rol) {
-        case "Jefe":
-          setPantalla("jefe");
-          break;
-        case "Supervisora":
-          setPantalla("supervisora");
-          break;
-        case "Líder":
-          setPantalla("lider");
-          break;
-        case "Empleada":
-          setPantalla("empleada");
-          break;
+        case 'Jefe':
+          setPantalla('jefe')
+          break
+        case 'Supervisora':
+          setPantalla('supervisora')
+          break
+        case 'L?der':
+          setPantalla('lider')
+          break
+        case 'Empleada':
+          setPantalla('empleada')
+          break
         default:
-          setErrorLogin("Rol no reconocido desde el servidor");
-          setPantalla("inicio");
-          return;
+          setErrorLogin('Rol no reconocido desde el servidor')
+          setPantalla('inicio')
+          return
       }
     } catch (error) {
-      console.error("Error al hacer login:", error);
-      setErrorLogin("Error al conectar con el servidor de autenticación");
+      console.error('Error al hacer login:', error)
+      setErrorLogin('Error al conectar con el servidor de autenticaci?n')
     }
   }
-
 
   const volverAlInicio = () => {
     setPantalla('inicio')
     setNombre('')
     setContrasena('')
-    setErrorLogin("")  
+    setErrorLogin('')
   }
 
   const controlInventarioBodega = () => setPantalla('controlInventarioBodega')
@@ -146,17 +145,12 @@ function App() {
   const crreacionPedido = () => setPantalla('creacion de pedido')
   const reporteEntradaSalida = () => setPantalla('reporteEntradaSalida')
   const volverLoginLider = () => setPantalla('lider')
-  const mostrarAnalisisInventario = () => setPantalla("analisisInventario")
-  const revisarPedidosJefe = () => { setPantalla('revisarPedidos'); };
-
-  
+  const mostrarAnalisisInventario = () => setPantalla('analisisInventario')
+  const revisarPedidosJefe = () => setPantalla('revisarPedidos')
   const verificarPedidoLider = () => setPantalla('verificarPedidoLider')
-
-  
   const verFaltantesJefe = () => setPantalla('faltantesJefe')
   const verHistorialEnvios = () => setPantalla('historialEnvios')
   const verInventarioLocal = () => {
-    // Guardar desde qué pantalla se abre el inventario para saber adónde volver
     setOrigenInventario(pantalla)
     setPantalla('inventarioLocal')
   }
@@ -170,17 +164,17 @@ function App() {
               <div className="brand-mark">L</div>
             </div>
             <h1 className="brand-title">Lolalitas</h1>
-            <p className="brand-subtitle">Medellín, Colombia</p>
+            <p className="brand-subtitle">Medell?n, Colombia</p>
 
             <div className="brand-divider" />
-            <p className="brand-instruction">Selecciona tu Rol</p>
+            <p className="brand-instruction">Selecciona tu rol</p>
             <p className="brand-helper">Elige el rol con el que deseas ingresar al sistema</p>
 
             <div className="roles-grid">
               {[
                 { key: 'Jefe', label: 'Jefe', color: '#f57c00', icon: <IconBriefcase /> },
                 { key: 'Supervisora', label: 'Supervisora', color: '#2d7bfa', icon: <IconUserBadge /> },
-                { key: 'Líder', label: 'Líder', color: '#11a36c', icon: <IconUsers /> },
+                { key: 'L?der', label: 'L?der', color: '#11a36c', icon: <IconUsers /> },
                 { key: 'Empleada', label: 'Empleada', color: '#a54bff', icon: <IconUserCircle /> },
               ].map((rol) => (
                 <button
@@ -200,11 +194,11 @@ function App() {
         </div>
       )}
 
-            {pantalla === 'login' && (
+      {pantalla === 'login' && (
         <div className="page">
           <div className="card-surface form-card pantalla-login">
             <h1>Ingreso de usuario</h1>
-            <p className="muted">Autent?cate para continuar como {tipoUsuario || "usuario"}</p>
+            <p className="muted">Autent?cate para continuar como {tipoUsuario || 'usuario'}</p>
 
             <form className="form-grid" onSubmit={manejarSubmitLogin}>
               <label className="field">
@@ -244,114 +238,133 @@ function App() {
         </div>
       )}
 
-{/* PANTALLA 3: CREACIÓN DE PEDIDO */}
       {pantalla === 'creacion de pedido' && (
-        <CreacionPedido volverAlInicio={volverAlInicio}>
-          <fieldset>
-            {[...Array(9)].map((_, i) => (
-              <LabelAndInputN key={i} label="bolsas_de_alitas" id={`ba${i}`} />
-            ))}
-            <Button name='Generar informe' />
-          </fieldset>
-        </CreacionPedido>
+        wrapScreen(
+          <CreacionPedido volverAlInicio={volverAlInicio}>
+            <fieldset>
+              {[...Array(9)].map((_, i) => (
+                <LabelAndInputN key={i} label="bolsas_de_alitas" id={`ba${i}`} />
+              ))}
+              <Button name="Generar informe" />
+            </fieldset>
+          </CreacionPedido>
+        )
       )}
 
-      {/* MENÚ JEFE */}
       {pantalla === 'jefe' && (
-        <LoginJefe
-          volverAlInicio={volverAlInicio}
-          controlInventarioBodega={controlInventarioBodega}
-          mostrarAnalisisInventario={mostrarAnalisisInventario}
-          // 👇 NUEVO: opción para ver faltantes
-          verFaltantesJefe={verFaltantesJefe}
-        />
+        wrapScreen(
+          <LoginJefe
+            volverAlInicio={volverAlInicio}
+            controlInventarioBodega={controlInventarioBodega}
+            mostrarAnalisisInventario={mostrarAnalisisInventario}
+            verFaltantesJefe={verFaltantesJefe}
+          />
+        )
       )}
 
-      {pantalla === 'controlInventarioBodega' &&(
+      {pantalla === 'controlInventarioBodega' && (
         <ControlInventarioBodega
           volverAlInicio={volverAlInicio}
           volverLoginJefe={volverLoginJefe}
           modificarInventarioJefe={modificarInventarioJefe}
-          revisarPedidosJefe={revisarPedidosJefe}   
+          revisarPedidosJefe={revisarPedidosJefe}
         />
       )}
 
       {pantalla === 'modificarInventarioJefe' && (
-        <ModificarInventarioJefe
-          volverAlInicio={volverAlInicio}
-          controlInventarioBodega={controlInventarioBodega}
-        />
+        wrapScreen(
+          <ModificarInventarioJefe
+            volverAlInicio={volverAlInicio}
+            controlInventarioBodega={controlInventarioBodega}
+          />
+        )
       )}
 
       {pantalla === 'revisarPedidos' && (
-        <RevisarPedidosJefe
-          volverControlInventarioBodega={controlInventarioBodega}
-        />
+        wrapScreen(
+          <RevisarPedidosJefe
+            volverControlInventarioBodega={controlInventarioBodega}
+          />
+        )
       )}
 
-      {/* MENÚ LÍDER */}
       {pantalla === 'lider' && (
-        <LoginLider
-          volverAlInicio={volverAlInicio}
-          reporteEntradaSalida={reporteEntradaSalida}
-          verificarPedidoLider={verificarPedidoLider}
-          verInventarioLocal={verInventarioLocal}
-        />
+        wrapScreen(
+          <LoginLider
+            volverAlInicio={volverAlInicio}
+            reporteEntradaSalida={reporteEntradaSalida}
+            verificarPedidoLider={verificarPedidoLider}
+            verInventarioLocal={verInventarioLocal}
+          />
+        )
       )}
 
       {pantalla === 'reporteEntradaSalida' && (
-        <ReporteEntradaSalida
-          volverAlInicio={volverAlInicio}
-          volverLoginLider={volverLoginLider}
-        />
+        wrapScreen(
+          <ReporteEntradaSalida
+            volverAlInicio={volverAlInicio}
+            volverLoginLider={volverLoginLider}
+          />
+        )
       )}
 
       {pantalla === 'verificarPedidoLider' && (
-        <VerificarPedidoLider
-          volverAlInicio={volverLoginLider}
-        />
+        wrapScreen(
+          <VerificarPedidoLider
+            volverAlInicio={volverLoginLider}
+          />
+        )
       )}
 
-      {/* (Inventario para Líder ahora está dentro de LoginLider) */}
-
-      {/* 👇 NUEVA PANTALLA: faltantes para el Jefe */}
       {pantalla === 'faltantesJefe' && (
-        <FaltantesJefe
-          volverControlInventarioBodega={controlInventarioBodega}
-          volverLoginJefe={volverLoginJefe}
-          verHistorialEnvios={verHistorialEnvios}
-        />
+        wrapScreen(
+          <FaltantesJefe
+            volverControlInventarioBodega={controlInventarioBodega}
+            volverLoginJefe={volverLoginJefe}
+            verHistorialEnvios={verHistorialEnvios}
+          />
+        )
       )}
 
       {pantalla === 'inventarioLocal' && (
-        <InventarioPorLocal volver={() => {
-          // Volver a la pantalla que abrió el inventario; por defecto 'jefe'
-          setPantalla(origenInventario || 'jefe')
-          setOrigenInventario(null)
-        }} />
+        wrapScreen(
+          <InventarioPorLocal volver={() => {
+            setPantalla(origenInventario || 'jefe')
+            setOrigenInventario(null)
+          }} />
+        )
       )}
 
       {pantalla === 'historialEnvios' && (
-        <HistorialEnvios volver={() => setPantalla('faltantesJefe')} />
+        wrapScreen(
+          <HistorialEnvios volver={() => setPantalla('faltantesJefe')} />
+        )
       )}
 
       {pantalla === 'supervisora' && (
-        <SupervisoraRoles volverAlInicio={volverAlInicio} />
+        wrapScreen(
+          <SupervisoraRoles volverAlInicio={volverAlInicio} />
+        )
       )}
 
       {pantalla === 'empleada' && (
-        <>
-          <h1>Estoy en la pantalla empleada</h1>
-          <button type="button" onClick={crreacionPedido}>Crear informe del pedido</button>
-          <br /><br />
-          <button type="button" onClick={verInventarioLocal}>Ver inventario por local</button>
-          <br /><br />
-          <button type="button" onClick={volverAlInicio}>Volver al inicio</button>
-        </>
+        wrapScreen(
+          <div>
+            <h1>Panel de empleada</h1>
+            <p className="muted">Crea informes de pedido o revisa inventario por local.</p>
+            <div className="actions" style={{ marginTop: '12px' }}>
+              <button type="button" onClick={crreacionPedido}>Crear informe del pedido</button>
+              <button type="button" onClick={verInventarioLocal}>Ver inventario por local</button>
+              <button className="btn ghost" type="button" onClick={volverAlInicio}>Volver al inicio</button>
+            </div>
+          </div>
+        )
       )}
 
-      {pantalla === "analisisInventario" && (
-        <AnalisisInventarioLocal volverLoginJefe={volverLoginJefe} />
+      {pantalla === 'analisisInventario' && (
+        wrapScreen(
+          <AnalisisInventarioLocal volverLoginJefe={volverLoginJefe} />
+        )
       )}
     </>
   )

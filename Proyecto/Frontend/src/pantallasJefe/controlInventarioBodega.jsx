@@ -4,9 +4,8 @@ export default function ControlInventarioBodega({
   volverAlInicio,
   volverLoginJefe,
   modificarInventarioJefe,
-  revisarPedidosJefe,       
+  revisarPedidosJefe,
 }) {
-
   const [productos, setProductos] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(null);
@@ -21,7 +20,6 @@ export default function ControlInventarioBodega({
           throw new Error(data.error || "Error al obtener productos.");
         }
 
-        // data.data viene del backend: { ok: true, data: [...] }
         setProductos(data.data || []);
       } catch (err) {
         console.error(err);
@@ -35,47 +33,47 @@ export default function ControlInventarioBodega({
   }, []);
 
   return (
-    <>
-      <div>
-        <h1>Control de inventario en Bodega</h1>
-        <label>
-          Aca podra revisar las cantidades de los insumos los cuales se 
-          encuentran en este momento en el inventario.
-        </label>
+    <div className="page">
+      <div className="card-surface">
+        <div className="page-header">
+          <div>
+            <h1>Control de inventario en bodega</h1>
+            <p className="muted">Revisa las existencias actuales y la ultima actualizacion de los insumos.</p>
+          </div>
+          <span className="badge">Bodega</span>
+        </div>
 
-        <br /><br />
-
-        {cargando && <p>Cargando productos...</p>}
+        {cargando && <p className="muted">Cargando productos...</p>}
 
         {error && (
-          <p style={{ color: "red" }}>
-            Ocurrió un error: {error}
+          <p className="alert error">
+            Ocurrio un error: {error}
           </p>
         )}
 
         {!cargando && !error && (
           <div>
             {productos.length === 0 ? (
-              <p>No hay productos en la bodega.</p>
+              <p className="muted">No hay productos en la bodega.</p>
             ) : (
-              <table style={{ border: "1px solid white", borderCollapse: "collapse" }}>
+              <table className="data-table">
                 <thead>
                   <tr>
-                    <th style={{ border: "1px solid white", padding: "8px" }}>ID</th>
-                    <th style={{ border: "1px solid white", padding: "8px" }}>Producto</th>
-                    <th style={{ border: "1px solid white", padding: "8px" }}>Lugar</th>
-                    <th style={{ border: "1px solid white", padding: "8px" }}>Stock</th>
-                    <th style={{ border: "1px solid white", padding: "8px" }}>Última actualización</th>
+                    <th>ID</th>
+                    <th>Producto</th>
+                    <th>Lugar</th>
+                    <th>Stock</th>
+                    <th>Ultima actualizacion</th>
                   </tr>
                 </thead>
                 <tbody>
                   {productos.map((p) => (
                     <tr key={p.id}>
-                      <td style={{ border: "1px solid white", padding: "8px" }}>{p.id}</td>
-                      <td style={{ border: "1px solid white", padding: "8px" }}>{p.nombre}</td>
-                      <td style={{ border: "1px solid white", padding: "8px" }}>{p.lugar}</td>
-                      <td style={{ border: "1px solid white", padding: "8px" }}>{p.stock}</td>
-                      <td style={{ border: "1px solid white", padding: "8px" }}>{p.actualizadoEn}</td>
+                      <td>{p.id}</td>
+                      <td>{p.nombre}</td>
+                      <td>{p.lugar}</td>
+                      <td>{p.stock}</td>
+                      <td>{p.actualizadoEn}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -84,41 +82,33 @@ export default function ControlInventarioBodega({
           </div>
         )}
 
-        <br /><br />
-        <button 
-          type = "button"
-          onClick={modificarInventarioJefe}
-        > 
-          Modificar Inventario
-          
-        </button>
-
-
-
-
-        <br /><br />
-
-        <button type="button" onClick={revisarPedidosJefe}>
-          Revisar pedidos
-        </button>
-        <br /><br />
-
-        <button
-          type="button"
-          onClick={volverLoginJefe}
-        >
-          Volver al menú del jefe
-        </button>
-
-        <br /><br />
-
-        <button
-          type="button"
-          onClick={volverAlInicio}
-        >
-          Volver al inicio
-        </button>
+        <div className="actions" style={{ marginTop: "18px" }}>
+          <button
+            className="btn"
+            type="button"
+            onClick={modificarInventarioJefe}
+          >
+            Modificar inventario
+          </button>
+          <button className="btn secondary" type="button" onClick={revisarPedidosJefe}>
+            Revisar pedidos
+          </button>
+          <button
+            className="btn ghost"
+            type="button"
+            onClick={volverLoginJefe}
+          >
+            Volver al menu del jefe
+          </button>
+          <button
+            className="btn ghost"
+            type="button"
+            onClick={volverAlInicio}
+          >
+            Volver al inicio
+          </button>
+        </div>
       </div>
-    </>
+    </div>
   );
 }
