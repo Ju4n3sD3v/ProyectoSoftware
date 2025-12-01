@@ -89,10 +89,10 @@ router.get("/api/pedidos/faltantes/:local", (req, res) => {
  * GET /api/pedidos/:id/exportar
  * Exportar el pedido a Excel (CSV)
  */
-router.get("/api/pedidos/:id/exportar", (req, res) => {
+router.get("/api/pedidos/:id/exportar", async (req, res) => {
   const { id } = req.params;
 
-  const resultado = exportarPedidoExcel(id);
+  const resultado = await exportarPedidoExcel(id);
 
   if (!resultado.success) {
     return res.status(400).json(resultado);

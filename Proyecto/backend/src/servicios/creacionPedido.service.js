@@ -2,6 +2,10 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { listarProductosPorLocal, actualizarStockProducto } from "./productos.service.js";
+import {
+  getAllProductosBodegaMock,
+  actualizarStockProductoMock,
+} from "../data/productos.mock.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -246,73 +250,46 @@ export const actualizarPedido = (id, nuevosProductos) => {
  * Generar contenido CSV (Excel) para un pedido
  * @param {String} id - ID del pedido
  */
-export const exportarPedidoExcel = (id) => {
+
+export const exportarPedidoExcel = async (id) => {
   try {
-    const archivos = fs.readdirSync(PEDIDOS_DIR);
-    const archivo = archivos.find((arch) => arch.includes(id));
+    const archivos = fs.readdirSync(PEDIDOS_DIR)
+    const archivo = archivos.find((arch) => arch.includes(id))
 
     if (!archivo) {
       return {
         success: false,
         mensaje: "Pedido no encontrado",
-      };
-    }
-
-    const rutaArchivo = path.join(PEDIDOS_DIR, archivo);
-    const contenido = fs.readFileSync(rutaArchivo, "utf-8");
-    const pedido = JSON.parse(contenido);
-
-    const fecha = pedido.fecha || "";
-
-    // SI HAY cantidades revisadas, usamos SOLO esas.
-    // Si no, usamos las originales.
-    const productosParaExportar =
-      pedido.productosRecibidos &&
-      Object.keys(pedido.productosRecibidos).length > 0
-        ? pedido.productosRecibidos
-        : (pedido.productos || {});
-
-    const lineas = [];
-    lineas.push("ID Pedido;Fecha;Producto;Cantidad");
-
-    // Para no descontar dos veces si vuelven a exportar
-    const inventarioYaActualizado =
-      pedido.inventarioActualizadoEnBodega === true;
-
-    for (const [nombre, valor] of Object.entries(productosParaExportar)) {
-      const cantidad = Number(valor) || 0;
-
-      // 👉 Lo que se ve en el Excel
-      lineas.push(`${pedido.id};${fecha};${nombre};${cantidad}`);
-
-      // 👉 Actualizar inventario de Bodega SOLO la primera vez
-      if (!inventarioYaActualizado && cantidad > 0) {
-        try {
-          // Restamos de Bodega lo que salió en el pedido
-          registrarSalidaProductoMock(nombre, "Bodega", cantidad)
-            .catch((err) => {
-              console.error(
-                `Error al actualizar inventario de "${nombre}" en Bodega:`,
-                err.message
-              );
-            });
-        } catch (error) {
-          console.error(
-            `Error al llamar registrarSalidaProductoMock para "${nombre}":`,
-            error.message
-          );
-        }
       }
     }
 
-    // Marcamos que ya se aplicó este pedido al inventario
-    if (!inventarioYaActualizado) {
-      pedido.inventarioActualizadoEnBodega = true;
-      pedido.fechaActualizacionInventario = new Date().toISOString();
-      fs.writeFileSync(rutaArchivo, JSON.stringify(pedido, null, 2));
+    const rutaArchivo = path.join(PEDIDOS_DIR, archivo)
+    const contenido = fs.readFileSync(rutaArchivo, "utf-8")
+    const pedido = JSON.parse(contenido)
+
+    const fecha = pedido.fecha || ""
+
+    // Exportamos siempre las cantidades actuales guardadas en el pedido
+    const productosParaExportar = pedido.productos || {}
+
+    const lineas = []
+    lineas.push("ID Pedido;Fecha;Producto;Cantidad")
+
+    for (const [nombre, valor] of Object.entries(productosParaExportar)) {
+      const cantidad = Number(valor) || 0
+      lineas.push(`${pedido.id};${fecha};${nombre};${cantidad}`)
     }
 
-    const csv = lineas.join("\n");
+    const aplicadoAnterior = pedido.stockAplicadoBodega || {}
+
+    await aplicarDeltasInventarioBodega(productosParaExportar, aplicadoAnterior)
+
+    pedido.inventarioActualizadoEnBodega = true
+    pedido.stockAplicadoBodega = { ...productosParaExportar }
+    pedido.fechaActualizacionInventario = new Date().toISOString()
+    fs.writeFileSync(rutaArchivo, JSON.stringify(pedido, null, 2))
+
+    const csv = lineas.join("\n")
 
     return {
       success: true,
@@ -320,16 +297,17 @@ export const exportarPedidoExcel = (id) => {
         nombreArchivo: `pedido_${pedido.id}.csv`,
         contenido: csv,
       },
-    };
+    }
   } catch (error) {
-    console.error("Error al exportar pedido a Excel:", error);
+    console.error("Error al exportar pedido a Excel:", error)
     return {
       success: false,
       mensaje: "Error al exportar el pedido",
       error: error.message,
-    };
+    }
   }
-};
+}
+
 
 
 /**
@@ -611,3 +589,38 @@ export const crearReporteFaltantes = (local, faltantes, motivo) => {
     return { success: false, mensaje: "Error creando reporte", error: error.message };
   }
 };
+
+// Ajusta inventario de bodega aplicando deltas (positivo descuenta, negativo devuelve stock)
+async function aplicarDeltasInventarioBodega(productosParaExportar, aplicadoAnterior = {}) {
+  try {
+    const inventarioBodega = await getAllProductosBodegaMock();
+
+    for (const [nombre, valor] of Object.entries(productosParaExportar || {})) {
+      const cantidadActual = Number(valor) || 0;
+      const previoAplicado = Number(aplicadoAnterior[nombre] || 0);
+      const delta = cantidadActual - previoAplicado;
+
+      if (delta === 0) continue;
+
+      const producto = inventarioBodega.find(
+        (p) => p.nombre === nombre && p.lugar === "Bodega"
+      );
+      if (!producto) {
+        console.warn(`Producto "${nombre}" no encontrado en bodega para ajustar stock`);
+        continue;
+      }
+
+      const stockActual = Number(producto.stock || 0);
+      const nuevoStock = Math.max(0, stockActual - delta);
+
+      try {
+        await actualizarStockProductoMock(producto.id, nuevoStock);
+      } catch (err) {
+        console.error(`Error actualizando stock de "${nombre}" en bodega:`, err.message || err);
+      }
+    }
+  } catch (err) {
+    console.error("Error al ajustar inventario de bodega desde exportaci?n:", err);
+  }
+}
+

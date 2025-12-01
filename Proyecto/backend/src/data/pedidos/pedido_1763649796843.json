@@ -4,7 +4,7 @@
   "revisado": true,
   "local": "Local 1",
   "productos": {
-    "Bolsas de pollo": 10,
+    "Bolsas de pollo": 20,
     "Bolsas de papas": 20,
     "Bolsas de harina": 30,
     "Aceite 20L": 0,
@@ -35,7 +35,7 @@
     "Mata cucarachas": 0,
     "Esponja": 0
   },
-  "fechaRevision": "2025-11-20T14:43:36.197Z",
+  "fechaRevision": "2025-12-01T22:50:25.523Z",
   "productosRecibidos": {
     "Bolsas de pollo": 5,
     "Bolsas de papas": 5,
@@ -53,5 +53,12 @@
       "cantidad": 15,
       "fecha": "2025-11-20T16:47:08.490Z"
     }
-  ]
+  ],
+  "inventarioActualizadoEnBodega": true,
+  "stockAplicadoBodega": {
+    "Bolsas de pollo": 5,
+    "Bolsas de papas": 5,
+    "Bolsas de harina": 30
+  },
+  "fechaActualizacionInventario": "2025-12-01T22:50:27.345Z"
 }
