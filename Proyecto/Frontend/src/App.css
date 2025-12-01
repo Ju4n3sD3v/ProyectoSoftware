@@ -1,42 +1,149 @@
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+  min-height: 100vh;
+}
+
+.inicio-layout {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 16px;
+  background: radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.05), transparent 35%),
+    radial-gradient(circle at 80% 10%, rgba(255, 255, 255, 0.06), transparent 28%),
+    linear-gradient(180deg, #7abf43 0%, #6fb53c 100%);
+}
+
+.inicio-card {
+  width: 100%;
+  max-width: 960px;
   text-align: center;
+  color: #f8fff4;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.brand-logo {
+  width: 128px;
+  height: 128px;
+  margin: 0 auto 12px;
+  border-radius: 18px;
+  background: radial-gradient(circle at 30% 30%, #ffd77a, #f7a023 65%);
+  box-shadow: 0 22px 40px rgba(0, 0, 0, 0.18);
+  display: grid;
+  place-items: center;
+  position: relative;
+  overflow: hidden;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.brand-logo::after {
+  content: "";
+  position: absolute;
+  inset: 12px;
+  border-radius: 50%;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.04));
+  mix-blend-mode: screen;
 }
 
-.card {
-  padding: 2em;
+.brand-mark {
+  width: 92px;
+  height: 92px;
+  border-radius: 50%;
+  background: linear-gradient(180deg, #2a6a4b 0%, #194d33 100%);
+  color: #f4ffe8;
+  display: grid;
+  place-items: center;
+  font-size: 42px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  z-index: 1;
 }
 
-.read-the-docs {
-  color: #888;
+.brand-title {
+  margin: 8px 0 4px;
+  font-size: 32px;
+  letter-spacing: -0.02em;
+}
+
+.brand-subtitle {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: 500;
+}
+
+.brand-divider {
+  width: 48px;
+  height: 3px;
+  margin: 28px auto 14px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.brand-instruction {
+  margin: 0;
+  font-weight: 700;
+  color: #fdfdfd;
+}
+
+.brand-helper {
+  margin: 6px 0 20px;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.roles-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 18px;
+  margin-top: 12px;
+}
+
+.role-card {
+  background: #ffffff;
+  border: none;
+  border-radius: 18px;
+  padding: 20px 16px 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  color: #1f2a30;
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.14);
+  cursor: pointer;
+  transition: transform 120ms ease, box-shadow 160ms ease;
+}
+
+.role-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.18);
+}
+
+.role-card:focus-visible {
+  outline: 3px solid rgba(255, 255, 255, 0.6);
+  outline-offset: 3px;
+}
+
+.role-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: #ffffff;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.16);
+}
+
+.role-icon svg {
+  width: 30px;
+  height: 30px;
+}
+
+.role-label {
+  font-weight: 700;
+  color: #1f2a30;
+}
+
+.pantalla-login {
+  max-width: 480px;
+  margin: 40px auto;
+  padding: 24px;
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.08);
 }

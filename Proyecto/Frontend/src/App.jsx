@@ -21,6 +21,50 @@ import FaltantesJefe from './pantallasJefe/FaltantesJefe'
 import HistorialEnvios from './pantallasJefe/HistorialEnvios'
 import InventarioPorLocal from './pantallasEmpleadas/InventarioPorLocal'
 
+const IconBriefcase = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+    <path
+      fill="currentColor"
+      d="M9 6V5a3 3 0 0 1 6 0v1h3a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h3zm2 0h2V5a1 1 0 1 0-2 0v1zm-5 4v7h12v-7H6zm7 2h-2v2h2v-2z"
+    />
+  </svg>
+)
+
+const IconUserBadge = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+    <path
+      fill="currentColor"
+      d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Zm-7 8v-1.5c0-2.36 3.11-3.5 7-3.5s7 1.14 7 3.5V20Z"
+    />
+    <path
+      fill="currentColor"
+      d="M18 3H6a1 1 0 0 0-1 1v15.5a.5.5 0 0 0 .84.36l1.47-1.34a1 1 0 0 1 .68-.27h8.02a1 1 0 0 1 .68.27l1.47 1.34a.5.5 0 0 0 .84-.36V4a1 1 0 0 0-1-1Zm-1 13.2c-1.2-.76-3.09-1.2-5-.2-1.91-1-3.8-.56-5 .2V5h10Z"
+    />
+  </svg>
+)
+
+const IconUsers = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+    <path
+      fill="currentColor"
+      d="M8 13a4 4 0 1 0-4-4 4 4 0 0 0 4 4Zm8 0a4 4 0 1 0-4-4 4 4 0 0 0 4 4Zm0 2c-2.14 0-4 .94-4 2.5V20h8v-2.5C20 15.94 18.14 15 16 15Zm-8 0c-2.67 0-5 1.12-5 3v2h10v-2c0-1.88-2.33-3-5-3Z"
+    />
+  </svg>
+)
+
+const IconUserCircle = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+    <path
+      fill="currentColor"
+      d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Zm0 2c-3.33 0-6 1.8-6 4v2h12v-2c0-2.2-2.67-4-6-4Z"
+    />
+    <path
+      fill="currentColor"
+      d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2Zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8Z"
+    />
+  </svg>
+)
+
 function App() {
   const [pantalla, setPantalla] = useState('inicio')
   const [tipoUsuario, setTipoUsuario] = useState('')
@@ -120,65 +164,87 @@ function App() {
   return (
     <>
       {pantalla === 'inicio' && (
-        <div className="pantalla-inicio">
-          <h1>¿Qué tipo de usuario es?</h1>
+        <div className="inicio-layout">
+          <div className="inicio-card">
+            <div className="brand-logo">
+              <div className="brand-mark">L</div>
+            </div>
+            <h1 className="brand-title">Lolalitas</h1>
+            <p className="brand-subtitle">Medellín, Colombia</p>
 
-          <div><label>Jefe</label> <button type="button" onClick={() => irALogin('Jefe')}>Siguiente</button></div>
-          <div><label>Supervisora</label> <button type="button" onClick={() => irALogin('Supervisora')}>Siguiente</button></div>
-          <div><label>Líder</label> <button type="button" onClick={() => irALogin('Líder')}>Siguiente</button></div>
-          <div><label>Empleada</label> <button type="button" onClick={() => irALogin('Empleada')}>Siguiente</button></div>
+            <div className="brand-divider" />
+            <p className="brand-instruction">Selecciona tu Rol</p>
+            <p className="brand-helper">Elige el rol con el que deseas ingresar al sistema</p>
+
+            <div className="roles-grid">
+              {[
+                { key: 'Jefe', label: 'Jefe', color: '#f57c00', icon: <IconBriefcase /> },
+                { key: 'Supervisora', label: 'Supervisora', color: '#2d7bfa', icon: <IconUserBadge /> },
+                { key: 'Líder', label: 'Líder', color: '#11a36c', icon: <IconUsers /> },
+                { key: 'Empleada', label: 'Empleada', color: '#a54bff', icon: <IconUserCircle /> },
+              ].map((rol) => (
+                <button
+                  key={rol.key}
+                  type="button"
+                  className="role-card"
+                  onClick={() => irALogin(rol.key)}
+                >
+                  <span className="role-icon" style={{ backgroundColor: rol.color }}>
+                    {rol.icon}
+                  </span>
+                  <span className="role-label">{rol.label}</span>
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
       )}
 
-      {pantalla === 'login' && (
-        <div className="pantalla-login">
-          <h1>Ingreso de usuario</h1>
-          <h2>{tipoUsuario}</h2>
+            {pantalla === 'login' && (
+        <div className="page">
+          <div className="card-surface form-card pantalla-login">
+            <h1>Ingreso de usuario</h1>
+            <p className="muted">Autent?cate para continuar como {tipoUsuario || "usuario"}</p>
 
-          <form onSubmit={manejarSubmitLogin}>
-            <div>
-              <label htmlFor="nombre">Nombre: </label>
-              <input
-                id="nombre"
-                type="text"
-                placeholder="pepito..."
-                value={nombre}
-                onChange={(e) => setNombre(e.target.value)}
-                required
-              />
-            </div>
+            <form className="form-grid" onSubmit={manejarSubmitLogin}>
+              <label className="field">
+                <span>Nombre</span>
+                <input
+                  id="nombre"
+                  type="text"
+                  placeholder="pepito..."
+                  value={nombre}
+                  onChange={(e) => setNombre(e.target.value)}
+                  required
+                />
+              </label>
 
-            <div>
-              <label htmlFor="contrasena">Contraseña: </label>
-              <input
-                id="contrasena"
-                type="password"
-                placeholder="***"
-                value={contrasena}
-                onChange={(e) => setContrasena(e.target.value)}
-                required
-              />
-            </div>
+              <label className="field">
+                <span>Contrase?a</span>
+                <input
+                  id="contrasena"
+                  type="password"
+                  placeholder="***"
+                  value={contrasena}
+                  onChange={(e) => setContrasena(e.target.value)}
+                  required
+                />
+              </label>
 
-            <br />
-            <button type="submit">Siguiente</button>
-          </form>
+              {errorLogin && (
+                <p className="alert error">{errorLogin}</p>
+              )}
 
-          {/* 👇 NUEVO: mensaje de error si algo falla */}
-          {errorLogin && (
-            <>
-              <br />
-              <p style={{ color: "red" }}>{errorLogin}</p>
-            </>
-          )}
-
-          <br />
-          <button type="button" onClick={volverAlInicio}>Volver</button>
+              <div className="actions">
+                <button className="btn" type="submit">Siguiente</button>
+                <button className="btn ghost" type="button" onClick={volverAlInicio}>Volver</button>
+              </div>
+            </form>
+          </div>
         </div>
       )}
 
-
-      {/* PANTALLA 3: CREACIÓN DE PEDIDO */}
+{/* PANTALLA 3: CREACIÓN DE PEDIDO */}
       {pantalla === 'creacion de pedido' && (
         <CreacionPedido volverAlInicio={volverAlInicio}>
           <fieldset>
