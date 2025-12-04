@@ -229,6 +229,12 @@ export async function actualizarStockProductoMock(id, nuevoStock) {
 
   producto.actualizadoEn = `${yyyy}-${mm}-${dd} ${hh}:${mi}:${ss}`;
 
+  try {
+    fs.writeFileSync(RUTA_JSON_PRODUCTOS, JSON.stringify(productos, null, 2));
+  } catch (err) {
+    console.error("No se pudo persistir productos.json:", err.message);
+  }
+
   // Devolvemos el producto ya actualizado
   return producto;
 }
