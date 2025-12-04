@@ -12,6 +12,7 @@ import {
   registrarEnvio,
   obtenerEnvios,
   crearReporteFaltantes,
+  archivarPedido,
 } from "../servicios/creacionPedido.service.js";
 
 const router = express.Router();
@@ -126,6 +127,16 @@ router.delete("/api/pedidos/:id", (req, res) => {
   const { id } = req.params;
   const resultado = eliminarPedido(id);
   res.json(resultado);
+});
+
+// PATCH /api/pedidos/:id/archivar -> marcar como archivado
+router.patch("/api/pedidos/:id/archivar", (req, res) => {
+  const { id } = req.params;
+  const { archivado = true } = req.body || {};
+
+  const resultado = archivarPedido(id, archivado === true);
+  const status = resultado.success ? 200 : 400;
+  return res.status(status).json(resultado);
 });
 
 /**

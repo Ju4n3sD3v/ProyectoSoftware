@@ -204,6 +204,44 @@ export const eliminarPedido = (id) => {
 };
 
 /**
+ * Archivar o desarchivar un pedido
+ */
+export const archivarPedido = (id, archivado = true) => {
+  try {
+    const archivos = fs.readdirSync(PEDIDOS_DIR);
+    const archivo = archivos.find((arch) => arch.includes(id));
+
+    if (!archivo) {
+      return {
+        success: false,
+        mensaje: "Pedido no encontrado",
+      };
+    }
+
+    const rutaArchivo = path.join(PEDIDOS_DIR, archivo);
+    const contenido = fs.readFileSync(rutaArchivo, "utf-8");
+    const pedido = JSON.parse(contenido);
+
+    pedido.archivado = archivado === true;
+    pedido.fechaArchivado = archivado ? new Date().toISOString() : null;
+
+    fs.writeFileSync(rutaArchivo, JSON.stringify(pedido, null, 2));
+
+    return {
+      success: true,
+      pedido,
+    };
+  } catch (error) {
+    console.error("Error al archivar pedido:", error);
+    return {
+      success: false,
+      mensaje: "Error al archivar el pedido",
+      error: error.message,
+    };
+  }
+};
+
+/**
  * Actualizar un pedido (cantidades) y marcarlo como revisado
  * @param {String} id - ID del pedido
  * @param {Object} nuevosProductos - Objeto { nombreProducto: cantidad }

@@ -288,6 +288,7 @@ function App() {
         wrapScreen(
           <RevisarPedidosJefe
             volverControlInventarioBodega={controlInventarioBodega}
+            volverAlInicio={volverAlInicio}
           />
         )
       )}

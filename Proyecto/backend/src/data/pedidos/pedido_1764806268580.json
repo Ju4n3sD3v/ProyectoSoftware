@@ -1,0 +1,19 @@
+{
+  "id": 1764806268580,
+  "fecha": "2025-12-03T12:00:00.000Z",
+  "revisado": true,
+  "archivado": false,
+  "local": "Local 1",
+  "productos": {
+    "Bolsas de pollo": 10,
+    "Aceite 20L": 2
+  },
+  "fechaArchivado": null,
+  "fechaRevision": "2025-12-04T00:01:07.128Z",
+  "inventarioActualizadoEnBodega": true,
+  "stockAplicadoBodega": {
+    "Bolsas de pollo": 10,
+    "Aceite 20L": 2
+  },
+  "fechaActualizacionInventario": "2025-12-04T00:01:08.724Z"
+}

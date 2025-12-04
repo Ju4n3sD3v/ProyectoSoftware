@@ -5,6 +5,7 @@ export default function ModificarInventarioJefe({ volverAlInicio, controlInventa
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(null);
   const [valoresEditados, setValoresEditados] = useState({}); // id → valor nuevo (string)
+  const [orden, setOrden] = useState("stock-desc"); // stock-desc | stock-asc | fecha-desc | fecha-asc
 
   // Cargar productos de bodega al montar el componente
   useEffect(() => {
@@ -106,14 +107,39 @@ export default function ModificarInventarioJefe({ volverAlInicio, controlInventa
   };
 
   return (
-    <>
-      <div>
-        <h1>Modificar inventario de bodega</h1>
+    <div className="page">
+      <div className="card-surface">
+        <div className="page-header">
+          <div>
+            <h1>Modificar inventario de bodega</h1>
+            <p className="muted">Ajusta stocks con filtros y ordenamientos.</p>
+          </div>
+          <div className="actions">
+            <button className="btn ghost" type="button" onClick={controlInventarioBodega}>
+              Volver
+            </button>
+            <button className="btn ghost" type="button" onClick={volverAlInicio}>
+              Cerrar sesión
+            </button>
+          </div>
+        </div>
 
-        {cargando && <p>Cargando productos...</p>}
+        <div className="actions" style={{ marginBottom: "10px" }}>
+          <label className="field" style={{ maxWidth: 260 }}>
+            <span>Ordenar por</span>
+            <select value={orden} onChange={(e) => setOrden(e.target.value)}>
+              <option value="stock-desc">Stock: mayor a menor</option>
+              <option value="stock-asc">Stock: menor a mayor</option>
+              <option value="fecha-desc">Fecha: más reciente</option>
+              <option value="fecha-asc">Fecha: más antigua</option>
+            </select>
+          </label>
+        </div>
+
+        {cargando && <p className="muted">Cargando productos...</p>}
 
         {error && (
-          <p style={{ color: "red" }}>
+          <p className="alert error">
             Ocurrió un error: {error}
           </p>
         )}
@@ -121,73 +147,72 @@ export default function ModificarInventarioJefe({ volverAlInicio, controlInventa
         {!cargando && !error && (
           <>
             {productos.length === 0 ? (
-              <p>No hay productos en la bodega.</p>
+              <p className="muted">No hay productos en la bodega.</p>
             ) : (
-              <table style={{ border: "1px solid white", borderCollapse: "collapse" }}>
-                <thead>
-                  <tr>
-                    <th style={{ border: "1px solid white", padding: "8px" }}>ID</th>
-                    <th style={{ border: "1px solid white", padding: "8px" }}>Producto</th>
-                    <th style={{ border: "1px solid white", padding: "8px" }}>Lugar</th>
-                    <th style={{ border: "1px solid white", padding: "8px" }}>Stock actual</th>
-                    <th style={{ border: "1px solid white", padding: "8px" }}>Última actualización</th>
-                    <th style={{ border: "1px solid white", padding: "8px" }}>Nuevo stock</th>
-                    <th style={{ border: "1px solid white", padding: "8px" }}>Acciones</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {productos.map((p) => (
-                    <tr key={p.id}>
-                      <td style={{ border: "1px solid white", padding: "8px" }}>{p.id}</td>
-                      <td style={{ border: "1px solid white", padding: "8px" }}>{p.nombre}</td>
-                      <td style={{ border: "1px solid white", padding: "8px" }}>{p.lugar}</td>
-                      <td style={{ border: "1px solid white", padding: "8px" }}>{p.stock}</td>
-                      <td style={{ border: "1px solid white", padding: "8px" }}>{p.actualizadoEn}</td>
-                      <td style={{ border: "1px solid white", padding: "8px" }}>
-                        <input
-                          type="number"
-                          min="0"
-                          value={
-                            valoresEditados[p.id] !== undefined
-                              ? valoresEditados[p.id]
-                              : p.stock
-                          }
-                          onChange={(e) => handleChangeStock(p.id, e.target.value)}
-                          style={{ width: "80px" }}
-                        />
-                      </td>
-                      <td style={{ border: "1px solid white", padding: "8px" }}>
-                        <button type="button" onClick={() => handleAceptar(p)}>
-                          Aceptar
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => handleRechazar(p.id)}
-                          style={{ marginLeft: "8px" }}
-                        >
-                          Rechazar
-                        </button>
-                      </td>
+              <div className="table-scroll">
+                <table className="data-table compact">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Producto</th>
+                      <th>Lugar</th>
+                      <th>Stock actual</th>
+                      <th>Última actualización</th>
+                      <th>Nuevo stock</th>
+                      <th>Acciones</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {productos
+                      .slice()
+                      .sort((a, b) => {
+                        if (orden === "stock-desc") return Number(b.stock || 0) - Number(a.stock || 0);
+                        if (orden === "stock-asc") return Number(a.stock || 0) - Number(b.stock || 0);
+                        if (orden === "fecha-desc") return new Date(b.actualizadoEn) - new Date(a.actualizadoEn);
+                        if (orden === "fecha-asc") return new Date(a.actualizadoEn) - new Date(b.actualizadoEn);
+                        return 0;
+                      })
+                      .map((p) => (
+                        <tr key={p.id}>
+                          <td>{p.id}</td>
+                          <td>{p.nombre}</td>
+                          <td>{p.lugar}</td>
+                          <td>{p.stock}</td>
+                          <td>{p.actualizadoEn}</td>
+                          <td>
+                            <input
+                              type="number"
+                              min="0"
+                              value={
+                                valoresEditados[p.id] !== undefined
+                                  ? valoresEditados[p.id]
+                                  : p.stock
+                              }
+                              onChange={(e) => handleChangeStock(p.id, e.target.value)}
+                              style={{ width: "90px" }}
+                            />
+                          </td>
+                          <td style={{ display: "flex", gap: "8px" }}>
+                            <button className="btn" type="button" onClick={() => handleAceptar(p)}>
+                              Aceptar
+                            </button>
+                            <button
+                              className="btn ghost"
+                              type="button"
+                              onClick={() => handleRechazar(p.id)}
+                            >
+                              Rechazar
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </table>
+              </div>
             )}
           </>
         )}
-
-        <br /><br />
-
-        <button type="button" onClick={controlInventarioBodega}>
-          Atrás (ver inventario)
-        </button>
-
-        <br /><br />
-
-        <button type="button" onClick={volverAlInicio}>
-          Volver al inicio
-        </button>
       </div>
-    </>
+    </div>
   );
 }
