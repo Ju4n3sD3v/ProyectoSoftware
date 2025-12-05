@@ -1,16 +1,15 @@
 #root {
   min-height: 100vh;
+  background: #7abf43;
 }
 
 .inicio-layout {
-  min-height: 100vh;
+  min-height: calc(100vh - 60px);
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 48px 16px;
-  background: radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.05), transparent 35%),
-    radial-gradient(circle at 80% 10%, rgba(255, 255, 255, 0.06), transparent 28%),
-    linear-gradient(180deg, #7abf43 0%, #6fb53c 100%);
+  background: #7abf43;
 }
 
 .inicio-card {
@@ -495,4 +494,79 @@ textarea {
 
 .table-scroll table {
   margin: 0;
+}
+
+.app-banner {
+  width: 100%;
+  padding: 16px 20px;
+  background: #7abf43;
+  color: #ffffff;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  text-align: center;
+  border-radius: 0;
+  box-shadow: none;
+  border-bottom: 1px solid rgba(22, 42, 35, 0.08);
+  font-family: "Pacifico", "Segoe UI", system-ui, sans-serif;
+  font-size: 24px;
+}
+
+.app-shell {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 12px 24px;
+}
+
+.profile-bar {
+  position: sticky;
+  top: 0;
+  display: flex;
+  justify-content: flex-end;
+  padding: 8px 12px;
+}
+
+.profile-btn {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.avatar-circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #2f6c2f;
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+}
+
+.profile-card {
+  position: absolute;
+  right: 12px;
+  top: 54px;
+  width: 280px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 12px 28px rgba(18, 42, 35, 0.15);
+  padding: 12px;
+  border: 1px solid rgba(22, 42, 35, 0.08);
+  z-index: 10;
+}
+
+.profile-header {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.profile-name {
+  font-weight: 800;
+}
+
+.profile-role {
+  color: #4d5a53;
+  font-size: 13px;
 }

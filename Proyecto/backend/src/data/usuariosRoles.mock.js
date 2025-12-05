@@ -2,15 +2,15 @@
 // Simulación de usuarios del sistema con su rol asignado
 
 let usuarios = [
-  { id: 1, nombre: "Laura", rol: "Empleada" },
-  { id: 2, nombre: "Carlos", rol: "Líder" },
-  { id: 3, nombre: "Ana", rol: "Supervisora" },
-  { id: 4, nombre: "Marta", rol: "Empleada" },
+  { id: 1, nombre: "Laura", rol: "Empleada", usuario: "laura" },
+  { id: 2, nombre: "Carlos", rol: "Líder", usuario: "carlos" },
+  { id: 3, nombre: "Ana", rol: "Supervisora", usuario: "ana" },
+  { id: 4, nombre: "Marta", rol: "Empleada", usuario: "marta" },
   // Relacionados con credenciales iniciales
-  { id: 5, nombre: "Jefe 1", rol: "Jefe" },
-  { id: 6, nombre: "Supervisora 1", rol: "Supervisora" },
-  { id: 7, nombre: "Líder 1", rol: "Líder" },
-  { id: 8, nombre: "Empleada 1", rol: "Empleada" },
+  { id: 5, nombre: "Jefe 1", rol: "Jefe", usuario: "jefe1" },
+  { id: 6, nombre: "Supervisora 1", rol: "Supervisora", usuario: "super1" },
+  { id: 7, nombre: "Líder 1", rol: "Líder", usuario: "lider1" },
+  { id: 8, nombre: "Empleada 1", rol: "Empleada", usuario: "emple1" },
 ];
 
 // Obtener todos los usuarios
@@ -19,12 +19,13 @@ export async function getAllUsuariosMock() {
 }
 
 // Crear un nuevo usuario
-export async function crearUsuarioMock({ nombre, rol }) {
+export async function crearUsuarioMock({ nombre, rol, usuario }) {
   const nuevoId = usuarios.length ? Math.max(...usuarios.map((u) => u.id)) + 1 : 1;
 
   const nuevoUsuario = {
     id: nuevoId,
     nombre,
+    usuario: usuario || nombre?.toLowerCase().replace(/\s+/g, ""),
     rol: rol || "Empleada"
   };
 

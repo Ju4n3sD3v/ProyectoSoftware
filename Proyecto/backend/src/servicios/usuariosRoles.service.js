@@ -4,7 +4,7 @@ import {
   crearUsuarioMock,
   eliminarUsuarioMock
 } from "../data/usuariosRoles.mock.js";
-import { usuarios as usuariosAuth } from "../data/usuarios.mock.js";
+import { usuarios as usuariosAuth, actualizarContrasena } from "../data/usuarios.mock.js";
 
 // Servicio: listar usuarios
 export async function listarUsuarios() {
@@ -66,6 +66,7 @@ export async function crearUsuario(nombre, rol, usuario, contrasena) {
 
     const nuevoUsuario = await crearUsuarioMock({
       nombre: nombre.trim(),
+      usuario: usuario.trim(),
       rol: rol && rol.trim() ? rol.trim() : "Empleada"
     });
 
@@ -83,6 +84,25 @@ export async function crearUsuario(nombre, rol, usuario, contrasena) {
   } catch (error) {
     console.error("Error en crearUsuario:", error.message);
     throw new Error("Error al crear el usuario");
+  }
+}
+
+// Servicio: cambiar contraseña
+export async function cambiarContrasena(usuario, anterior, nueva) {
+  try {
+    if (!usuario || !anterior || !nueva) {
+      return { ok: false, message: "Datos incompletos" };
+    }
+
+    const res = actualizarContrasena(usuario, anterior, nueva);
+    if (!res.ok) {
+      return { ok: false, message: res.message };
+    }
+
+    return { ok: true };
+  } catch (error) {
+    console.error("Error en cambiarContrasena:", error.message);
+    throw new Error("Error al cambiar la contraseña");
   }
 }
 

@@ -6,28 +6,28 @@ export default function SupervisoraRoles({ volverAlInicio }) {
   const [roles, setRoles] = useState([]);
   const [usuarios, setUsuarios] = useState([]);
 
-  const [usuarioSeleccionado, setUsuarioSeleccionado] = useState("");
-  const [rolSeleccionado, setRolSeleccionado] = useState("");
-
   const [nuevoUsuarioNombre, setNuevoUsuarioNombre] = useState("");
-  const [nuevoUsuarioRol, setNuevoUsuarioRol] = useState("");
   const [nuevoUsuarioUser, setNuevoUsuarioUser] = useState("");
   const [nuevoUsuarioPass, setNuevoUsuarioPass] = useState("");
+  const [nuevoUsuarioRol, setNuevoUsuarioRol] = useState("");
 
   const [mensaje, setMensaje] = useState("");
   const [error, setError] = useState("");
+  const [filtroRol, setFiltroRol] = useState("todos");
+
+  useEffect(() => {
+    cargarDatos();
+  }, []);
 
   const cargarDatos = async () => {
     try {
       setError("");
       const [resRoles, resUsuarios] = await Promise.all([
         fetch(`${API_URL}/api/roles`),
-        fetch(`${API_URL}/api/usuarios`)
+        fetch(`${API_URL}/api/usuarios`),
       ]);
-
       const dataRoles = await resRoles.json();
       const dataUsuarios = await resUsuarios.json();
-
       setRoles(dataRoles.data || []);
       setUsuarios(dataUsuarios.data || []);
     } catch (err) {
@@ -36,15 +36,8 @@ export default function SupervisoraRoles({ volverAlInicio }) {
     }
   };
 
-  useEffect(() => {
-    cargarDatos();
-  }, []);
-
   const normalizarRol = (rol) =>
-    (rol || "")
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .toLowerCase();
+    (rol || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 
   const limites = {
     jefe: 2,
@@ -65,13 +58,11 @@ export default function SupervisoraRoles({ volverAlInicio }) {
     const cuenta = contarRoles();
     const key = normalizarRol(rolDestino);
     const limite = limites[key];
-    if (!limite) return true; // sin límite (empleadas u otros)
+    if (!limite) return true; // sin limite (empleadas u otros)
 
     const usuarioActual = usuarios.find((u) => u.id === usuarioId);
     const rolActualKey = usuarioActual ? normalizarRol(usuarioActual.rol) : null;
     const yaCuenta = cuenta[key] || 0;
-
-    // si ya tenía ese rol, no afecta
     if (rolActualKey === key) return true;
 
     return yaCuenta < limite;
@@ -82,24 +73,13 @@ export default function SupervisoraRoles({ volverAlInicio }) {
     setMensaje("");
     setError("");
 
-    if (!nuevoUsuarioNombre.trim()) {
-      setError("Debes ingresar un nombre");
-      return;
-    }
-
-    if (!nuevoUsuarioUser.trim()) {
-      setError("Debes ingresar un usuario");
-      return;
-    }
-
-    if (!nuevoUsuarioPass.trim()) {
-      setError("Debes ingresar una contraseña");
-      return;
-    }
+    if (!nuevoUsuarioNombre.trim()) return setError("Debes ingresar un nombre");
+    if (!nuevoUsuarioUser.trim()) return setError("Debes ingresar un usuario");
+    if (!nuevoUsuarioPass.trim()) return setError("Debes ingresar una contrasena");
 
     const rolDestino = nuevoUsuarioRol || "Empleada";
     if (!puedeAsignar(rolDestino, null)) {
-      setError(`Límite alcanzado para el rol ${rolDestino}`);
+      setError(`Limite alcanzado para el rol ${rolDestino}`);
       return;
     }
 
@@ -109,12 +89,11 @@ export default function SupervisoraRoles({ volverAlInicio }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           nombre: nuevoUsuarioNombre,
-          rol: rolDestino,
           usuario: nuevoUsuarioUser,
-          contrasena: nuevoUsuarioPass
-        })
+          contrasena: nuevoUsuarioPass,
+          rol: rolDestino,
+        }),
       });
-
       const data = await resp.json();
       if (!resp.ok || !data.ok) {
         setError(data.message || "No se pudo crear el usuario");
@@ -123,9 +102,9 @@ export default function SupervisoraRoles({ volverAlInicio }) {
 
       setMensaje("Usuario creado correctamente");
       setNuevoUsuarioNombre("");
-      setNuevoUsuarioRol("");
       setNuevoUsuarioUser("");
       setNuevoUsuarioPass("");
+      setNuevoUsuarioRol("");
       await cargarDatos();
     } catch (err) {
       console.error("Error al crear usuario:", err);
@@ -133,19 +112,17 @@ export default function SupervisoraRoles({ volverAlInicio }) {
     }
   };
 
-  const manejarAsignarRol = async (e) => {
-    e.preventDefault();
+  const manejarAsignarRol = async (idUsuario, nuevoRol) => {
     setMensaje("");
     setError("");
 
-    const idUsuario = Number(usuarioSeleccionado);
-    if (!idUsuario || !rolSeleccionado) {
-      setError("Debes seleccionar un usuario y un rol");
+    if (!idUsuario || !nuevoRol) {
+      setError("Debes seleccionar un rol valido");
       return;
     }
 
-    if (!puedeAsignar(rolSeleccionado, idUsuario)) {
-      setError(`Límite alcanzado para el rol ${rolSeleccionado}`);
+    if (!puedeAsignar(nuevoRol, idUsuario)) {
+      setError(`Limite alcanzado para el rol ${nuevoRol}`);
       return;
     }
 
@@ -153,17 +130,15 @@ export default function SupervisoraRoles({ volverAlInicio }) {
       const resp = await fetch(`${API_URL}/api/usuarios/${idUsuario}/rol`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ rol: rolSeleccionado })
+        body: JSON.stringify({ rol: nuevoRol }),
       });
-
       const data = await resp.json();
-
       if (!resp.ok || !data.ok) {
         setError(data.message || "No se pudo asignar el rol");
         return;
       }
 
-      setMensaje("Rol asignado correctamente");
+      setMensaje("Rol actualizado correctamente");
       await cargarDatos();
     } catch (err) {
       console.error("Error al asignar rol:", err);
@@ -172,23 +147,18 @@ export default function SupervisoraRoles({ volverAlInicio }) {
   };
 
   const manejarEliminarUsuario = async (id) => {
-    if (!window.confirm("¿Seguro que deseas eliminar este usuario?")) return;
-
+    if (!window.confirm("Seguro que deseas eliminar este usuario?")) return;
     setMensaje("");
     setError("");
-
     try {
       const resp = await fetch(`${API_URL}/api/usuarios/${id}`, {
-        method: "DELETE"
+        method: "DELETE",
       });
-
       const data = await resp.json();
-
       if (!resp.ok || !data.ok) {
         setError(data.message || "No se pudo eliminar el usuario");
         return;
       }
-
       setMensaje("Usuario eliminado correctamente");
       await cargarDatos();
     } catch (err) {
@@ -197,16 +167,21 @@ export default function SupervisoraRoles({ volverAlInicio }) {
     }
   };
 
+  const usernameFrom = (u) =>
+    (u.usuario || u.nombre || "").toLowerCase().replace(/\s+/g, "");
+
   return (
     <div className="page">
       <div className="card-surface">
         <div className="page-header">
           <div>
-            <h1>Gestión de roles y usuarios</h1>
-            <p className="muted">Registra usuarios con roles disponibles y controla asignaciones.</p>
+            <h1>Hola, Supervisora</h1>
+            <p className="muted">
+              Registra usuarios, asigna roles con limites y administra la lista actual.
+            </p>
           </div>
           <button className="btn ghost" type="button" onClick={volverAlInicio}>
-            Cerrar sesión
+            Cerrar sesion
           </button>
         </div>
 
@@ -238,13 +213,13 @@ export default function SupervisoraRoles({ volverAlInicio }) {
                 />
               </label>
               <label className="field">
-                <span>Contraseña</span>
+                <span>Contrasena</span>
                 <input
                   type="password"
                   value={nuevoUsuarioPass}
                   onChange={(e) => setNuevoUsuarioPass(e.target.value)}
                   required
-                  placeholder="••••••"
+                  placeholder="******"
                 />
               </label>
               <label className="field">
@@ -256,20 +231,26 @@ export default function SupervisoraRoles({ volverAlInicio }) {
                 >
                   <option value="">Selecciona un rol</option>
                   {roles.map((rol) => (
-                    <option key={rol.id} value={rol.nombre}>{rol.nombre}</option>
+                    <option key={rol.id} value={rol.nombre}>
+                      {rol.nombre}
+                    </option>
                   ))}
                 </select>
               </label>
               <p className="muted">
-                Límite: 2 Jefes, 2 Supervisoras, 1 Líder, Empleadas sin límite.
+                Limite: 2 Jefes, 2 Supervisoras, 1 Lider, Empleadas sin limite.
               </p>
               <div className="actions">
-                <button className="btn" type="submit">Crear usuario</button>
+                <button className="btn" type="submit">
+                  Crear usuario
+                </button>
               </div>
             </form>
+          </div>
 
-            <h4>Roles disponibles</h4>
-            <div className="table-scroll" style={{ maxHeight: 220 }}>
+          <div className="panel">
+            <h3>Roles disponibles</h3>
+            <div className="table-scroll" style={{ maxHeight: 320 }}>
               <table className="data-table compact">
                 <thead>
                   <tr>
@@ -281,40 +262,27 @@ export default function SupervisoraRoles({ volverAlInicio }) {
                   {roles.map((rol) => (
                     <tr key={rol.id}>
                       <td>{rol.nombre}</td>
-                      <td>{Array.isArray(rol.permisos) && rol.permisos.length > 0 ? rol.permisos.join(", ") : "Sin permisos"}</td>
+                      <td>
+                        {Array.isArray(rol.permisos) && rol.permisos.length > 0
+                          ? rol.permisos.join(", ")
+                          : "Sin permisos"}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
           </div>
+        </div>
 
-          <div className="panel">
-            <h3>Asignar rol</h3>
-            <form className="form-grid" onSubmit={manejarAsignarRol}>
-              <label className="field">
-                <span>Empleado</span>
-                <select
-                  value={usuarioSeleccionado}
-                  onChange={(e) => setUsuarioSeleccionado(e.target.value)}
-                  required
-                >
-                  <option value="">-- Selecciona un usuario --</option>
-                  {usuarios.map((u) => (
-                    <option key={u.id} value={u.id}>
-                      {u.nombre} (rol actual: {u.rol || "Sin rol"})
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <label className="field">
-                <span>Rol</span>
-                <select
-                  value={rolSeleccionado}
-                  onChange={(e) => setRolSeleccionado(e.target.value)}
-                  required
-                >
-                  <option value="">-- Selecciona un rol --</option>
+        <div className="panel" style={{ marginTop: "14px" }}>
+          <div className="panel-head">
+            <h3>Usuarios actuales</h3>
+            <div className="actions">
+              <label className="field" style={{ minWidth: 180 }}>
+                <span>Filtrar por rol</span>
+                <select value={filtroRol} onChange={(e) => setFiltroRol(e.target.value)}>
+                  <option value="todos">Todos</option>
                   {roles.map((rol) => (
                     <option key={rol.id} value={rol.nombre}>
                       {rol.nombre}
@@ -322,41 +290,49 @@ export default function SupervisoraRoles({ volverAlInicio }) {
                   ))}
                 </select>
               </label>
-              <p className="muted">
-                Se aplican los mismos límites: 2 Jefes, 2 Supervisoras, 1 Líder.
-              </p>
-              <div className="actions">
-                <button className="btn secondary" type="submit">Asignar rol</button>
-              </div>
-            </form>
+            </div>
           </div>
-        </div>
-
-        <div className="panel" style={{ marginTop: "14px" }}>
-          <div className="panel-head">
-            <h3>Usuarios actuales</h3>
-          </div>
-          <div className="table-scroll" style={{ maxHeight: 280 }}>
+          <div className="table-scroll" style={{ maxHeight: 320 }}>
             <table className="data-table compact">
               <thead>
                 <tr>
                   <th>Nombre</th>
+                  <th>Usuario</th>
                   <th>Rol</th>
                   <th>Acciones</th>
                 </tr>
               </thead>
               <tbody>
-                {usuarios.map((u) => (
-                  <tr key={u.id}>
-                    <td>{u.nombre}</td>
-                    <td>{u.rol || "Sin rol"}</td>
-                    <td>
-                      <button className="btn ghost" type="button" onClick={() => manejarEliminarUsuario(u.id)}>
-                        Eliminar
-                      </button>
-                    </td>
-                  </tr>
-                ))}
+                {usuarios
+                  .filter((u) => (filtroRol === "todos" ? true : u.rol === filtroRol))
+                  .map((u) => (
+                    <tr key={u.id}>
+                      <td>{u.nombre}</td>
+                      <td>{usernameFrom(u)}</td>
+                      <td>{u.rol || "Sin rol"}</td>
+                      <td style={{ display: "flex", gap: "8px" }}>
+                        <select
+                          value={u.rol || ""}
+                          onChange={(e) => manejarAsignarRol(u.id, e.target.value)}
+                          style={{ minWidth: 140 }}
+                        >
+                          <option value="">-- Rol --</option>
+                          {roles.map((rol) => (
+                            <option key={rol.id} value={rol.nombre}>
+                              {rol.nombre}
+                            </option>
+                          ))}
+                        </select>
+                        <button
+                          className="btn ghost"
+                          type="button"
+                          onClick={() => manejarEliminarUsuario(u.id)}
+                        >
+                          Eliminar
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
               </tbody>
             </table>
           </div>

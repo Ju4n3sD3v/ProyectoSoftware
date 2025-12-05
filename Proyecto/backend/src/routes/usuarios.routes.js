@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { listarUsuarios, asignarRol, eliminarUsuario, crearUsuario } from "../servicios/usuariosRoles.service.js";
+import { listarUsuarios, asignarRol, eliminarUsuario, crearUsuario, cambiarContrasena } from "../servicios/usuariosRoles.service.js";
 
 const router = Router();
 
@@ -82,6 +82,28 @@ router.post("/api/usuarios", async (req, res) => {
     return res.status(500).json({
       ok: false,
       message: "Error interno al crear el usuario"
+    });
+  }
+});
+
+// PATCH /api/usuarios/:usuario/contrasena -> cambiar contrasena
+router.patch("/api/usuarios/:usuario/contrasena", async (req, res) => {
+  try {
+    const { usuario } = req.params;
+    const { anterior, nueva } = req.body || {};
+
+    const respuesta = await cambiarContrasena(usuario, anterior, nueva);
+
+    if (!respuesta.ok) {
+      return res.status(400).json(respuesta);
+    }
+
+    return res.status(200).json(respuesta);
+  } catch (error) {
+    console.error("Error en PATCH /api/usuarios/:usuario/contrasena:", error.message);
+    return res.status(500).json({
+      ok: false,
+      message: "Error interno al cambiar la contraseña"
     });
   }
 });

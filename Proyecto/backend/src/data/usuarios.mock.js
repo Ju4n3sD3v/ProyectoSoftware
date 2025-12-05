@@ -12,3 +12,17 @@ export const usuarios = [
   { usuario: "ana", contrasena: "ana123", rol: "Supervisora" },
   { usuario: "marta", contrasena: "marta123", rol: "Empleada" },
 ];
+
+export function actualizarContrasena(usuario, contrasenaAnterior, nueva) {
+  const idx = usuarios.findIndex(
+    (u) => u.usuario.toLowerCase() === usuario.toLowerCase()
+  );
+  if (idx === -1) {
+    return { ok: false, message: "Usuario no encontrado" };
+  }
+  if (usuarios[idx].contrasena !== contrasenaAnterior) {
+    return { ok: false, message: "La contraseña anterior no coincide" };
+  }
+  usuarios[idx].contrasena = nueva;
+  return { ok: true };
+}

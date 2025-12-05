@@ -20,6 +20,7 @@ import VerificarPedidoLider from './pantallasLider/verificarPedidoLider'
 import FaltantesJefe from './pantallasJefe/FaltantesJefe'
 import HistorialEnvios from './pantallasJefe/HistorialEnvios'
 import InventarioPorLocal from './pantallasEmpleadas/InventarioPorLocal'
+import ProfilePasswordForm from './componentes/ProfilePasswordForm'
 
 const IconBriefcase = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
@@ -65,6 +66,12 @@ const IconUserCircle = () => (
   </svg>
 )
 
+const AppBanner = () => (
+  <div className="app-banner">
+    Sistema Lolalitas
+  </div>
+)
+
 function App() {
   const [pantalla, setPantalla] = useState('inicio')
   const [tipoUsuario, setTipoUsuario] = useState('')
@@ -72,6 +79,8 @@ function App() {
   const [contrasena, setContrasena] = useState('')
   const [origenInventario, setOrigenInventario] = useState(null)
   const [errorLogin, setErrorLogin] = useState('')
+  const [usuarioActual, setUsuarioActual] = useState(null)
+  const [mostrarPerfil, setMostrarPerfil] = useState(false)
 
   const wrapScreen = (children) => (
     <div className="page">
@@ -129,6 +138,7 @@ function App() {
         return
       }
 
+      setUsuarioActual({ usuario: nombre, rol: data.rol })
       setPantalla(rolDestino)
     } catch (error) {
       console.error('Error al hacer login:', error)
@@ -141,6 +151,8 @@ function App() {
     setNombre('')
     setContrasena('')
     setErrorLogin('')
+    setUsuarioActual(null)
+    setMostrarPerfil(false)
   }
 
   const controlInventarioBodega = () => setPantalla('controlInventarioBodega')
@@ -160,7 +172,34 @@ function App() {
   }
 
   return (
-    <>
+    <div className="app-shell">
+      <AppBanner />
+      {usuarioActual && (
+        <div className="profile-bar">
+          <button
+            className="profile-btn"
+            type="button"
+            onClick={() => setMostrarPerfil((prev) => !prev)}
+          >
+            <span className="avatar-circle">{(usuarioActual.usuario || 'U').slice(0,1).toUpperCase()}</span>
+          </button>
+          {mostrarPerfil && (
+            <div className="profile-card">
+              <div className="profile-header">
+                <div className="avatar-circle">{(usuarioActual.usuario || 'U').slice(0,1).toUpperCase()}</div>
+                <div>
+                  <div className="profile-name">{usuarioActual.usuario}</div>
+                  <div className="profile-role">{usuarioActual.rol}</div>
+                </div>
+              </div>
+              <ProfilePasswordForm
+                usuario={usuarioActual.usuario}
+                onClose={() => setMostrarPerfil(false)}
+              />
+            </div>
+          )}
+        </div>
+      )}
       {pantalla === 'inicio' && (
         <div className="inicio-layout">
           <div className="inicio-card">
@@ -371,7 +410,7 @@ function App() {
           <AnalisisInventarioLocal volverLoginJefe={volverLoginJefe} />
         )
       )}
-    </>
+    </div>
   )
 }
 
