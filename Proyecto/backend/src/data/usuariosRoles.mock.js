@@ -5,7 +5,12 @@ let usuarios = [
   { id: 1, nombre: "Laura", rol: "Empleada" },
   { id: 2, nombre: "Carlos", rol: "Líder" },
   { id: 3, nombre: "Ana", rol: "Supervisora" },
-  { id: 4, nombre: "Marta", rol: "Empleada" }
+  { id: 4, nombre: "Marta", rol: "Empleada" },
+  // Relacionados con credenciales iniciales
+  { id: 5, nombre: "Jefe 1", rol: "Jefe" },
+  { id: 6, nombre: "Supervisora 1", rol: "Supervisora" },
+  { id: 7, nombre: "Líder 1", rol: "Líder" },
+  { id: 8, nombre: "Empleada 1", rol: "Empleada" },
 ];
 
 // Obtener todos los usuarios
@@ -13,7 +18,7 @@ export async function getAllUsuariosMock() {
   return usuarios;
 }
 
-// Crear un nuevo usuario (opcional)
+// Crear un nuevo usuario
 export async function crearUsuarioMock({ nombre, rol }) {
   const nuevoId = usuarios.length ? Math.max(...usuarios.map((u) => u.id)) + 1 : 1;
 

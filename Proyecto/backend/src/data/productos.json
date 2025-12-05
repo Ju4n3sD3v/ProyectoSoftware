@@ -3,8 +3,8 @@
     "id": 1,
     "lugar": "Bodega",
     "nombre": "Bolsas de pollo",
-    "stock": 95,
-    "actualizadoEn": "2025-12-03 19:18:08"
+    "stock": 83,
+    "actualizadoEn": "2025-12-04 18:22:41"
   },
   {
     "id": 2,
@@ -24,8 +24,8 @@
     "id": 4,
     "lugar": "Bodega",
     "nombre": "Bolsas de papas",
-    "stock": 90,
-    "actualizadoEn": "2025-11-20 01:28:55"
+    "stock": 80,
+    "actualizadoEn": "2025-12-04 18:22:41"
   },
   {
     "id": 5,
@@ -45,8 +45,8 @@
     "id": 7,
     "lugar": "Bodega",
     "nombre": "Bolsas de harina",
-    "stock": 70,
-    "actualizadoEn": "2025-11-20 01:28:55"
+    "stock": 60,
+    "actualizadoEn": "2025-12-04 18:22:41"
   },
   {
     "id": 8,

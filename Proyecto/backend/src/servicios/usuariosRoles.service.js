@@ -1,8 +1,10 @@
 import { 
   getAllUsuariosMock,
   asignarRolAUsuarioMock,
+  crearUsuarioMock,
   eliminarUsuarioMock
 } from "../data/usuariosRoles.mock.js";
+import { usuarios as usuariosAuth } from "../data/usuarios.mock.js";
 
 // Servicio: listar usuarios
 export async function listarUsuarios() {
@@ -24,6 +26,63 @@ export async function listarUsuarios() {
   } catch (error) {
     console.error("Error en listarUsuarios:", error.message);
     throw new Error("Error al obtener los usuarios");
+  }
+}
+
+// Servicio: crear usuario con rol
+export async function crearUsuario(nombre, rol, usuario, contrasena) {
+  try {
+    if (!nombre || !nombre.trim()) {
+      return {
+        ok: false,
+        message: "El nombre es obligatorio"
+      };
+    }
+
+    if (!usuario || !usuario.trim()) {
+      return {
+        ok: false,
+        message: "El usuario es obligatorio"
+      };
+    }
+
+    if (!contrasena || !contrasena.trim()) {
+      return {
+        ok: false,
+        message: "La contraseña es obligatoria"
+      };
+    }
+
+    // Validar usuario único
+    const existe = usuariosAuth.find(
+      (u) => u.usuario.toLowerCase() === usuario.trim().toLowerCase()
+    );
+    if (existe) {
+      return {
+        ok: false,
+        message: "El usuario ya existe"
+      };
+    }
+
+    const nuevoUsuario = await crearUsuarioMock({
+      nombre: nombre.trim(),
+      rol: rol && rol.trim() ? rol.trim() : "Empleada"
+    });
+
+    // Añadir credenciales al mock de autenticación
+    usuariosAuth.push({
+      usuario: usuario.trim(),
+      contrasena: contrasena.trim(),
+      rol: nuevoUsuario.rol || "Empleada"
+    });
+
+    return {
+      ok: true,
+      data: nuevoUsuario
+    };
+  } catch (error) {
+    console.error("Error en crearUsuario:", error.message);
+    throw new Error("Error al crear el usuario");
   }
 }
 

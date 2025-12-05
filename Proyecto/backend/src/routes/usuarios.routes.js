@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { listarUsuarios, asignarRol, eliminarUsuario } from "../servicios/usuariosRoles.service.js";
+import { listarUsuarios, asignarRol, eliminarUsuario, crearUsuario } from "../servicios/usuariosRoles.service.js";
 
 const router = Router();
 
@@ -61,6 +61,27 @@ router.delete("/api/usuarios/:id", async (req, res) => {
     return res.status(500).json({
       ok: false,
       message: "Error interno al eliminar el usuario"
+    });
+  }
+});
+
+// POST /api/usuarios -> crear usuario
+router.post("/api/usuarios", async (req, res) => {
+  try {
+    const { nombre, rol, usuario, contrasena } = req.body;
+
+    const respuesta = await crearUsuario(nombre, rol, usuario, contrasena);
+
+    if (!respuesta.ok) {
+      return res.status(400).json(respuesta);
+    }
+
+    return res.status(201).json(respuesta);
+  } catch (error) {
+    console.error("Error en POST /api/usuarios:", error.message);
+    return res.status(500).json({
+      ok: false,
+      message: "Error interno al crear el usuario"
     });
   }
 });

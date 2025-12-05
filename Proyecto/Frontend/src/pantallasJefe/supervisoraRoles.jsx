@@ -6,11 +6,13 @@ export default function SupervisoraRoles({ volverAlInicio }) {
   const [roles, setRoles] = useState([]);
   const [usuarios, setUsuarios] = useState([]);
 
-  const [nuevoRolNombre, setNuevoRolNombre] = useState("");
-  const [nuevoRolPermisos, setNuevoRolPermisos] = useState("");
-
   const [usuarioSeleccionado, setUsuarioSeleccionado] = useState("");
   const [rolSeleccionado, setRolSeleccionado] = useState("");
+
+  const [nuevoUsuarioNombre, setNuevoUsuarioNombre] = useState("");
+  const [nuevoUsuarioRol, setNuevoUsuarioRol] = useState("");
+  const [nuevoUsuarioUser, setNuevoUsuarioUser] = useState("");
+  const [nuevoUsuarioPass, setNuevoUsuarioPass] = useState("");
 
   const [mensaje, setMensaje] = useState("");
   const [error, setError] = useState("");
@@ -38,35 +40,96 @@ export default function SupervisoraRoles({ volverAlInicio }) {
     cargarDatos();
   }, []);
 
-  const manejarCrearRol = async (e) => {
+  const normalizarRol = (rol) =>
+    (rol || "")
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase();
+
+  const limites = {
+    jefe: 2,
+    supervisora: 2,
+    lider: 1,
+  };
+
+  const contarRoles = () => {
+    const cuenta = {};
+    usuarios.forEach((u) => {
+      const key = normalizarRol(u.rol);
+      cuenta[key] = (cuenta[key] || 0) + 1;
+    });
+    return cuenta;
+  };
+
+  const puedeAsignar = (rolDestino, usuarioId = null) => {
+    const cuenta = contarRoles();
+    const key = normalizarRol(rolDestino);
+    const limite = limites[key];
+    if (!limite) return true; // sin límite (empleadas u otros)
+
+    const usuarioActual = usuarios.find((u) => u.id === usuarioId);
+    const rolActualKey = usuarioActual ? normalizarRol(usuarioActual.rol) : null;
+    const yaCuenta = cuenta[key] || 0;
+
+    // si ya tenía ese rol, no afecta
+    if (rolActualKey === key) return true;
+
+    return yaCuenta < limite;
+  };
+
+  const manejarCrearUsuario = async (e) => {
     e.preventDefault();
     setMensaje("");
     setError("");
 
+    if (!nuevoUsuarioNombre.trim()) {
+      setError("Debes ingresar un nombre");
+      return;
+    }
+
+    if (!nuevoUsuarioUser.trim()) {
+      setError("Debes ingresar un usuario");
+      return;
+    }
+
+    if (!nuevoUsuarioPass.trim()) {
+      setError("Debes ingresar una contraseña");
+      return;
+    }
+
+    const rolDestino = nuevoUsuarioRol || "Empleada";
+    if (!puedeAsignar(rolDestino, null)) {
+      setError(`Límite alcanzado para el rol ${rolDestino}`);
+      return;
+    }
+
     try {
-      const resp = await fetch(`${API_URL}/api/roles`, {
+      const resp = await fetch(`${API_URL}/api/usuarios`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          nombre: nuevoRolNombre,
-          permisosTexto: nuevoRolPermisos
+          nombre: nuevoUsuarioNombre,
+          rol: rolDestino,
+          usuario: nuevoUsuarioUser,
+          contrasena: nuevoUsuarioPass
         })
       });
 
       const data = await resp.json();
-
       if (!resp.ok || !data.ok) {
-        setError(data.message || "No se pudo crear el rol");
+        setError(data.message || "No se pudo crear el usuario");
         return;
       }
 
-      setMensaje("Rol creado correctamente");
-      setNuevoRolNombre("");
-      setNuevoRolPermisos("");
+      setMensaje("Usuario creado correctamente");
+      setNuevoUsuarioNombre("");
+      setNuevoUsuarioRol("");
+      setNuevoUsuarioUser("");
+      setNuevoUsuarioPass("");
       await cargarDatos();
     } catch (err) {
-      console.error("Error al crear rol:", err);
-      setError("Error al crear el rol");
+      console.error("Error al crear usuario:", err);
+      setError("Error al crear el usuario");
     }
   };
 
@@ -78,6 +141,11 @@ export default function SupervisoraRoles({ volverAlInicio }) {
     const idUsuario = Number(usuarioSeleccionado);
     if (!idUsuario || !rolSeleccionado) {
       setError("Debes seleccionar un usuario y un rol");
+      return;
+    }
+
+    if (!puedeAsignar(rolSeleccionado, idUsuario)) {
+      setError(`Límite alcanzado para el rol ${rolSeleccionado}`);
       return;
     }
 
@@ -130,138 +198,170 @@ export default function SupervisoraRoles({ volverAlInicio }) {
   };
 
   return (
-    <div className="pantalla-supervisora">
-      <h1>Gestión de roles y usuarios</h1>
-
-      {mensaje && <p style={{ color: "green" }}>{mensaje}</p>}
-      {error && <p style={{ color: "red" }}>{error}</p>}
-
-      {/* 1. Crear un rol con permisos */}
-      <section>
-        <h2>1. Crear un rol con permisos</h2>
-        <p>
-          La supervisora accede al módulo de administración de roles y registra un
-          nuevo rol indicando qué permisos tendrá.
-        </p>
-        <form onSubmit={manejarCrearRol}>
+    <div className="page">
+      <div className="card-surface">
+        <div className="page-header">
           <div>
-            <label>Nombre del rol:&nbsp;</label>
-            <input
-              type="text"
-              value={nuevoRolNombre}
-              onChange={(e) => setNuevoRolNombre(e.target.value)}
-              required
-            />
+            <h1>Gestión de roles y usuarios</h1>
+            <p className="muted">Registra usuarios con roles disponibles y controla asignaciones.</p>
           </div>
-          <div>
-            <label>Permisos (separados por comas):&nbsp;</label>
-            <input
-              type="text"
-              placeholder="Ej: crear pedidos, ver inventario, generar reportes"
-              value={nuevoRolPermisos}
-              onChange={(e) => setNuevoRolPermisos(e.target.value)}
-            />
+          <button className="btn ghost" type="button" onClick={volverAlInicio}>
+            Cerrar sesión
+          </button>
+        </div>
+
+        {mensaje && <p className="alert">{mensaje}</p>}
+        {error && <p className="alert error">{error}</p>}
+
+        <div className="dashboard-grid">
+          <div className="panel">
+            <h3>Registrar usuario</h3>
+            <form className="form-grid" onSubmit={manejarCrearUsuario}>
+              <label className="field">
+                <span>Nombre</span>
+                <input
+                  type="text"
+                  value={nuevoUsuarioNombre}
+                  onChange={(e) => setNuevoUsuarioNombre(e.target.value)}
+                  required
+                  placeholder="Nombre completo"
+                />
+              </label>
+              <label className="field">
+                <span>Usuario</span>
+                <input
+                  type="text"
+                  value={nuevoUsuarioUser}
+                  onChange={(e) => setNuevoUsuarioUser(e.target.value)}
+                  required
+                  placeholder="usuario123"
+                />
+              </label>
+              <label className="field">
+                <span>Contraseña</span>
+                <input
+                  type="password"
+                  value={nuevoUsuarioPass}
+                  onChange={(e) => setNuevoUsuarioPass(e.target.value)}
+                  required
+                  placeholder="••••••"
+                />
+              </label>
+              <label className="field">
+                <span>Rol</span>
+                <select
+                  value={nuevoUsuarioRol}
+                  onChange={(e) => setNuevoUsuarioRol(e.target.value)}
+                  required
+                >
+                  <option value="">Selecciona un rol</option>
+                  {roles.map((rol) => (
+                    <option key={rol.id} value={rol.nombre}>{rol.nombre}</option>
+                  ))}
+                </select>
+              </label>
+              <p className="muted">
+                Límite: 2 Jefes, 2 Supervisoras, 1 Líder, Empleadas sin límite.
+              </p>
+              <div className="actions">
+                <button className="btn" type="submit">Crear usuario</button>
+              </div>
+            </form>
+
+            <h4>Roles disponibles</h4>
+            <div className="table-scroll" style={{ maxHeight: 220 }}>
+              <table className="data-table compact">
+                <thead>
+                  <tr>
+                    <th>Rol</th>
+                    <th>Permisos</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {roles.map((rol) => (
+                    <tr key={rol.id}>
+                      <td>{rol.nombre}</td>
+                      <td>{Array.isArray(rol.permisos) && rol.permisos.length > 0 ? rol.permisos.join(", ") : "Sin permisos"}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
-          <br />
-          <button type="submit">Crear rol</button>
-        </form>
 
-        <h3>Roles disponibles</h3>
-        <ul>
-          {roles.map((rol) => (
-            <li key={rol.id}>
-              <strong>{rol.nombre}</strong>{" "}
-              {Array.isArray(rol.permisos) && rol.permisos.length > 0 && (
-                <>- Permisos: {rol.permisos.join(", ")}</>
-              )}
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      <hr />
-
-      {/* 2. Asignar rol */}
-      <section>
-        <h2>2. Asignar rol a un empleado</h2>
-        <p>
-          La supervisora está en su pantalla y puede asignar un rol a un
-          empleado.
-        </p>
-        <form onSubmit={manejarAsignarRol}>
-          <div>
-            <label>Empleado:&nbsp;</label>
-            <select
-              value={usuarioSeleccionado}
-              onChange={(e) => setUsuarioSeleccionado(e.target.value)}
-              required
-            >
-              <option value="">-- Selecciona un usuario --</option>
-              {usuarios.map((u) => (
-                <option key={u.id} value={u.id}>
-                  {u.nombre} (rol actual: {u.rol || "Sin rol"})
-                </option>
-              ))}
-            </select>
+          <div className="panel">
+            <h3>Asignar rol</h3>
+            <form className="form-grid" onSubmit={manejarAsignarRol}>
+              <label className="field">
+                <span>Empleado</span>
+                <select
+                  value={usuarioSeleccionado}
+                  onChange={(e) => setUsuarioSeleccionado(e.target.value)}
+                  required
+                >
+                  <option value="">-- Selecciona un usuario --</option>
+                  {usuarios.map((u) => (
+                    <option key={u.id} value={u.id}>
+                      {u.nombre} (rol actual: {u.rol || "Sin rol"})
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label className="field">
+                <span>Rol</span>
+                <select
+                  value={rolSeleccionado}
+                  onChange={(e) => setRolSeleccionado(e.target.value)}
+                  required
+                >
+                  <option value="">-- Selecciona un rol --</option>
+                  {roles.map((rol) => (
+                    <option key={rol.id} value={rol.nombre}>
+                      {rol.nombre}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <p className="muted">
+                Se aplican los mismos límites: 2 Jefes, 2 Supervisoras, 1 Líder.
+              </p>
+              <div className="actions">
+                <button className="btn secondary" type="submit">Asignar rol</button>
+              </div>
+            </form>
           </div>
-          <div>
-            <label>Rol:&nbsp;</label>
-            <select
-              value={rolSeleccionado}
-              onChange={(e) => setRolSeleccionado(e.target.value)}
-              required
-            >
-              <option value="">-- Selecciona un rol --</option>
-              {roles.map((rol) => (
-                <option key={rol.id} value={rol.nombre}>
-                  {rol.nombre}
-                </option>
-              ))}
-            </select>
+        </div>
+
+        <div className="panel" style={{ marginTop: "14px" }}>
+          <div className="panel-head">
+            <h3>Usuarios actuales</h3>
           </div>
-          <br />
-          <button type="submit">Asignar rol</button>
-        </form>
-      </section>
-
-      <hr />
-
-      {/* 3. Eliminar usuario */}
-      <section>
-        <h2>3. Eliminar usuario</h2>
-        <p>
-          La jefe puede eliminar a algún empleado de su rol. El sistema actualiza
-          la lista de usuarios activos.
-        </p>
-
-        <table border="1" cellPadding="4">
-          <thead>
-            <tr>
-              <th>Nombre</th>
-              <th>Rol</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {usuarios.map((u) => (
-              <tr key={u.id}>
-                <td>{u.nombre}</td>
-                <td>{u.rol || "Sin rol"}</td>
-                <td>
-                  <button type="button" onClick={() => manejarEliminarUsuario(u.id)}>
-                    Eliminar usuario
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </section>
-
-      <br />
-      <button type="button" onClick={volverAlInicio}>
-        Volver al inicio
-      </button>
+          <div className="table-scroll" style={{ maxHeight: 280 }}>
+            <table className="data-table compact">
+              <thead>
+                <tr>
+                  <th>Nombre</th>
+                  <th>Rol</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                {usuarios.map((u) => (
+                  <tr key={u.id}>
+                    <td>{u.nombre}</td>
+                    <td>{u.rol || "Sin rol"}</td>
+                    <td>
+                      <button className="btn ghost" type="button" onClick={() => manejarEliminarUsuario(u.id)}>
+                        Eliminar
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
