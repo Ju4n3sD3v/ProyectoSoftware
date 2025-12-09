@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import LabelAndInputN from '../componentes/LabelAndInputN'
 import Button from '../componentes/Button'
 
-function CreacionPedido({ volverAlInicio }) {
+function CreacionPedido({ volverLoginEmpleada }) {
   // Estado para guardar los valores de los inputs
   const [pedido, setPedido] = useState({})
   const [productos, setProductos] = useState([])
@@ -170,7 +170,7 @@ function CreacionPedido({ volverAlInicio }) {
           />
         </fieldset>
         <br/><br/>
-        <button type="button" onClick={volverAlInicio}> Volver al inicio </button>
+        <button type="button" onClick={volverLoginEmpleada}> Volver al menú </button>
       </div>
     </>
   )

@@ -6,7 +6,10 @@ import Button from './componentes/Button'
 import LoginJefe from './pantallasJefe/loginjefe'
 import ControlInventarioBodega from './pantallasJefe/controlInventarioBodega'
 import ModificarInventarioJefe from './pantallasJefe/modificarInventario'
+
 import LoginLider from './pantallasLider/loginLider'
+
+//import LoginTecnico from './pantallasTecnico/logintecnico'
 
 import ReporteEntradaSalida from './pantallasLider/reporteEntradaSalida'
 import CreacionPedido from './pantallasEmpleadas/creacionPedido'
@@ -70,7 +73,7 @@ const IconUserCircle = () => (
 
 const AppBanner = () => (
   <div className="app-banner">
-    Sistema Lolalitas
+    Lolalitas Core
   </div>
 )
 
@@ -130,6 +133,7 @@ function App() {
         supervisora: 'supervisora',
         lider: 'lider',
         empleada: 'empleada',
+        tecnico: 'tecnico',
       }
 
       const rolDestino = mapaRol[rolNormalizado]
@@ -144,7 +148,7 @@ function App() {
       setPantalla(rolDestino)
     } catch (error) {
       console.error('Error al hacer login:', error)
-      setErrorLogin('Error al conectar con el servidor de autenticaci?n')
+      setErrorLogin('Error al conectar con el servidor de autenticación')
     }
   }
 
@@ -161,6 +165,7 @@ function App() {
   const volverLoginJefe = () => setPantalla('jefe')
   const modificarInventarioJefe = () => setPantalla('modificarInventarioJefe')
   const crreacionPedido = () => setPantalla('creacion de pedido')
+  const volverLoginEmpleada = () => setPantalla('empleada')
   const reporteEntradaSalida = () => setPantalla('reporteEntradaSalida')
   const volverLoginLider = () => setPantalla('lider')
   const mostrarAnalisisInventario = () => setPantalla('analisisInventario')
@@ -213,7 +218,7 @@ function App() {
               <div className="brand-mark">L</div>
             </div>
             <h1 className="brand-title">Lolalitas</h1>
-            <p className="brand-subtitle">Medell?n, Colombia</p>
+            <p className="brand-subtitle">Medellín, Colombia</p>
 
             <div className="brand-divider" />
             <p className="brand-instruction">Selecciona tu rol</p>
@@ -223,8 +228,9 @@ function App() {
               {[ 
                 { key: 'Jefe', label: 'Jefe', color: '#f57c00', icon: <IconBriefcase /> },
                 { key: 'Supervisora', label: 'Supervisora', color: '#2d7bfa', icon: <IconUserBadge /> },
-                { key: 'L?der', label: 'L?der', color: '#11a36c', icon: <IconUsers /> },
-                { key: 'Empleada', label: 'Empleada', color: '#a54bff', icon: <IconUserCircle /> },
+                { key: 'L?der', label: 'Lider', color: '#11a36c', icon: <IconUsers /> },
+                { key: 'Empleada', label: 'Empleada', color: '#a54bff', icon: <IconUserCircle /> }, // Ya tenías 'Tecnico' aquí, lo cual es correcto.
+                { key: 'Tecnico', label: 'Tecnico', color: '#a54bff', icon: <IconUserCircle /> },
               ].map((rol) => (
                 <button
                   key={rol.key}
@@ -247,7 +253,7 @@ function App() {
         <div className="page">
           <div className="card-surface form-card pantalla-login">
             <h1>Ingreso de usuario</h1>
-            <p className="muted">Autent?cate para continuar como {tipoUsuario || 'usuario'}</p>
+            <p className="muted">Autentícate para continuar como {tipoUsuario || 'usuario'}</p>
 
             <form className="form-grid" onSubmit={manejarSubmitLogin}>
               <label className="field">
@@ -263,7 +269,7 @@ function App() {
               </label>
 
               <label className="field">
-                <span>Contrase?a</span>
+                <span>Contraseña</span>
                 <input
                   id="contrasena"
                   type="password"
@@ -289,7 +295,7 @@ function App() {
 
       {pantalla === 'creacion de pedido' && (
         wrapScreen(
-          <CreacionPedido volverAlInicio={volverAlInicio}>
+          <CreacionPedido volverLoginEmpleada={volverLoginEmpleada}>
             <fieldset>
               {[...Array(9)].map((_, i) => (
                 <LabelAndInputN key={i} label="bolsas_de_alitas" id={`ba${i}`} />
@@ -411,6 +417,18 @@ function App() {
             <div className="actions" style={{ marginTop: '12px' }}>
               <button type="button" onClick={crreacionPedido}>Crear informe del pedido</button>
               <button type="button" onClick={verInventarioLocal}>Ver inventario por local</button>
+              <button className="btn ghost" type="button" onClick={volverAlInicio}>Volver al inicio</button>
+            </div>
+          </div>
+        )
+      )}
+
+      {pantalla === 'tecnico' && (
+        wrapScreen(
+          <div>
+            <h1>Panel de Técnico</h1>
+            <p className="muted">Bienvenido al panel de soporte técnico.</p>
+            <div className="actions" style={{ marginTop: '12px' }}>
               <button className="btn ghost" type="button" onClick={volverAlInicio}>Volver al inicio</button>
             </div>
           </div>
