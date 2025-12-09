@@ -22,6 +22,8 @@ import HistorialEnvios from './pantallasJefe/HistorialEnvios'
 import InventarioPorLocal from './pantallasEmpleadas/InventarioPorLocal'
 import ProfilePasswordForm from './componentes/ProfilePasswordForm'
 
+import VariacionPorLocal from './pantallasJefe/VariacionPorLocal' 
+
 const IconBriefcase = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
     <path
@@ -171,9 +173,12 @@ function App() {
     setPantalla('inventarioLocal')
   }
 
+  const mostrarVariacionPorLocal = () => setPantalla('variacionLocal')
+
   return (
     <div className="app-shell">
       <AppBanner />
+
       {usuarioActual && (
         <div className="profile-bar">
           <button
@@ -200,6 +205,7 @@ function App() {
           )}
         </div>
       )}
+
       {pantalla === 'inicio' && (
         <div className="inicio-layout">
           <div className="inicio-card">
@@ -214,7 +220,7 @@ function App() {
             <p className="brand-helper">Elige el rol con el que deseas ingresar al sistema</p>
 
             <div className="roles-grid">
-              {[
+              {[ 
                 { key: 'Jefe', label: 'Jefe', color: '#f57c00', icon: <IconBriefcase /> },
                 { key: 'Supervisora', label: 'Supervisora', color: '#2d7bfa', icon: <IconUserBadge /> },
                 { key: 'L?der', label: 'L?der', color: '#11a36c', icon: <IconUsers /> },
@@ -387,7 +393,13 @@ function App() {
 
       {pantalla === 'supervisora' && (
         wrapScreen(
-          <SupervisoraRoles volverAlInicio={volverAlInicio} />
+          <div>
+            <SupervisoraRoles volverAlInicio={volverAlInicio} />
+            <br />
+            <button type="button" onClick={mostrarVariacionPorLocal}>
+              Variación de productos entre locales
+            </button>
+          </div>
         )
       )}
 
@@ -410,6 +422,13 @@ function App() {
           <AnalisisInventarioLocal volverLoginJefe={volverLoginJefe} />
         )
       )}
+
+      {pantalla === 'variacionLocal' && (
+        wrapScreen(
+          <VariacionPorLocal volverLoginSupervisora={() => setPantalla('supervisora')} />
+        )
+      )}
+
     </div>
   )
 }

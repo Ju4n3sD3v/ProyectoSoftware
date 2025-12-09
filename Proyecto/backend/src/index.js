@@ -10,6 +10,8 @@ import verificarPedidoRoutes from "./routes/verificarPedido.routes.js";
 import rolesRoutes from "./routes/roles.routes.js";
 import usuariosRoutes from "./routes/usuarios.routes.js";
 import authRoutes from "./routes/auth.routes.js";
+import variacionRoutes from "./routes/analisisVariacion.routes.js";
+
 
 import { PORT } from "./config.js";
 
@@ -31,6 +33,7 @@ app.use(verificarPedidoRoutes);
 app.use(rolesRoutes);
 app.use(usuariosRoutes);
 app.use(authRoutes);
+app.use(variacionRoutes);
 
 // Iniciar servidor
 app.listen(PORT, () => {

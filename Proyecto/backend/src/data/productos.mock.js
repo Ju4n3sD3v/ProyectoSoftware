@@ -184,6 +184,7 @@ try {
 export async function getAllProductosBodegaMock() {
   return productos.filter(p => p.lugar === "Bodega");
 }
+
 /*FUNCION MOCK PARA ENCONTRAR LOS QUE NO SE HAN ACTUALIZADO EN 72 HORAS */
 export async function getProductosBodegaSinActualizar72Mock() {
   const ahora = new Date();
@@ -197,18 +198,15 @@ export async function getProductosBodegaSinActualizar72Mock() {
   return sublista;   
 }
 
-//ME FALTA ACA PARA COMPROBAR LO DEL PEDIDO DE LAS EMPLEADAS
-
 // Prueba
-// ✅ Actualizar stock de un producto de bodega
+// Actualizar stock de un producto de bodega
 export async function actualizarStockProductoMock(id, nuevoStock) {
   // Validación de stock
   if (nuevoStock < 0) {
     throw new Error("El stock no puede ser negativo.");
   }
 
-  // Buscar producto por id en la Bodega
-  // Buscar producto por id en cualquier lugar (bodega o local)
+  // Buscar producto por id
   const producto = productos.find(p => p.id === id);
 
   if (!producto) {
@@ -218,7 +216,7 @@ export async function actualizarStockProductoMock(id, nuevoStock) {
   // Actualizar stock
   producto.stock = nuevoStock;
 
-  // Actualizar fecha de última actualización en formato YYYY-MM-DD HH:mm:ss
+  // Actualizar fecha
   const ahora = new Date();
   const yyyy = ahora.getFullYear();
   const mm = String(ahora.getMonth() + 1).padStart(2, "0");
@@ -235,14 +233,15 @@ export async function actualizarStockProductoMock(id, nuevoStock) {
     console.error("No se pudo persistir productos.json:", err.message);
   }
 
-  // Devolvemos el producto ya actualizado
   return producto;
 }
 
-// FUNCION MOCK PARA OBTENER PRODUCTOS DE UN LOCAL ESPECÍFICO
 export function getProductosPorLocal(local) {
   return productos.filter(p => p.lugar === local);
 }
 
-export default productos;
+export function getAllProductosMock() {
+  return productos;
+}
 
+export default productos;
