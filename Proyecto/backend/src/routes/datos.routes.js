@@ -8,7 +8,7 @@ const router = express.Router();
  * Obtener todos los datos de empresa_lolalitas
  */
 router.get("/api/datos", (req, res) => {
-  console.log("📦 Solicitud GET /api/datos");
+  console.log("Solicitud GET /api/datos");
   res.json({
     success: true,
     data: empresa_lolalitas,
@@ -20,7 +20,7 @@ router.get("/api/datos", (req, res) => {
  * Obtener solo los productos
  */
 router.get("/api/datos/productos", (req, res) => {
-  console.log("📦 Solicitud GET /api/datos/productos");
+  console.log("Solicitud GET /api/datos/productos");
   res.json({
     success: true,
     productos: empresa_lolalitas.productos,
@@ -32,7 +32,7 @@ router.get("/api/datos/productos", (req, res) => {
  * Obtener solo las categorías
  */
 router.get("/api/datos/categorias", (req, res) => {
-  console.log("📦 Solicitud GET /api/datos/categorias");
+  console.log("Solicitud GET /api/datos/categorias");
   res.json({
     success: true,
     categorias: empresa_lolalitas.categorias,

@@ -262,7 +262,7 @@ function App() {
               {[ 
                 { key: 'Jefe', label: 'Jefe', color: '#f57c00', icon: <IconTie /> },
                 { key: 'Supervisora', label: 'Supervisora', color: '#2d7bfa', icon: <IconBriefcase /> },
-                { key: 'L?der', label: 'Lider', color: '#11a36c', icon: <IconUsers /> },
+                { key: 'Líder', label: 'Líder', color: '#11a36c', icon: <IconUsers /> },
                 { key: 'Empleada', label: 'Empleada', color: '#a54bff', icon: <IconUserCircle /> },
                 { key: 'Tecnico', label: 'Tecnico', color: '#e24938ff', icon: <IconWrench /> },
                 { key: 'Despachador', label: 'Despachador', color: '#1fdadaff', icon: <IconDelivery /> },

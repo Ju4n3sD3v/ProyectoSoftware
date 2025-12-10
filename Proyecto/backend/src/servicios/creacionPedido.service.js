@@ -658,7 +658,7 @@ async function aplicarDeltasInventarioBodega(productosParaExportar, aplicadoAnte
       }
     }
   } catch (err) {
-    console.error("Error al ajustar inventario de bodega desde exportaci?n:", err);
+    console.error("Error al ajustar inventario de bodega desde exportación:", err);
   }
 }
 

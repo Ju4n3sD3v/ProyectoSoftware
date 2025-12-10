@@ -7,9 +7,9 @@ export const empresa_lolalitas = {
     { id: 5, nombre: "Gaseosas" },
     { id: 6, nombre: "Otros" }
   ],
-  
+
   movimientos_inventario: [],
-  
+
   productos: [
     { id: 1, nombre: "Bolsas de pollo", descripcion: "Bolsas de pollo que contienen 50 muslos y 50 alitas", categoria_id: 1, stock: 0, precio: 0.00, fecha_creacion: "2025-11-16 15:23:23" },
     { id: 2, nombre: "Bolsas de papas", descripcion: "---", categoria_id: 1, stock: 0, precio: 0.00, fecha_creacion: "2025-11-16 15:32:05" },
@@ -42,11 +42,11 @@ export const empresa_lolalitas = {
     { id: 29, nombre: "Mata cucarachas", descripcion: "", categoria_id: 3, stock: 0, precio: 0.00, fecha_creacion: "2025-11-16 17:05:58" },
     { id: 30, nombre: "Esponja", descripcion: "", categoria_id: 3, stock: 0, precio: 0.00, fecha_creacion: "2025-11-16 17:06:07" }
   ],
-  
+
   roles: [],
-  
+
   usuarios: []
 };
 
-// Export (ESM) — disponible para importación como:
+// Export (ESM) - disponible para importación como:
 // import { empresa_lolalitas } from './data.js'

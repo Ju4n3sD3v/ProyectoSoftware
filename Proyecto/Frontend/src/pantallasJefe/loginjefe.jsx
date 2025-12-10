@@ -61,7 +61,7 @@ export default function LoginJefe({
           <p className="muted">Controla inventario, analiza stock y revisa faltantes desde un solo lugar.</p>
         </div>
         <button className="btn ghost" type="button" onClick={volverAlInicio}>
-          Cerrar sesi?n
+          Cerrar sesión
         </button>
       </div>
 
@@ -84,15 +84,15 @@ export default function LoginJefe({
 
       <div className="dashboard-grid">
         <div className="panel">
-          <h3>Acciones r?pidas</h3>
+          <h3>Acciones rápidas</h3>
           <div className="action-grid">
             <button className="action-card" type="button" onClick={controlInventarioBodega}>
               <span className="action-title">Inventario de bodega</span>
               <span className="action-text">Ver y actualizar stock</span>
             </button>
             <button className="action-card" type="button" onClick={mostrarAnalisisInventario}>
-              <span className="action-title">An?lisis por local</span>
-              <span className="action-text">Alertas y m?nimos</span>
+              <span className="action-title">Análisis por local</span>
+              <span className="action-text">Alertas y mínimos</span>
             </button>
             <button className="action-card" type="button" onClick={verFaltantesJefe}>
               <span className="action-title">Faltantes</span>
@@ -114,7 +114,7 @@ export default function LoginJefe({
                 <tr>
                   <th>Producto</th>
                   <th>Stock</th>
-                  <th>?ltima act.</th>
+                  <th>Última act.</th>
                 </tr>
               </thead>
               <tbody>

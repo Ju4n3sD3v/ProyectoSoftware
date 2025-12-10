@@ -13,7 +13,6 @@ import authRoutes from "./routes/auth.routes.js";
 import variacionRoutes from "./routes/analisisVariacion.routes.js";
 import maquinasRoutes from "./routes/maquinas.routes.js";
 
-
 import { PORT } from "./config.js";
 
 const app = express();
@@ -39,8 +38,8 @@ app.use("/api/maquinas", maquinasRoutes);
 
 // Iniciar servidor
 app.listen(PORT, () => {
-  console.log(`✓ Servidor escuchando en el puerto ${PORT}`);
-  console.log(`✓ Rutas de creación de pedidos disponibles en http://localhost:${PORT}/api/pedidos`);
-  console.log(`✓ Rutas de análisis por local disponibles en http://localhost:${PORT}/api/analisis-local`);
-  console.log(`✓ Ruta de verificación de pedidos: POST http://localhost:${PORT}/api/verificar-pedido`);
+  console.log(`Servidor escuchando en el puerto ${PORT}`);
+  console.log(`Rutas de creación de pedidos disponibles en http://localhost:${PORT}/api/pedidos`);
+  console.log(`Rutas de análisis por local disponibles en http://localhost:${PORT}/api/analisis-local`);
+  console.log(`Ruta de verificación de pedidos: POST http://localhost:${PORT}/api/verificar-pedido`);
 });

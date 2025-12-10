@@ -1,4 +1,4 @@
-[
+﻿[
   {
     "id": 1,
     "lugar": "Bodega",
@@ -359,21 +359,21 @@
   {
     "id": 52,
     "lugar": "Bodega",
-    "nombre": "PiÃ±a",
+    "nombre": "Piña",
     "stock": 100,
     "actualizadoEn": "2025-02-01 10:00:00"
   },
   {
     "id": 53,
     "lugar": "Local 1",
-    "nombre": "PiÃ±a",
+    "nombre": "Piña",
     "stock": 50,
     "actualizadoEn": "2025-02-01 11:00:00"
   },
   {
     "id": 54,
     "lugar": "Local 2",
-    "nombre": "PiÃ±a",
+    "nombre": "Piña",
     "stock": 25,
     "actualizadoEn": "2025-02-01 12:00:00"
   },
@@ -464,21 +464,21 @@
   {
     "id": 67,
     "lugar": "Bodega",
-    "nombre": "Papel higiÃ©nico",
+    "nombre": "Papel higiénico",
     "stock": 100,
     "actualizadoEn": "2025-02-01 10:00:00"
   },
   {
     "id": 68,
     "lugar": "Local 1",
-    "nombre": "Papel higiÃ©nico",
+    "nombre": "Papel higiénico",
     "stock": 50,
     "actualizadoEn": "2025-02-01 11:00:00"
   },
   {
     "id": 69,
     "lugar": "Local 2",
-    "nombre": "Papel higiÃ©nico",
+    "nombre": "Papel higiénico",
     "stock": 25,
     "actualizadoEn": "2025-02-01 12:00:00"
   },
@@ -548,21 +548,21 @@
   {
     "id": 79,
     "lugar": "Bodega",
-    "nombre": "JabÃ³n de manos",
+    "nombre": "Jabón de manos",
     "stock": 100,
     "actualizadoEn": "2025-02-01 10:00:00"
   },
   {
     "id": 80,
     "lugar": "Local 1",
-    "nombre": "JabÃ³n de manos",
+    "nombre": "Jabón de manos",
     "stock": 50,
     "actualizadoEn": "2025-02-01 11:00:00"
   },
   {
     "id": 81,
     "lugar": "Local 2",
-    "nombre": "JabÃ³n de manos",
+    "nombre": "Jabón de manos",
     "stock": 25,
     "actualizadoEn": "2025-02-01 12:00:00"
   },
@@ -630,3 +630,4 @@
     "actualizadoEn": "2025-02-01 12:00:00"
   }
 ]
+
