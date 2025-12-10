@@ -11,6 +11,8 @@ let usuarios = [
   { id: 6, nombre: "Supervisora 1", rol: "Supervisora", usuario: "super1" },
   { id: 7, nombre: "Líder 1", rol: "Líder", usuario: "lider1" },
   { id: 8, nombre: "Empleada 1", rol: "Empleada", usuario: "emple1" },
+  { id: 9, nombre: "Tecnico 1", rol: "Tecnico", usuario: "tecni1" },
+  { id: 10, nombre: "Despachador 1", rol: "Despachador", usuario: "despac1" },
 ];
 
 // Obtener todos los usuarios
@@ -26,7 +28,7 @@ export async function crearUsuarioMock({ nombre, rol, usuario }) {
     id: nuevoId,
     nombre,
     usuario: usuario || nombre?.toLowerCase().replace(/\s+/g, ""),
-    rol: rol || "Empleada"
+    rol: rol || "Empleada",
   };
 
   usuarios.push(nuevoUsuario);

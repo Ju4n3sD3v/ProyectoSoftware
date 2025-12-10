@@ -36,6 +36,24 @@ let roles = [
       "Crear pedido",
       "Ver inventario por local"
     ]
+  },
+  {
+    id: 5,
+    nombre: "Tecnico",
+    permisos: [
+      "Ver estado de maquinas",
+      "Agendar revisiones",
+      "Registrar revisiones"
+    ]
+  },
+  {
+    id: 6,
+    nombre: "Despachador",
+    permisos: [
+      "Ver pedidos",
+      "Marcar envios",
+      "Actualizar estado de pedidos enviados"
+    ]
   }
 ];
 

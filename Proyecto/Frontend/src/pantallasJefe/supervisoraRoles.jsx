@@ -238,7 +238,7 @@ export default function SupervisoraRoles({ volverAlInicio }) {
                 </select>
               </label>
               <p className="muted">
-                Limite: 2 Jefes, 2 Supervisoras, 1 Lider, Empleadas sin limite.
+                Limite: 2 Jefes, 2 Supervisoras, 1 Lider. Empleadas, Tecnicos y Despachadores sin limite.
               </p>
               <div className="actions">
                 <button className="btn" type="submit">
