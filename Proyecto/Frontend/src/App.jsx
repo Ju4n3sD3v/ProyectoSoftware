@@ -38,6 +38,33 @@ const IconBriefcase = () => (
   </svg>
 )
 
+const IconTie = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+    <path
+      fill="currentColor"
+      d="M9 3h6l1 3-3 3 2 10-3 2-3-2 2-10-3-3 1-3Zm1.5 2-0.4 1.2L12 7.6l1.9-1.4L13.5 5h-3Z"
+    />
+  </svg>
+)
+
+const IconWrench = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+    <path
+      fill="currentColor"
+      d="M20.7 7.3a6 6 0 0 1-7.9 7.8l-1.8 1.8 1.2 1.1-2.1 2.1-5.6-5.6 2.1-2.1 1.1 1.2 1.8-1.8A6 6 0 0 1 16.7 3l-2.4 2.4 1.3 2.9 2.9 1.3 2.2-2.3Z"
+    />
+  </svg>
+)
+
+const IconDelivery = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+    <path
+      fill="currentColor"
+      d="M15 5h2l1 2h3v6h-1a3 3 0 0 1-6 0h-2.2a3 3 0 1 1-5.8 0H4V8h4.2l1.1-3H15Zm-7 6.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3Zm10 0a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3Zm-8-5.5-.7 2H13V7h-3Z"
+    />
+  </svg>
+)
+
 const IconUserBadge = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
     <path
@@ -220,11 +247,11 @@ function App() {
 
       {pantalla === 'inicio' && (
         <div className="inicio-layout">
-          <div className="inicio-card">
-            <div className="brand-logo">
-              <div className="brand-mark">L</div>
-            </div>
-            <h1 className="brand-title">Lolalitas</h1>
+      <div className="inicio-card">
+        <div className="brand-logo">
+          <div className="brand-mark">L</div>
+        </div>
+        <h1 className="brand-title">Lolalitas</h1>
             <p className="brand-subtitle">Medellín, Colombia</p>
 
             <div className="brand-divider" />
@@ -233,12 +260,12 @@ function App() {
 
             <div className="roles-grid">
               {[ 
-                { key: 'Jefe', label: 'Jefe', color: '#f57c00', icon: <IconBriefcase /> },
-                { key: 'Supervisora', label: 'Supervisora', color: '#2d7bfa', icon: <IconUserBadge /> },
+                { key: 'Jefe', label: 'Jefe', color: '#f57c00', icon: <IconTie /> },
+                { key: 'Supervisora', label: 'Supervisora', color: '#2d7bfa', icon: <IconBriefcase /> },
                 { key: 'L?der', label: 'Lider', color: '#11a36c', icon: <IconUsers /> },
                 { key: 'Empleada', label: 'Empleada', color: '#a54bff', icon: <IconUserCircle /> },
-                { key: 'Tecnico', label: 'Tecnico', color: '#e24938ff', icon: <IconUserCircle /> },
-                { key: 'Despachador', label: 'Despachador', color: '#1fdadaff', icon: <IconUserCircle /> },
+                { key: 'Tecnico', label: 'Tecnico', color: '#e24938ff', icon: <IconWrench /> },
+                { key: 'Despachador', label: 'Despachador', color: '#1fdadaff', icon: <IconDelivery /> },
               ].map((rol) => (
                 <button
                   key={rol.key}
