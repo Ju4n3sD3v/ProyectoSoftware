@@ -6,6 +6,8 @@ export const usuarios = [
   { usuario: "super1", contrasena: "abcd", rol: "Supervisora" },
   { usuario: "lider1", contrasena: "1111", rol: "Líder" },
   { usuario: "emple1", contrasena: "0000", rol: "Empleada" },
+  { usuario: "tecni1", contrasena: "2222", rol: "Tecnico" },
+  { usuario: "despac1", contrasena: "3333", rol: "Despachador" },
   // Relacionados con la tabla de roles/usuarios
   { usuario: "laura", contrasena: "laura123", rol: "Empleada" },
   { usuario: "carlos", contrasena: "carlos123", rol: "Líder" },

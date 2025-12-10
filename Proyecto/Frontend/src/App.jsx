@@ -26,6 +26,8 @@ import InventarioPorLocal from './pantallasEmpleadas/InventarioPorLocal'
 import ProfilePasswordForm from './componentes/ProfilePasswordForm'
 
 import VariacionPorLocal from './pantallasJefe/VariacionPorLocal' 
+import LoginTecnico from './pantallasTecnico/logintecnico.jsx'
+import EstadoMaquinas from './pantallasTecnico/estadoMaquinas.jsx'
 
 const IconBriefcase = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
@@ -134,6 +136,7 @@ function App() {
         lider: 'lider',
         empleada: 'empleada',
         tecnico: 'tecnico',
+        despachador: 'despachador'
       }
 
       const rolDestino = mapaRol[rolNormalizado]
@@ -168,6 +171,9 @@ function App() {
   const volverLoginEmpleada = () => setPantalla('empleada')
   const reporteEntradaSalida = () => setPantalla('reporteEntradaSalida')
   const volverLoginLider = () => setPantalla('lider')
+  const volverLoginSupervisora = () => setPantalla('supervisora')
+  const volverLoginTecnico = () => setPantalla('tecnico')
+  const volverLoginDespachador = () => setPantalla('despachador')
   const mostrarAnalisisInventario = () => setPantalla('analisisInventario')
   const revisarPedidosJefe = () => setPantalla('revisarPedidos')
   const verificarPedidoLider = () => setPantalla('verificarPedidoLider')
@@ -179,6 +185,7 @@ function App() {
   }
 
   const mostrarVariacionPorLocal = () => setPantalla('variacionLocal')
+  const verEstadoMaquinas = () => setPantalla('estadoMaquinas')
 
   return (
     <div className="app-shell">
@@ -229,8 +236,9 @@ function App() {
                 { key: 'Jefe', label: 'Jefe', color: '#f57c00', icon: <IconBriefcase /> },
                 { key: 'Supervisora', label: 'Supervisora', color: '#2d7bfa', icon: <IconUserBadge /> },
                 { key: 'L?der', label: 'Lider', color: '#11a36c', icon: <IconUsers /> },
-                { key: 'Empleada', label: 'Empleada', color: '#a54bff', icon: <IconUserCircle /> }, // Ya tenías 'Tecnico' aquí, lo cual es correcto.
-                { key: 'Tecnico', label: 'Tecnico', color: '#a54bff', icon: <IconUserCircle /> },
+                { key: 'Empleada', label: 'Empleada', color: '#a54bff', icon: <IconUserCircle /> },
+                { key: 'Tecnico', label: 'Tecnico', color: '#e24938ff', icon: <IconUserCircle /> },
+                { key: 'Despachador', label: 'Despachador', color: '#1fdadaff', icon: <IconUserCircle /> },
               ].map((rol) => (
                 <button
                   key={rol.key}
@@ -425,9 +433,25 @@ function App() {
 
       {pantalla === 'tecnico' && (
         wrapScreen(
+          <LoginTecnico
+            volverAlInicio={volverAlInicio}
+            verEstadoMaquinas={verEstadoMaquinas}
+          />
+        )
+      )}
+
+      {pantalla === 'estadoMaquinas' && (
+        wrapScreen(
+          <EstadoMaquinas volverAlInicio={volverAlInicio} />
+        )
+      )}    
+
+
+        {pantalla === 'despachador' && (
+        wrapScreen(
           <div>
-            <h1>Panel de Técnico</h1>
-            <p className="muted">Bienvenido al panel de soporte técnico.</p>
+            <h1>Panel de Despachador</h1>
+            <p className="muted">Bienvenido al panel de despachador.</p>
             <div className="actions" style={{ marginTop: '12px' }}>
               <button className="btn ghost" type="button" onClick={volverAlInicio}>Volver al inicio</button>
             </div>

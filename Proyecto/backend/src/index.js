@@ -11,6 +11,7 @@ import rolesRoutes from "./routes/roles.routes.js";
 import usuariosRoutes from "./routes/usuarios.routes.js";
 import authRoutes from "./routes/auth.routes.js";
 import variacionRoutes from "./routes/analisisVariacion.routes.js";
+import maquinasRoutes from "./routes/maquinas.routes.js";
 
 
 import { PORT } from "./config.js";
@@ -34,6 +35,7 @@ app.use(rolesRoutes);
 app.use(usuariosRoutes);
 app.use(authRoutes);
 app.use(variacionRoutes);
+app.use("/api/maquinas", maquinasRoutes);
 
 // Iniciar servidor
 app.listen(PORT, () => {
