@@ -4,8 +4,8 @@ export const maquinas = [
     id: "M001",
     local: "Local 1",
     numero: 1,
-    estado: "Operativa",
-    ultimaRevision: "2025-12-08"
+    estado: "En espera para revisión",
+    ultimaRevision: "2025-11-11" // Próxima revisión vence hoy (2025-12-11)
   },
   {
     id: "M002",
@@ -19,8 +19,8 @@ export const maquinas = [
     id: "M003",
     local: "Local 2",
     numero: 1,
-    estado: "Fuera de servicio",
-    ultimaRevision: "2025-12-05"
+    estado: "En espera para revisión",
+    ultimaRevision: "2025-11-11"
   },
   {
     id: "M004",
