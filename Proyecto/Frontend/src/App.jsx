@@ -28,6 +28,7 @@ import ProfilePasswordForm from './componentes/ProfilePasswordForm'
 import VariacionPorLocal from './pantallasJefe/VariacionPorLocal' 
 import LoginTecnico from './pantallasTecnico/logintecnico.jsx'
 import EstadoMaquinas from './pantallasTecnico/estadoMaquinas.jsx'
+import PedidosListos from './pantallasDespachador/pedidosListos.jsx'
 
 const IconBriefcase = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
@@ -201,6 +202,7 @@ function App() {
   const volverLoginSupervisora = () => setPantalla('supervisora')
   const volverLoginTecnico = () => setPantalla('tecnico')
   const volverLoginDespachador = () => setPantalla('despachador')
+  const verPedidosListos = () => setPantalla('pedidosListos')
   const mostrarAnalisisInventario = () => setPantalla('analisisInventario')
   const revisarPedidosJefe = () => setPantalla('revisarPedidos')
   const verificarPedidoLider = () => setPantalla('verificarPedidoLider')
@@ -478,11 +480,23 @@ function App() {
         wrapScreen(
           <div>
             <h1>Panel de Despachador</h1>
-            <p className="muted">Bienvenido al panel de despachador.</p>
+            <p className="muted">Gestiona los pedidos listos para despachar.</p>
             <div className="actions" style={{ marginTop: '12px' }}>
+              <button className="btn primary" type="button" onClick={verPedidosListos}>
+                Ver pedidos listos
+              </button>
               <button className="btn ghost" type="button" onClick={volverAlInicio}>Volver al inicio</button>
             </div>
           </div>
+        )
+      )}
+
+      {pantalla === 'pedidosListos' && (
+        wrapScreen(
+          <PedidosListos
+            volverAlInicio={volverAlInicio}
+            volverLoginDespachador={volverLoginDespachador}
+          />
         )
       )}
 

@@ -82,5 +82,8 @@
     "Vinagre": 0,
     "Mata cucarachas": 0,
     "Esponja": 0
-  }
+  },
+  "estadoDespacho": "en_despacho",
+  "fechaInicioDespacho": "2025-12-11T02:02:51.614Z",
+  "observacionesDespachador": "Ojo, llegar a tiempo "
 }
