@@ -4,55 +4,52 @@ export default function ModificarInventarioJefe({ volverAlInicio, controlInventa
   const [productos, setProductos] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(null);
-  const [valoresEditados, setValoresEditados] = useState({}); // id → valor nuevo (string)
+  const [valoresEditados, setValoresEditados] = useState({});
   const [orden, setOrden] = useState("stock-desc"); // stock-desc | stock-asc | fecha-desc | fecha-asc
 
-  // Cargar productos de bodega al montar el componente
-  useEffect(() => {
-    const cargarProductos = async () => {
-      try {
-        setCargando(true);
-        const respuesta = await fetch("http://localhost:4000/productos/bodega");
-        const data = await respuesta.json();
+  const cargarProductos = async () => {
+    try {
+      setCargando(true);
+      const respuesta = await fetch("http://localhost:4000/productos/bodega");
+      const data = await respuesta.json();
 
-        if (!data.ok) {
-          throw new Error(data.error || "Error al obtener productos de la bodega.");
-        }
-
-        setProductos(data.data || []);
-        setError(null);
-      } catch (err) {
-        console.error(err);
-        setError(err.message);
-      } finally {
-        setCargando(false);
+      if (!data.ok) {
+        throw new Error(data.error || "Error al obtener productos de la bodega.");
       }
-    };
 
+      const lista = Array.isArray(data.data) ? data.data : [];
+      // Normalizar stocks como numero para mostrar los valores reales almacenados
+      setProductos(lista.map((p) => ({ ...p, stock: Number(p.stock ?? 0) })));
+      setError(null);
+    } catch (err) {
+      console.error(err);
+      setError(err.message);
+    } finally {
+      setCargando(false);
+    }
+  };
+
+  useEffect(() => {
     cargarProductos();
   }, []);
 
-  // Manejar cambio en el input de nuevo stock
   const handleChangeStock = (idProducto, valor) => {
     if (valor === "" || parseInt(valor, 10) >= 0) {
-      setValoresEditados(prev => ({
+      setValoresEditados((prev) => ({
         ...prev,
-        [idProducto]: valor
+        [idProducto]: valor,
       }));
     }
   };
 
-  // Aceptar cambio para un producto
   const handleAceptar = async (producto) => {
     const valorInput = valoresEditados[producto.id];
 
-    // Si no se escribió nada, usamos el stock actual
-    const nuevoStock = valorInput === undefined || valorInput === ""
-      ? producto.stock
-      : parseInt(valorInput, 10);
+    const nuevoStock =
+      valorInput === undefined || valorInput === "" ? producto.stock : parseInt(valorInput, 10);
 
     if (Number.isNaN(nuevoStock) || nuevoStock < 0) {
-      alert("El stock debe ser un número mayor o igual a 0.");
+      alert("El stock debe ser un numero mayor o igual a 0.");
       return;
     }
 
@@ -65,9 +62,9 @@ export default function ModificarInventarioJefe({ volverAlInicio, controlInventa
       const respuesta = await fetch(`http://localhost:4000/productos/${producto.id}`, {
         method: "PUT",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({ stock: nuevoStock })
+        body: JSON.stringify({ stock: nuevoStock }),
       });
 
       const data = await respuesta.json();
@@ -79,29 +76,25 @@ export default function ModificarInventarioJefe({ volverAlInicio, controlInventa
 
       const productoActualizado = data.data;
 
-      // Actualizar la lista de productos en el estado
-      setProductos(prev =>
-        prev.map(p => p.id === producto.id ? productoActualizado : p)
-      );
+      // Recargar lista desde backend para reflejar el valor real guardado
+      await cargarProductos();
 
-      // Limpiar el valor editado de ese producto
-      setValoresEditados(prev => ({
+      setValoresEditados((prev) => ({
         ...prev,
-        [producto.id]: ""
+        [producto.id]: "",
       }));
 
-      alert("✓ Inventario actualizado correctamente para " + productoActualizado.nombre);
+      alert(`Inventario actualizado correctamente para ${productoActualizado.nombre}`);
     } catch (err) {
       console.error(err);
-      alert("Error de conexión con el servidor: " + err.message);
+      alert("Error de conexion con el servidor: " + err.message);
     }
   };
 
-  // Rechazar cambio → no se modifica nada
   const handleRechazar = (idProducto) => {
-    setValoresEditados(prev => ({
+    setValoresEditados((prev) => ({
       ...prev,
-      [idProducto]: ""
+      [idProducto]: "",
     }));
     alert("No se realizaron cambios en el inventario para este producto.");
   };
@@ -119,7 +112,7 @@ export default function ModificarInventarioJefe({ volverAlInicio, controlInventa
               Volver
             </button>
             <button className="btn ghost" type="button" onClick={volverAlInicio}>
-              Cerrar sesión
+              Cerrar sesion
             </button>
           </div>
         </div>
@@ -130,19 +123,15 @@ export default function ModificarInventarioJefe({ volverAlInicio, controlInventa
             <select value={orden} onChange={(e) => setOrden(e.target.value)}>
               <option value="stock-desc">Stock: mayor a menor</option>
               <option value="stock-asc">Stock: menor a mayor</option>
-              <option value="fecha-desc">Fecha: más reciente</option>
-              <option value="fecha-asc">Fecha: más antigua</option>
+              <option value="fecha-desc">Fecha: mas reciente</option>
+              <option value="fecha-asc">Fecha: mas antigua</option>
             </select>
           </label>
         </div>
 
         {cargando && <p className="muted">Cargando productos...</p>}
 
-        {error && (
-          <p className="alert error">
-            Ocurrió un error: {error}
-          </p>
-        )}
+        {error && <p className="alert error">Ocurrio un error: {error}</p>}
 
         {!cargando && !error && (
           <>
@@ -157,7 +146,7 @@ export default function ModificarInventarioJefe({ volverAlInicio, controlInventa
                       <th>Producto</th>
                       <th>Lugar</th>
                       <th>Stock actual</th>
-                      <th>Última actualización</th>
+                      <th>Ultima actualizacion</th>
                       <th>Nuevo stock</th>
                       <th>Acciones</th>
                     </tr>
@@ -172,40 +161,37 @@ export default function ModificarInventarioJefe({ volverAlInicio, controlInventa
                         if (orden === "fecha-asc") return new Date(a.actualizadoEn) - new Date(b.actualizadoEn);
                         return 0;
                       })
-                      .map((p) => (
-                        <tr key={p.id}>
-                          <td>{p.id}</td>
-                          <td>{p.nombre}</td>
-                          <td>{p.lugar}</td>
-                          <td>{p.stock}</td>
-                          <td>{p.actualizadoEn}</td>
-                          <td>
-                            <input
-                              type="number"
-                              min="0"
-                              value={
-                                valoresEditados[p.id] !== undefined
-                                  ? valoresEditados[p.id]
-                                  : p.stock
-                              }
-                              onChange={(e) => handleChangeStock(p.id, e.target.value)}
-                              style={{ width: "90px" }}
-                            />
-                          </td>
-                          <td style={{ display: "flex", gap: "8px" }}>
-                            <button className="btn" type="button" onClick={() => handleAceptar(p)}>
-                              Aceptar
-                            </button>
-                            <button
-                              className="btn ghost"
-                              type="button"
-                              onClick={() => handleRechazar(p.id)}
-                            >
-                              Rechazar
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
+                      .map((p) => {
+                        const stockActual = Number(p.stock ?? 0);
+                        const inputValue =
+                          valoresEditados[p.id] !== undefined ? valoresEditados[p.id] : stockActual;
+                        return (
+                          <tr key={p.id}>
+                            <td>{p.id}</td>
+                            <td>{p.nombre}</td>
+                            <td>{p.lugar}</td>
+                            <td>{stockActual}</td>
+                            <td>{p.actualizadoEn}</td>
+                            <td>
+                              <input
+                                type="number"
+                                min="0"
+                                value={inputValue}
+                                onChange={(e) => handleChangeStock(p.id, e.target.value)}
+                                style={{ width: "90px" }}
+                              />
+                            </td>
+                            <td style={{ display: "flex", gap: "8px" }}>
+                              <button className="btn" type="button" onClick={() => handleAceptar(p)}>
+                                Aceptar
+                              </button>
+                              <button className="btn ghost" type="button" onClick={() => handleRechazar(p.id)}>
+                                Rechazar
+                              </button>
+                            </td>
+                          </tr>
+                        );
+                      })}
                   </tbody>
                 </table>
               </div>

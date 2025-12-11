@@ -35,7 +35,7 @@
     "Mata cucarachas": 0,
     "Esponja": 0
   },
-  "fechaRevision": "2025-12-04T23:22:20.684Z",
+  "fechaRevision": "2025-12-11T13:37:01.827Z",
   "productosRecibidos": {
     "Bolsas de pollo": 5,
     "Bolsas de papas": 20,
@@ -50,7 +50,7 @@
     }
   ],
   "inventarioActualizadoEnBodega": true,
-  "fechaActualizacionInventario": "2025-12-04T23:22:21.828Z",
+  "fechaActualizacionInventario": "2025-12-11T13:37:03.194Z",
   "stockAplicadoBodega": {
     "Bolsas de pollo": 20,
     "Bolsas de papas": 20,

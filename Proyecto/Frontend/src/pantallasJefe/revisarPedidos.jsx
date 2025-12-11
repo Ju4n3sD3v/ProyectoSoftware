@@ -80,7 +80,7 @@ function RevisarPedidosJefe({ volverControlInventarioBodega, volverAlInicio }) {
         return;
       }
 
-      alert("✓ Pedido actualizado y marcado como revisado");
+      alert("Pedido actualizado y marcado como revisado");
 
       // 2. Descargar Excel (CSV)
       const respExcel = await fetch(
@@ -89,7 +89,7 @@ function RevisarPedidosJefe({ volverControlInventarioBodega, volverAlInicio }) {
 
       if (!respExcel.ok) {
         alert(
-          "El pedido se actualizó, pero hubo un problema al generar el Excel"
+          "El pedido se actualizo, pero hubo un problema al generar el Excel"
         );
       } else {
         const blob = await respExcel.blob();
