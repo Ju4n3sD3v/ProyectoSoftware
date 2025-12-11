@@ -5,8 +5,11 @@ import {
   obtenerMaquinaPorId,
   obtenerMaquinasEnEspera,
   agendarRevision,
+  obtenerRevisionesAgendadas,
   registrarRevision,
-  actualizarEstadoMaquina
+  actualizarEstadoMaquina,
+  registrarMantenimiento,
+  obtenerHistorialMantenimiento
 } from '../servicios/maquinas.service.js';
 
 const router = express.Router();
@@ -47,10 +50,43 @@ router.get('/id/:maquinaId', (req, res) => {
   res.json(maquina);
 });
 
+// GET: Obtener revisiones agendadas de una máquina
+router.get('/:maquinaId/revisiones-agendadas', (req, res) => {
+  const { maquinaId } = req.params;
+  const revisiones = obtenerRevisionesAgendadas(maquinaId);
+  
+  res.json({
+    maquinaId,
+    totalAgendadas: revisiones.length,
+    revisiones
+  });
+});
+
+// GET: Obtener historial de mantenimientos de una máquina
+router.get('/:maquinaId/historial-mantenimiento', (req, res) => {
+  const { maquinaId } = req.params;
+  const historial = obtenerHistorialMantenimiento(maquinaId);
+  
+  res.json({
+    maquinaId,
+    totalRegistros: historial.length,
+    mantenimientos: historial
+  });
+});
+
 // POST: Agendar revisión para una máquina
 router.post('/:maquinaId/agendar-revision', (req, res) => {
   const { maquinaId } = req.params;
-  const resultado = agendarRevision(maquinaId);
+  const { fecha, hora, descripcion } = req.body;
+  
+  if (!fecha || !hora) {
+    return res.status(400).json({ 
+      ok: false, 
+      mensaje: "Se requieren fecha y hora para agendar revisión" 
+    });
+  }
+  
+  const resultado = agendarRevision(maquinaId, { fecha, hora, descripcion });
   
   if (!resultado.ok) {
     return res.status(404).json(resultado);
@@ -93,6 +129,42 @@ router.put('/:maquinaId', (req, res) => {
   }
   
   res.json(resultado);
+});
+
+// POST: Registrar mantenimiento realizado
+router.post('/:maquinaId/registrar-mantenimiento', (req, res) => {
+  const { maquinaId } = req.params;
+  const { fecha, hora, tecnicoResponsable, tipoMantenimiento, descripcion } = req.body;
+  
+  // Validar campos requeridos
+  if (!fecha || !hora || !tecnicoResponsable || !tipoMantenimiento) {
+    return res.status(400).json({ 
+      ok: false, 
+      mensaje: "Se requieren: fecha, hora, tecnicoResponsable, tipoMantenimiento" 
+    });
+  }
+  
+  // Validar que tipoMantenimiento sea preventivo o correctivo
+  if (!["preventivo", "correctivo"].includes(tipoMantenimiento)) {
+    return res.status(400).json({ 
+      ok: false, 
+      mensaje: "tipoMantenimiento debe ser 'preventivo' o 'correctivo'" 
+    });
+  }
+  
+  const resultado = registrarMantenimiento(maquinaId, {
+    fecha,
+    hora,
+    tecnicoResponsable,
+    tipoMantenimiento,
+    descripcion
+  });
+  
+  if (!resultado.ok) {
+    return res.status(404).json(resultado);
+  }
+  
+  res.status(201).json(resultado);
 });
 
 export default router;
