@@ -108,6 +108,31 @@ function FaltantesJefe({ volverControlInventarioBodega, volverLoginJefe, verHist
         return;
       }
 
+      // 2.1) Incrementar stock en el local destino (si existe el producto allí)
+      try {
+        const respLocal = await fetch(`http://localhost:4000/productos/local/${encodeURIComponent(local)}`);
+        const dataLocal = await respLocal.json();
+        const listaLocal = dataLocal?.data || [];
+        const productoLocal = listaLocal.find((p) => p.nombre === nombreProducto && p.lugar === local);
+
+        if (productoLocal) {
+          const nuevoStockLocal = Number(productoLocal.stock || 0) + requerido;
+          const respUpdateLocal = await fetch(`http://localhost:4000/productos/${productoLocal.id}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ stock: nuevoStockLocal }),
+          });
+          const dataUpdLocal = await respUpdateLocal.json();
+          if (!respUpdateLocal.ok) {
+            console.warn("No se pudo actualizar stock en local:", dataUpdLocal);
+          }
+        } else {
+          console.warn(`No se encontró ${nombreProducto} en ${local} para incrementar stock.`);
+        }
+      } catch (err) {
+        console.error("Error actualizando stock en local destino:", err);
+      }
+
       // 3) Registrar envío en el pedido (backend)
       try {
         const reg = await fetch(`http://localhost:4000/api/pedidos/${pedidoId}/enviar`, {

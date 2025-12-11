@@ -4,25 +4,23 @@
   "revisado": true,
   "local": "Local 1",
   "motivo": "Agotamiento de producto",
-  "faltantes": {
-    "Bolsas de pollo": {
-      "solicitada": 10,
-      "recibida": 0,
-      "faltante": 10,
-      "origen": "agotamiento"
+  "faltantes": {},
+  "origen": "reporte",
+  "envios": [
+    {
+      "producto": "Bolsas de pollo",
+      "cantidad": 10,
+      "fecha": "2025-12-11T04:38:29.064Z"
     },
-    "Aceite 20L": {
-      "solicitada": 20,
-      "recibida": 0,
-      "faltante": 20,
-      "origen": "agotamiento"
+    {
+      "producto": "Aceite 20L",
+      "cantidad": 20,
+      "fecha": "2025-12-11T04:38:29.812Z"
     },
-    "Combo#3": {
-      "solicitada": 30,
-      "recibida": 0,
-      "faltante": 30,
-      "origen": "agotamiento"
+    {
+      "producto": "Combo#3",
+      "cantidad": 30,
+      "fecha": "2025-12-11T04:38:30.207Z"
     }
-  },
-  "origen": "reporte"
+  ]
 }

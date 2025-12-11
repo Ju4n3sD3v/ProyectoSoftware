@@ -15,6 +15,8 @@ import ReporteEntradaSalida from './pantallasLider/reporteEntradaSalida'
 import CreacionPedido from './pantallasEmpleadas/creacionPedido'
 import AnalisisInventarioLocal from './pantallasJefe/analisisInventarioLocal'
 import RevisarPedidosJefe from './pantallasJefe/revisarPedidos.jsx'
+import NotificarDescarte from './pantallasLider/NotificarDescarte.jsx'
+import HistorialDescartes from './pantallasJefe/HistorialDescartes.jsx'
 
 import SupervisoraRoles from './pantallasJefe/supervisoraRoles.jsx'
 
@@ -29,6 +31,7 @@ import VariacionPorLocal from './pantallasJefe/VariacionPorLocal'
 import LoginTecnico from './pantallasTecnico/logintecnico.jsx'
 import EstadoMaquinas from './pantallasTecnico/estadoMaquinas.jsx'
 import PedidosListos from './pantallasDespachador/pedidosListos.jsx'
+import logoLolalitas from './assets/Logololalitas.png'
 
 const IconBriefcase = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
@@ -208,6 +211,8 @@ function App() {
   const verificarPedidoLider = () => setPantalla('verificarPedidoLider')
   const verFaltantesJefe = () => setPantalla('faltantesJefe')
   const verHistorialEnvios = () => setPantalla('historialEnvios')
+  const notificarDescarte = () => setPantalla('notificarDescarte')
+  const verHistorialDescartes = () => setPantalla('historialDescartes')
   const verInventarioLocal = () => {
     setOrigenInventario(pantalla)
     setPantalla('inventarioLocal')
@@ -249,25 +254,28 @@ function App() {
 
       {pantalla === 'inicio' && (
         <div className="inicio-layout">
-      <div className="inicio-card">
-        <div className="brand-logo">
-          <div className="brand-mark">L</div>
+        <div className="inicio-card">
+        <div className="brand-logo has-image">
+          <div className="logo-face front">
+            <img src={logoLolalitas} alt="Logo Lolalitas" />
+          </div>
+          <div className="logo-face back">
+            <div className="brand-quote">
+              “Ala a ala, llevamos sabor y energía a cada mesa.”
+            </div>
+          </div>
         </div>
-        <h1 className="brand-title">Lolalitas</h1>
-            <p className="brand-subtitle">Medellín, Colombia</p>
-
-            <div className="brand-divider" />
-            <p className="brand-instruction">Selecciona tu rol</p>
+        <h1 className="brand-title">Selecciona tu rol</h1>
             <p className="brand-helper">Elige el rol con el que deseas ingresar al sistema</p>
 
-            <div className="roles-grid">
-              {[ 
+            <div className="roles-grid roles-grid-3x2">
+              {[
                 { key: 'Jefe', label: 'Jefe', color: '#f57c00', icon: <IconTie /> },
                 { key: 'Supervisora', label: 'Supervisora', color: '#2d7bfa', icon: <IconBriefcase /> },
                 { key: 'Líder', label: 'Líder', color: '#11a36c', icon: <IconUsers /> },
-                { key: 'Empleada', label: 'Empleada', color: '#a54bff', icon: <IconUserCircle /> },
                 { key: 'Tecnico', label: 'Tecnico', color: '#e24938ff', icon: <IconWrench /> },
                 { key: 'Despachador', label: 'Despachador', color: '#1fdadaff', icon: <IconDelivery /> },
+                { key: 'Empleada', label: 'Empleada', color: '#a54bff', icon: <IconUserCircle /> },
               ].map((rol) => (
                 <button
                   key={rol.key}
@@ -350,6 +358,7 @@ function App() {
             controlInventarioBodega={controlInventarioBodega}
             mostrarAnalisisInventario={mostrarAnalisisInventario}
             verFaltantesJefe={verFaltantesJefe}
+            verHistorialDescartes={verHistorialDescartes}
           />
         )
       )}
@@ -388,6 +397,7 @@ function App() {
             reporteEntradaSalida={reporteEntradaSalida}
             verificarPedidoLider={verificarPedidoLider}
             verInventarioLocal={verInventarioLocal}
+            notificarDescarte={notificarDescarte}
           />
         )
       )}
@@ -398,6 +408,12 @@ function App() {
             volverAlInicio={volverAlInicio}
             volverLoginLider={volverLoginLider}
           />
+        )
+      )}
+
+      {pantalla === 'notificarDescarte' && (
+        wrapScreen(
+          <NotificarDescarte volverLoginLider={volverLoginLider} />
         )
       )}
 
@@ -416,6 +432,12 @@ function App() {
             volverLoginJefe={volverLoginJefe}
             verHistorialEnvios={verHistorialEnvios}
           />
+        )
+      )}
+
+      {pantalla === 'historialDescartes' && (
+        wrapScreen(
+          <HistorialDescartes volver={volverLoginJefe} />
         )
       )}
 
@@ -448,13 +470,47 @@ function App() {
 
       {pantalla === 'empleada' && (
         wrapScreen(
-          <div>
-            <h1>Panel de empleada</h1>
-            <p className="muted">Crea informes de pedido o revisa inventario por local.</p>
-            <div className="actions" style={{ marginTop: '12px' }}>
-              <button type="button" onClick={crreacionPedido}>Crear informe del pedido</button>
-              <button type="button" onClick={verInventarioLocal}>Ver inventario por local</button>
-              <button className="btn ghost" type="button" onClick={volverAlInicio}>Volver al inicio</button>
+          <div className="role-shell">
+            <div className="role-hero">
+              <div>
+                <p className="chip">Panel empleada</p>
+                <h1>Acciones principales</h1>
+                <p className="muted">Registra pedidos y consulta inventario de locales.</p>
+              </div>
+              <div className="role-insight">
+                <p className="muted">Tip rápido</p>
+                <h3>Verifica stock antes de generar el pedido.</h3>
+                <div className="mini-bar"><div className="mini-bar__fill" /></div>
+              </div>
+            </div>
+
+            <div className="role-grid">
+              <div className="role-card">
+                <div className="role-card__icon">📝</div>
+                <div className="role-card__body">
+                  <h3>Crear informe de pedido</h3>
+                  <p className="muted">Captura cantidades solicitadas y envía al jefe.</p>
+                  <button className="btn" type="button" onClick={crreacionPedido}>Crear informe</button>
+                </div>
+              </div>
+
+              <div className="role-card">
+                <div className="role-card__icon">📦</div>
+                <div className="role-card__body">
+                  <h3>Ver inventario por local</h3>
+                  <p className="muted">Consulta stock y solicita reposición.</p>
+                  <button className="btn secondary" type="button" onClick={verInventarioLocal}>Abrir inventario</button>
+                </div>
+              </div>
+
+              <div className="role-card ghost">
+                <div className="role-card__icon">↩️</div>
+                <div className="role-card__body">
+                  <h3>Volver al inicio</h3>
+                  <p className="muted">Regresa a la selección de rol.</p>
+                  <button className="btn ghost" type="button" onClick={volverAlInicio}>Salir</button>
+                </div>
+              </div>
             </div>
           </div>
         )

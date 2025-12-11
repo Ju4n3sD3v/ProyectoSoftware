@@ -13,6 +13,7 @@ import authRoutes from "./routes/auth.routes.js";
 import variacionRoutes from "./routes/analisisVariacion.routes.js";
 import maquinasRoutes from "./routes/maquinas.routes.js";
 import despachoRoutes from "./routes/despacho.routes.js";
+import descartesRoutes from "./routes/descartes.routes.js";
 
 import { PORT } from "./config.js";
 
@@ -37,6 +38,7 @@ app.use(authRoutes);
 app.use(variacionRoutes);
 app.use("/api/maquinas", maquinasRoutes);
 app.use(despachoRoutes);
+app.use(descartesRoutes);
 
 // Iniciar servidor
 app.listen(PORT, () => {

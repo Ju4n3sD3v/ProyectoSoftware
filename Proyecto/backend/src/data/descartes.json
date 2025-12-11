@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "productoId": 2,
+    "nombreProducto": "Bolsas de pollo",
+    "lugar": "Local 1",
+    "cantidad": 4,
+    "motivo": "Producto vencido",
+    "usuario": "Líder local",
+    "fecha": "2025-12-11 00:31:41",
+    "stockRestante": 46,
+    "requiereReposicion": false
+  },
+  {
+    "id": 2,
+    "productoId": 2,
+    "nombreProducto": "Bolsas de pollo",
+    "lugar": "Local 1",
+    "cantidad": 10,
+    "motivo": "No especificado",
+    "usuario": "Líder local",
+    "fecha": "2025-12-11 01:02:43",
+    "stockRestante": 36,
+    "requiereReposicion": false
+  }
+]

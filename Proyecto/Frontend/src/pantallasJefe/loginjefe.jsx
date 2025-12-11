@@ -5,6 +5,7 @@ export default function LoginJefe({
   controlInventarioBodega,
   mostrarAnalisisInventario,
   verFaltantesJefe,
+  verHistorialDescartes,
 }) {
   const [resumen, setResumen] = useState({
     productos: 0,
@@ -14,6 +15,7 @@ export default function LoginJefe({
   const [destacados, setDestacados] = useState([]);
   const [error, setError] = useState("");
   const [cargando, setCargando] = useState(false);
+  const [resumenChart, setResumenChart] = useState([]);
 
   useEffect(() => {
     const cargar = async () => {
@@ -42,6 +44,14 @@ export default function LoginJefe({
           .sort((a, b) => Number(a.stock || 0) - Number(b.stock || 0))
           .slice(0, 5);
         setDestacados(low);
+
+        const maxStock = Math.max(...lista.map((p) => Number(p.stock || 0)), 1);
+        const mini = lista.slice(0, 6).map((p) => ({
+          nombre: p.nombre,
+          valor: p.stock,
+          ancho: Math.min(100, Math.round((Number(p.stock || 0) / maxStock) * 100)),
+        }));
+        setResumenChart(mini);
       } catch (err) {
         console.error(err);
         setError("No pudimos cargar el resumen de bodega.");
@@ -85,7 +95,7 @@ export default function LoginJefe({
       <div className="dashboard-grid">
         <div className="panel">
           <h3>Acciones rápidas</h3>
-          <div className="action-grid">
+          <div className="action-grid actions-balanced">
             <button className="action-card" type="button" onClick={controlInventarioBodega}>
               <span className="action-title">Inventario de bodega</span>
               <span className="action-text">Ver y actualizar stock</span>
@@ -98,7 +108,35 @@ export default function LoginJefe({
               <span className="action-title">Faltantes</span>
               <span className="action-text">Reportes de locales</span>
             </button>
+            {typeof verHistorialDescartes === "function" && (
+              <button className="action-card" type="button" onClick={verHistorialDescartes}>
+                <span className="action-title">Historial de descartes</span>
+                <span className="action-text">Motivos, cantidades y reposición</span>
+              </button>
+            )}
           </div>
+        </div>
+
+        <div className="panel">
+          <div className="panel-head">
+            <h3>Vista gráfica del inventario</h3>
+            {cargando && <span className="chip">Actualizando...</span>}
+          </div>
+          {resumenChart.length === 0 ? (
+            <p className="muted">Cargando datos de bodega...</p>
+          ) : (
+            <div className="mini-chart">
+              {resumenChart.map((item) => (
+                <div key={item.nombre} className="mini-chart__row">
+                  <span className="mini-chart__label">{item.nombre}</span>
+                  <div className="mini-chart__bar">
+                    <div className="mini-chart__fill" style={{ width: `${item.ancho}%` }} />
+                  </div>
+                  <span className="mini-chart__value">{item.valor}</span>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="panel">

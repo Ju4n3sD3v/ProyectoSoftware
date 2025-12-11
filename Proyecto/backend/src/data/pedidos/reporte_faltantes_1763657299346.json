@@ -3,19 +3,18 @@
   "fecha": "2025-11-20T16:48:19.346Z",
   "revisado": true,
   "local": "Local 1",
-  "faltantes": {
-    "Bolsas de pollo": {
-      "solicitada": 0,
-      "recibida": 0,
-      "faltante": 1,
-      "origen": "reportado"
+  "faltantes": {},
+  "origen": "reporte",
+  "envios": [
+    {
+      "producto": "Bolsas de pollo",
+      "cantidad": 1,
+      "fecha": "2025-12-11T07:38:19.937Z"
     },
-    "Bolsas de harina": {
-      "solicitada": 0,
-      "recibida": 0,
-      "faltante": 1,
-      "origen": "reportado"
+    {
+      "producto": "Bolsas de harina",
+      "cantidad": 1,
+      "fecha": "2025-12-11T07:38:20.526Z"
     }
-  },
-  "origen": "reporte"
+  ]
 }

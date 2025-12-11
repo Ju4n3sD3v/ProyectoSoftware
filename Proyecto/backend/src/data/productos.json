@@ -1,73 +1,73 @@
-﻿[
+[
   {
     "id": 1,
     "lugar": "Bodega",
     "nombre": "Bolsas de pollo",
-    "stock": 83,
-    "actualizadoEn": "2025-12-04 18:22:41"
+    "stock": 28,
+    "actualizadoEn": "2025-12-11 03:03:40"
   },
   {
     "id": 2,
     "lugar": "Local 1",
     "nombre": "Bolsas de pollo",
-    "stock": 50,
-    "actualizadoEn": "2025-02-01 11:00:00"
+    "stock": 5,
+    "actualizadoEn": "2025-12-11 02:55:51"
   },
   {
     "id": 3,
     "lugar": "Local 2",
     "nombre": "Bolsas de pollo",
-    "stock": 25,
-    "actualizadoEn": "2025-02-01 12:00:00"
+    "stock": 20,
+    "actualizadoEn": "2025-12-11 03:03:40"
   },
   {
     "id": 4,
     "lugar": "Bodega",
     "nombre": "Bolsas de papas",
-    "stock": 80,
-    "actualizadoEn": "2025-12-04 18:22:41"
+    "stock": 83,
+    "actualizadoEn": "2025-12-11 02:56:25"
   },
   {
     "id": 5,
     "lugar": "Local 1",
     "nombre": "Bolsas de papas",
-    "stock": 50,
-    "actualizadoEn": "2025-02-01 11:00:00"
+    "stock": 5,
+    "actualizadoEn": "2025-12-11 02:55:51"
   },
   {
     "id": 6,
     "lugar": "Local 2",
     "nombre": "Bolsas de papas",
-    "stock": 25,
-    "actualizadoEn": "2025-02-01 12:00:00"
+    "stock": 60,
+    "actualizadoEn": "2025-12-10 23:44:32"
   },
   {
     "id": 7,
     "lugar": "Bodega",
     "nombre": "Bolsas de harina",
-    "stock": 60,
-    "actualizadoEn": "2025-12-04 18:22:41"
+    "stock": 62,
+    "actualizadoEn": "2025-12-11 03:03:42"
   },
   {
     "id": 8,
     "lugar": "Local 1",
     "nombre": "Bolsas de harina",
-    "stock": 50,
-    "actualizadoEn": "2025-02-01 11:00:00"
+    "stock": 5,
+    "actualizadoEn": "2025-12-11 02:55:51"
   },
   {
     "id": 9,
     "lugar": "Local 2",
     "nombre": "Bolsas de harina",
-    "stock": 25,
-    "actualizadoEn": "2025-02-01 12:00:00"
+    "stock": 20,
+    "actualizadoEn": "2025-12-11 03:03:42"
   },
   {
     "id": 10,
     "lugar": "Bodega",
     "nombre": "Aceite 20L",
     "stock": 60,
-    "actualizadoEn": "2025-11-20 01:28:55"
+    "actualizadoEn": "2025-12-10 23:39:41"
   },
   {
     "id": 11,
@@ -87,8 +87,8 @@
     "id": 13,
     "lugar": "Bodega",
     "nombre": "Combo#1",
-    "stock": 100,
-    "actualizadoEn": "2025-02-01 10:00:00"
+    "stock": 80,
+    "actualizadoEn": "2025-12-10 23:39:42"
   },
   {
     "id": 14,
@@ -108,15 +108,15 @@
     "id": 16,
     "lugar": "Bodega",
     "nombre": "Combo#2",
-    "stock": 100,
-    "actualizadoEn": "2025-02-01 10:00:00"
+    "stock": 87,
+    "actualizadoEn": "2025-12-11 02:56:20"
   },
   {
     "id": 17,
     "lugar": "Local 1",
     "nombre": "Combo#2",
-    "stock": 50,
-    "actualizadoEn": "2025-02-01 11:00:00"
+    "stock": 0,
+    "actualizadoEn": "2025-12-11 02:48:24"
   },
   {
     "id": 18,
@@ -129,8 +129,8 @@
     "id": 19,
     "lugar": "Bodega",
     "nombre": "Combo#3",
-    "stock": 100,
-    "actualizadoEn": "2025-02-01 10:00:00"
+    "stock": 70,
+    "actualizadoEn": "2025-12-10 23:38:30"
   },
   {
     "id": 20,
@@ -192,15 +192,15 @@
     "id": 28,
     "lugar": "Bodega",
     "nombre": "Tapas de combos",
-    "stock": 100,
-    "actualizadoEn": "2025-02-01 10:00:00"
+    "stock": 87,
+    "actualizadoEn": "2025-12-11 02:56:24"
   },
   {
     "id": 29,
     "lugar": "Local 1",
     "nombre": "Tapas de combos",
-    "stock": 50,
-    "actualizadoEn": "2025-02-01 11:00:00"
+    "stock": 0,
+    "actualizadoEn": "2025-12-11 02:48:33"
   },
   {
     "id": 30,
@@ -227,8 +227,8 @@
     "id": 33,
     "lugar": "Local 2",
     "nombre": "Cajas de papas",
-    "stock": 25,
-    "actualizadoEn": "2025-02-01 12:00:00"
+    "stock": 0,
+    "actualizadoEn": "2025-12-11 02:37:07"
   },
   {
     "id": 34,
@@ -297,8 +297,8 @@
     "id": 43,
     "lugar": "Bodega",
     "nombre": "Extra Picante",
-    "stock": 100,
-    "actualizadoEn": "2025-02-01 10:00:00"
+    "stock": 99,
+    "actualizadoEn": "2025-12-10 23:39:56"
   },
   {
     "id": 44,
@@ -507,8 +507,8 @@
     "id": 73,
     "lugar": "Bodega",
     "nombre": "Copas/Tapas",
-    "stock": 100,
-    "actualizadoEn": "2025-02-01 10:00:00"
+    "stock": 99,
+    "actualizadoEn": "2025-12-10 23:39:57"
   },
   {
     "id": 74,
@@ -630,4 +630,3 @@
     "actualizadoEn": "2025-02-01 12:00:00"
   }
 ]
-

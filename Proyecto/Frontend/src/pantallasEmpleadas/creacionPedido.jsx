@@ -120,59 +120,75 @@ function CreacionPedido({ volverLoginEmpleada }) {
 
   // Mostrar mensaje de carga
   if (cargando) {
-    return <div><h1>Cargando datos...</h1></div>
+    return <div className="pedido-shell"><h1>Cargando datos...</h1></div>
   }
 
   // Mostrar error si hay
   if (error) {
-    return <div><h1>Error: {error}</h1></div>
+    return <div className="pedido-shell"><h1>Error: {error}</h1></div>
   }
 
+  const totalProductos = productos.length
+
   return (
-    <>
-      <div className="creacion-pedido">
-        <h1>Crear Pedido</h1>
-
-        {/* Selector de local */}
-        <div style={{ marginBottom: "1rem" }}>
-          <label htmlFor="select-local" style={{ marginRight: "0.5rem" }}>
-            Local:
-          </label>
-          <select
-            id="select-local"
-            value={local}
-            onChange={(e) => setLocal(e.target.value)}
-          >
-            <option value="">Seleccione un local</option>
-            <option value="Local 1">Local 1</option>
-            <option value="Local 2">Local 2</option>
-          </select>
+    <div className="pedido-shell">
+      <div className="pedido-hero">
+        <div>
+          <p className="chip">Nuevo pedido</p>
+          <h1>Selecciona local y cantidades</h1>
+          <p className="muted">Completa sólo los productos que necesitas. Los demás quedan en cero.</p>
         </div>
-
-        <fieldset>
-          {productos.map((producto) => (
-            <LabelAndInputN 
-              key={producto.id}
-              label={producto.nombre}
-              id={`producto-${producto.id}`}
-              value={pedido[producto.nombre] ?? ""}
-              onChange={(e) => {
-                // 👇 Soporta evento o valor directo
-                const valor = e?.target ? e.target.value : e
-                handleInputChange(producto.nombre, valor)
-              }}
-            />
-          ))}
-          <Button 
-            name='Generar informe'
-            id='btn-generar'
-            onClick={handleGenerarInforme}
-          />
-        </fieldset>
-        <br/><br/>
-        <button type="button" onClick={volverLoginEmpleada}> Volver al menú </button>
+        <div className="pedido-summary">
+          <label className="field" style={{ margin: 0 }}>
+            <span>Local</span>
+            <select
+              id="select-local"
+              value={local}
+              onChange={(e) => setLocal(e.target.value)}
+            >
+              <option value="">Selecciona un local</option>
+              <option value="Local 1">Local 1</option>
+              <option value="Local 2">Local 2</option>
+            </select>
+          </label>
+          <div className="stat-card soft" style={{ margin: 0 }}>
+            <p className="muted">Productos listados</p>
+            <h3 style={{ margin: 0 }}>{totalProductos}</h3>
+          </div>
+        </div>
       </div>
-    </>
+
+      <div className="pedido-grid">
+        {productos.map((producto, idx) => (
+          <div className="pedido-item" key={producto.id}>
+            <div className="pedido-item__label">
+              <span className="pill">#{idx + 1}</span> {producto.nombre}
+            </div>
+            <input
+              type="number"
+              min="0"
+              value={pedido[producto.nombre] ?? ""}
+              onChange={(e) => handleInputChange(producto.nombre, e.target.value)}
+            />
+          </div>
+        ))}
+      </div>
+
+      <div className="pedido-actions">
+        <Button
+          name='Generar informe'
+          id='btn-generar'
+          onClick={handleGenerarInforme}
+          className={'btn'}
+        />
+        <Button
+          name={'Volver al menú'}
+          id={'btn-volver-empleada'}
+          onClick={volverLoginEmpleada}
+          className={'btn'}
+        />
+      </div>
+    </div>
   )
 }
 

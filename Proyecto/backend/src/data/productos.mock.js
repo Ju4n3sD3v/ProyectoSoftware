@@ -244,4 +244,43 @@ export function getAllProductosMock() {
   return productos;
 }
 
+/**
+ * Disminuye el stock de un producto en un lugar específico, pensado para descartes.
+ * Devuelve el producto actualizado o lanza error si no existe o si la cantidad es inválida.
+ */
+export function ajustarStockPorDescartes({ productoId, lugar, cantidad }) {
+  if (!Number.isFinite(cantidad) || cantidad <= 0) {
+    throw new Error("La cantidad a descontar debe ser mayor a 0.");
+  }
+
+  const producto = productos.find(
+    (p) => p.id === Number(productoId) && p.lugar.toLowerCase() === String(lugar).toLowerCase()
+  );
+
+  if (!producto) {
+    throw new Error("Producto no encontrado para el lugar indicado.");
+  }
+
+  const nuevoStock = Math.max(0, Number(producto.stock) - Number(cantidad));
+  producto.stock = nuevoStock;
+
+  const ahora = new Date();
+  const yyyy = ahora.getFullYear();
+  const mm = String(ahora.getMonth() + 1).padStart(2, "0");
+  const dd = String(ahora.getDate()).padStart(2, "0");
+  const hh = String(ahora.getHours()).padStart(2, "0");
+  const mi = String(ahora.getMinutes()).padStart(2, "0");
+  const ss = String(ahora.getSeconds()).padStart(2, "0");
+
+  producto.actualizadoEn = `${yyyy}-${mm}-${dd} ${hh}:${mi}:${ss}`;
+
+  try {
+    fs.writeFileSync(RUTA_JSON_PRODUCTOS, JSON.stringify(productos, null, 2));
+  } catch (err) {
+    console.error("No se pudo persistir productos.json al descontar:", err.message);
+  }
+
+  return producto;
+}
+
 export default productos;

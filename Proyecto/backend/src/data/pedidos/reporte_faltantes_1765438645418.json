@@ -1,0 +1,28 @@
+{
+  "id": 1765438645418,
+  "fecha": "2025-12-11T07:37:25.418Z",
+  "revisado": true,
+  "local": "Local 2",
+  "motivo": "Agotamiento de producto",
+  "faltantes": {
+    "Bolsas de harina": {
+      "solicitada": 11,
+      "recibida": 0,
+      "faltante": 11,
+      "origen": "agotamiento"
+    },
+    "Bolsas de pollo": {
+      "solicitada": 11,
+      "recibida": 0,
+      "faltante": 11,
+      "origen": "agotamiento"
+    },
+    "Cajas de papas": {
+      "solicitada": 11,
+      "recibida": 0,
+      "faltante": 11,
+      "origen": "agotamiento"
+    }
+  },
+  "origen": "reporte"
+}

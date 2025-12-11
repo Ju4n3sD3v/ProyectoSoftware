@@ -1,0 +1,23 @@
+<svg width="260" height="260" viewBox="0 0 260 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Logo Lolalitas</title>
+  <desc id="desc">Ilustración simplificada en círculo con alas y nombre Lolalitas.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fbb03b"/>
+      <stop offset="100%" stop-color="#f15a24"/>
+    </linearGradient>
+    <linearGradient id="wing" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#4dc4ff"/>
+      <stop offset="100%" stop-color="#1e6fbf"/>
+    </linearGradient>
+  </defs>
+  <circle cx="130" cy="115" r="105" fill="url(#bg)"/>
+  <path d="M76 150c-10-38 10-76 30-76 12 0 20 12 24 22 7-12 17-22 28-22 20 0 40 38 30 76-6 22-34 34-56 34s-51-12-56-34z" fill="#ffe5d7" stroke="#d99c7c" stroke-width="3" stroke-linecap="round"/>
+  <path d="M78 86c-14 14-18 42-8 66 10 24 31 40 53 40" fill="none" stroke="#1d2c3a" stroke-width="6" stroke-linecap="round"/>
+  <path d="M183 86c14 14 18 42 8 66-10 24-31 40-53 40" fill="none" stroke="#1d2c3a" stroke-width="6" stroke-linecap="round"/>
+  <path d="M82 92c-6 34 8 62 30 78" fill="none" stroke="url(#wing)" stroke-width="18" stroke-linecap="round"/>
+  <path d="M178 92c6 34-8 62-30 78" fill="none" stroke="url(#wing)" stroke-width="18" stroke-linecap="round"/>
+  <rect x="98" y="120" width="64" height="12" rx="6" fill="#f36f56" opacity="0.35"/>
+  <text x="130" y="220" text-anchor="middle" font-family="Pacifico, 'Segoe Script', cursive" font-size="46" fill="#ffffff" stroke="#ffffff" stroke-width="1.5">Lolalitas</text>
+  <text x="132" y="242" text-anchor="middle" font-family="Inter, 'Segoe UI', sans-serif" font-size="12" fill="#f2f5f0" letter-spacing="0.5">Alitas Picantes</text>
+</svg>

@@ -4,25 +4,23 @@
   "revisado": true,
   "local": "Local 1",
   "motivo": "Agotamiento de producto",
-  "faltantes": {
-    "Bolsas de pollo": {
-      "solicitada": 1,
-      "recibida": 0,
-      "faltante": 1,
-      "origen": "agotamiento"
+  "faltantes": {},
+  "origen": "reporte",
+  "envios": [
+    {
+      "producto": "Bolsas de pollo",
+      "cantidad": 1,
+      "fecha": "2025-12-11T04:39:56.034Z"
     },
-    "Extra Picante": {
-      "solicitada": 1,
-      "recibida": 0,
-      "faltante": 1,
-      "origen": "agotamiento"
+    {
+      "producto": "Extra Picante",
+      "cantidad": 1,
+      "fecha": "2025-12-11T04:39:56.555Z"
     },
-    "Copas/Tapas": {
-      "solicitada": 1,
-      "recibida": 0,
-      "faltante": 1,
-      "origen": "agotamiento"
+    {
+      "producto": "Copas/Tapas",
+      "cantidad": 1,
+      "fecha": "2025-12-11T04:39:57.460Z"
     }
-  },
-  "origen": "reporte"
+  ]
 }
